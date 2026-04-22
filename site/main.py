@@ -21,7 +21,7 @@ def index():
             'client_nome': request.form.get('client_nome'),
             'client_numero': request.form.get('client_numero')
         }
-        supabase = supabase.table('clientes').insert(dados).execute()
+        supabase.table('Clientes').insert(dados).execute()
         
     return render_template('index.html')
 
