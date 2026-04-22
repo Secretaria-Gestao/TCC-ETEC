@@ -11,7 +11,8 @@
     margin: 0%;
     box-sizing: border-box;
     color: var(--color-font);
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+    text-decoration: none;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 body{
@@ -23,10 +24,10 @@ body{
 
 #cadastro{
     position: relative;
-    width: 40vw;
+    width: 39vw;
     margin-top: 200px;
-    margin-right: 30vw;
-    margin-left: 30vw;
+    margin-right: 30.5vw;
+    margin-left: 30.5vw;
     border-radius: 25px;
     border: 2px solid var(--border-color-cadastro);
     background-color: var(--background-color-cadastro);
@@ -34,6 +35,12 @@ body{
     padding: 60px;
     text-align: center
 }
-a{
-    text-decoration: none;
+
+input{
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color-cadastro);
 }
