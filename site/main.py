@@ -18,8 +18,8 @@ def index():
     dados = None
     if request.method == 'POST':
         dados = {
-            'client_nome': request.form.get('client_nome'),
-            'client_numero': request.form.get('client_numero')
+            'client_nome': request.form.get('nome'),
+            'client_numero': request.form.get('numero')
         }
         supabase.table('Clientes').insert(dados).execute()
         
