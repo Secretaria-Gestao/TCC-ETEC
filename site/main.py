@@ -1,29 +1,30 @@
-from flask import Flask, render_template, request
-
 import os
+from flask import Flask, render_template, request
 from dotenv import load_dotenv
+from supabase import create_client
 
-load_dotenv()
 
-url = os.getenv("SUPABASE_URL")
-key = os.getenv("SUPABASE_KEY")
+load_dotenv() #Carregando o .env local
 
+url = os.getenv("SUPABASE_URL")  #Pegando a url do Supabase
+key = os.getenv("SUPABASE_KEY")  #Pegando a senha do Supabase
+
+supabase = create_client(url,key)
 
 app = Flask(__name__)
-
 
 @app.route("/", methods=['GET','POST'])
 def index():
     dados = None
     if request.method == 'POST':
         dados = {
-            'nome': request.form.get('nome'),
-            'numero': request.form.get('numero')
+            'client_nome': request.form.get('client_nome'),
+            'client_numero': request.form.get('client_numero')
         }
-        
+        supabase = supabase.table('Clientes').insert(dados).execute()
         
     return render_template('index.html')
 
-if __name__ == '__main__':
+if __name__ == '__main__':  #Faz o código rodar as rotas do Flesk
     app.run(debug=True)
 
