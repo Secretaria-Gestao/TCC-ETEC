@@ -16,7 +16,6 @@
 }
 
 body{
-/*    background-image: linear-gradient(45deg,#2b2b2b, #b2b2b2); */
     background-image: repeating-linear-gradient(to top left, var(--color-gradiend-clara) 10% ,var(--color-gradiend-escura) 10% 20%, var(--color-gradiend-clara) 20% 30%);
     background-repeat: no-repeat;
     background-size: 100vw 100vh;
