@@ -21,7 +21,7 @@ body{
     background-size: 100vw 100vh;
 }
 
-#cadastro{
+main{
     position: relative;
     width: 39vw;
     margin-top: 200px;
@@ -35,7 +35,7 @@ body{
     text-align: center
 }
 
-input{
+input, select{
     width: 100%;
     max-width: 300px;
     padding: 10px;
