@@ -1,9 +1,9 @@
 :root{
-    --border-color-cadastro: #e3e3e3;
-    --background-color-cadastro: #c7c7c740;
-    --color-font: #151313;
-    --color-gradiend-clara: #484848;
-    --color-gradiend-escura: #2b2b2b;
+    --border-color-cadastro: #a1005b;
+    --background-color-cadastro: #7d264d34;
+    --color-font: #ffbcd6;
+    --color-gradiend-clara: #380b24;
+    --color-gradiend-escura: #270a1e;
 }
 
 *{
@@ -30,16 +30,18 @@ main{
     border-radius: 25px;
     border: 2px solid var(--border-color-cadastro);
     background-color: var(--background-color-cadastro);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(10px);
     padding: 60px;
     text-align: center
 }
 
-input, select{
+input, select, option{
+    color: var(--border-color-cadastro);
     width: 100%;
     max-width: 300px;
     padding: 10px;
     margin-top: 20px;
     border-radius: 5px;
     border: 1px solid var(--border-color-cadastro);
+    text-align: center;
 }
