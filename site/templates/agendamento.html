@@ -8,16 +8,22 @@
   </head>
   <body>
     <main>
+      <h1>Bem vindo {{ dados.client_nome }}!</h1>
       <h1>Agendamento</h1>
       <br /><br />
 
-      <form>
+      <form method="post" action="/fim">
         <label id="agenda">
-          Selecione o serviço:
-          <select name="agenda" id="agenda">
+          Selecione o serviço: <br>
+          <select name="servico" id="agenda">
             <option value="barba"> Barba </option>
             <option value="cabelo"> Cabelo </option>
-          </select>
+            <option value="cabelo"> Hidratação capilar </option>
+            <option value="cabelo"> Coloração </option>
+            <option value="cabelo"> manicure </option>
+          </select><br><br>
+          <label>Para que dia?</label><br><input type="date" name="data"><br>
+          <label>Em que horas?</label><br><input type="time" name="horario"><br>
           <input type="submit" value="Enviar" />
         </label>
       </form>
