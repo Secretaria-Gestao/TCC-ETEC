@@ -1,34 +1,50 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Agendamento</title>
-    <link rel="stylesheet" href="../static/css/style.css" />
-  </head>
-  <body>
-    <main>
-      <h1>Bem vindo {{ dados.client_nome }}!</h1>
-      <h1>Agendamento</h1>
-      <br /><br />
 
-      
-      <form method="post" action="/fim">
-        <input name="client_id" type="hidden" value="{{ client_id }}"></form>
-        <label id="agenda">
-          Selecione o serviço: <br>
-          <select name="servico" id="agenda">
-            <option value="barba"> Barba </option>
-            <option value="cabelo"> Cabelo </option>
-            <option value="cabelo"> Hidratação capilar </option>
-            <option value="cabelo"> Coloração </option>
-            <option value="cabelo"> manicure </option>
-          </select><br><br>
-          <label>Para que dia?</label><br><input type="date" name="data"><br>
-          <label>Em que horas?</label><br><input type="time" name="horario"><br>
-          <input type="submit" value="Enviar" />
-        </label>
-      </form>
-    </main>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agendamento</title>
+  <link rel="stylesheet" href="../static/css/style.css" />
+</head>
+
+<body>
+  <main>
+    <h1>Bem vindo {{ dados.client_nome }}!</h1>
+    <h1>Agendamento</h1>
+    <br /><br />
+
+
+    <form method="post" action="/fim">
+
+      Selecione o serviço: <br>
+      <select name="servico">
+        <option value="barba"> Barba </option>
+        <option value="cabelo"> Cabelo </option>
+        <option value="cabelo"> Hidratação capilar </option>
+        <option value="cabelo"> Coloração </option>
+        <option value="cabelo"> manicure </option>
+      </select>
+      <br><br>
+      Selecione o(a) profissional: <br>
+      <select name="profissional">
+        <option value="barba"> Roberto </option>
+        <option value="cabelo"> Ronaldo </option>
+        <option value="cabelo"> Rosalva </option>
+        <option value="cabelo"> Leila </option>
+      </select>
+
+      <input name="client_id" type="hidden" value="{{ client_id }}"><br><br>
+
+      <label>Para que dia?</label><br><input type="date" name="data"><br><br>
+      <label>Em que horas?</label><br><input type="time" name="horario"><br>
+      <br>
+    </form>
+
+    <input type="submit" value="Enviar" />
+
+    </form>
+  </main>
+</body>
+
 </html>

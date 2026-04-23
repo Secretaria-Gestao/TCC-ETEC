@@ -18,7 +18,8 @@
 body{
     background-image: repeating-linear-gradient(to top left, var(--color-gradiend-clara) 10% ,var(--color-gradiend-escura) 10% 20%, var(--color-gradiend-clara) 20% 30%);
     background-repeat: no-repeat;
-    background-size: 100vw;
+    display: flex;
+    min-height: 100vh;
 }
 
 main{
@@ -30,6 +31,10 @@ main{
     backdrop-filter: blur(10px);
     padding: 60px;
     text-align: center
+}
+
+.fim {
+    height: max-content;
 }
 
 input, select, option{
