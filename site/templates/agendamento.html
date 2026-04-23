@@ -12,7 +12,9 @@
       <h1>Agendamento</h1>
       <br /><br />
 
+      
       <form method="post" action="/fim">
+        <input name="client_id" type="hidden" value="{{ client_id }}"></form>
         <label id="agenda">
           Selecione o serviço: <br>
           <select name="servico" id="agenda">

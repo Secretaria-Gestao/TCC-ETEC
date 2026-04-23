@@ -1,4 +1,4 @@
-#Bibliotecas necessarias (se for tentar mexer no python e testar o funcionamente )
+#Bibliotecas necessarias (se for tentar mexer no python e testar o funcionamento )
 import os
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
@@ -29,7 +29,10 @@ def comeco():   # Definindo a rota principal do site (homepage/login)
         resposta = supabase.table('clientes').insert(cliente).execute()
 
         print(resposta)
-        return render_template('agendamento.html', dados = cliente)
+
+        client_id = resposta.data[0]['client_id']
+
+        return render_template('agendamento.html', dados = cliente, client_id = client_id)
 
     else:
         return render_template('index.html')
@@ -45,6 +48,7 @@ def termino(): #Definindo rota do login para o agendamento
         agendamento = {
             'servico': request.form.get('servico'),
             'horario': f"{data} {horario}:00",
+            'client_id': request.form.get('client_id')
         }
 
         supabase.table('agendamentos').insert(agendamento).execute()
