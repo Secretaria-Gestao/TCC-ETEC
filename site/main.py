@@ -48,13 +48,12 @@ def termino():
         profissional_escolhido = request.form.get('profissional') #pego o nome de qual profissional a pessoa escolheu
 
         profissional = supabase.table('profissionais').select('*').eq('profissional_nome', profissional_escolhido).execute() #se existir na tabela, vai ficar salvado na variavel 
-        print(profissional)
 
         agendamento = {
             'servico': request.form.get('servico'),
             'horario': f"{data} {horario}:00",
             'client_id': request.form.get('client_id'),
-            # 'profissional_id': profissional[0]['profissional_id']
+            'profissional_id': profissional.data[0]['profissional_id']
         }
 
         
