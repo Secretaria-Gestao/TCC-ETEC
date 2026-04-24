@@ -32,24 +32,32 @@ def comeco():   # Definindo a rota principal do site (homepage/login)
 
         client_id = resposta.data[0]['client_id']
 
-        return render_template('agendamento.html', dados = cliente, client_id = client_id)
+        return render_template('agendamento.html', dados = cliente, client_id = client_id) # levando a pessoa para parte de agendamento 
 
     else:
         return render_template('index.html')
 
-@app.route("/fim", methods=['GET','POST'])
-def termino(): #Definindo rota do login para o agendamento
+@app.route("/fim", methods=['GET','POST']) #Definindo rota do agendamento para o "fim"
+def termino(): 
     agendamento = None
 
     if request.method == 'POST':
         data = request.form.get('data')
         horario = request.form.get('horario')
 
+        profissional_escolhido = request.form.get('profissional') #pego o nome de qual profissional a pessoa escolheu
+
+        profissional = supabase.table('profissionais').select('*').eq('profissional_nome', profissional_escolhido).execute() #se existir na tabela, vai ficar salvado na variavel 
+        print(profissional)
+
         agendamento = {
             'servico': request.form.get('servico'),
             'horario': f"{data} {horario}:00",
-            'client_id': request.form.get('client_id')
+            'client_id': request.form.get('client_id'),
+            # 'profissional_id': profissional[0]['profissional_id']
         }
+
+        
 
         supabase.table('agendamentos').insert(agendamento).execute()
         return render_template('fim.html')
