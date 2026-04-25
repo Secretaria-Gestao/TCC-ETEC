@@ -23,6 +23,8 @@ body{
 }
 
 main{
+    display: grid;
+    grid-column: 1fr;
     width: 39vw;
     margin: 100px auto;
     border-radius: 25px;
@@ -45,5 +47,18 @@ input, select, option{
     margin-top: 20px;
     border-radius: 5px;
     border: 1px solid var(--border-color-cadastro);
+}
+
+#add_servico{
+    margin-top: 20px;
+    color: var(--border-color-cadastro);
+    border-radius: 300px;
+    border: 1px solid var(--border-color-cadastro);
+    width: 30px;
+    height: 30px;
+    font-size: large;
+}
+
+select:nth-child(1){
     text-align: center;
 }

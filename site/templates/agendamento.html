@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agendamento</title>
-  <link rel="stylesheet" href="../static/css/style.css" />
+  
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agendamento</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <script src="../static/js/script.js"defer></script>
 </head>
 
 <body>
@@ -18,13 +19,16 @@
     <form method="post" action="/fim">
 
       Selecione o serviço: <br>
-      <select name="servico">
-        <option value="Barba"> Barba </option>
-        <option value="Cabelo"> Cabelo </option>
-        <option value="Hidratação capilar"> Hidratação capilar </option>
-        <option value="Coloração"> Coloração </option>
-        <option value="Manicure"> manicure </option>
-      </select>
+      <div>
+        <button type="button" id="add_servico">+</button>
+        <select name="servico">
+          <option value="Barba"> Barba </option>
+          <option value="Cabelo"> Cabelo </option>
+          <option value="Hidratação capilar"> Hidratação capilar </option>
+          <option value="Coloração"> Coloração </option>
+          <option value="Manicure"> manicure </option>
+        </select>
+      </div>
       <br><br>
 
       Selecione o(a) profissional: <br>
@@ -45,6 +49,9 @@
 
     </form>
   </main>
-</body>
 
+  <footer>
+    &copy;
+  </footer>
+</body>
 </html>
