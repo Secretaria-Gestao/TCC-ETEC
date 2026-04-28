@@ -60,10 +60,20 @@ def termino():
             'profissional_id': profissional.data[0]['profissional_id']
         }
 
-        # Salva o agendamento no supabase
-        supabase.table('agendamentos').insert(agendamento).execute()
-        
-        return render_template('fim.html')
+        checagem_agendamento = supabase.table('agendamentos').select('horario').eq('horario', agendamento['horario']).execute()
+
+        print(checagem_agendamento)
+
+        conclusao = ""
+
+        if not checagem_agendamento.data:
+            supabase.table('agendamentos').insert(agendamento).execute() # Salva o agendamento no supabase
+            conclusao = "O seu agendamento foi concluido!"
+            return render_template('fim.html' )
+
+        else:
+            
+            return render_template('agendamento.html', )
 
     else:   
         return render_template('index.html')
