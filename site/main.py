@@ -50,7 +50,12 @@ def termino():
         profissional_escolhido = request.form.get('profissional') 
 
         # Se o profissional existir na tabela, vai ficar salvado na variavel 
-        profissional = supabase.table('profissionais').select('*').eq('profissional_nome', profissional_escolhido).execute() 
+        profissional = (
+            supabase.table('profissionais')
+            .select('*')
+            .eq('profissional_nome', profissional_escolhido)
+            .execute()
+        )
 
         
         agendamento = { 
@@ -60,7 +65,13 @@ def termino():
             'profissional_id': profissional.data[0]['profissional_id']
         }
 
-        checagem_agendamento = supabase.table('agendamentos').select('horario').eq('horario', agendamento['horario']).execute()
+        checagem_agendamento = (
+            supabase.table('agendamentos')
+            .select('horario')
+            .eq('horario', agendamento['horario'])
+            .eq('profissional_id', agendamento['profissional_id'])
+            .execute()
+        )
 
         print(checagem_agendamento)
 
@@ -69,11 +80,11 @@ def termino():
         if not checagem_agendamento.data:
             supabase.table('agendamentos').insert(agendamento).execute() # Salva o agendamento no supabase
             conclusao = "O seu agendamento foi concluido!"
-            return render_template('fim.html' )
+            return render_template('fim.html', conclusao = conclusao)
 
         else:
-            
-            return render_template('agendamento.html', )
+            conclusao = "Não foi possível continuar com o seu agendamento. Este horário já foi selecionado para esse profissional."
+            return render_template('agendamento.html', conclusao = conclusao)
 
     else:   
         return render_template('index.html')
