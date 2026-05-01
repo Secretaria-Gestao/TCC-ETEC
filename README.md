@@ -53,3 +53,7 @@
 | 16   | Baixa      | Como profissional, quero visualizar a minha renda total do mês para saber o quanto estou colaborando com o salão                                        | 2          | 6      |
 | 17   | Baixa      | Como profissional, quero visualizar o meu portfólio de serviços para me ajudar à refazer serviços já feitos                                             | 2          | 7      |
 | 18   | Baixa      | Como cliente, quero visualizar o meu histórico de serviços para relembrar como ficou um serviço especifico feito no salão                               | 2          | 7      |
+
+
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
