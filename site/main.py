@@ -19,12 +19,23 @@ app = Flask(__name__)
 def homepage():
     return render_template('index.html')
 
-@app.route("/login", methods=['POST'])
+@app.route("/login")
 def login():
     return render_template('login.html')
 
-@app.route("/agendamento", methods=['POST'])
+@app.route("/agendamento", methods=['POST', ''])
 def agendamento():
+    cliente = None
+
+    cliente = {
+        'client_nome': request.form.get('nome'),
+        'client_numero': request.form.get('numero')
+    }
+
+    checagem_client = supabase.table('clientes').select('client_numero').eq()
+
+    print(cliente['client_nome'])
+
     return render_template('agendamento.html')
 
 @app.route("/fim", methods=['POST'])
