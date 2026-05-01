@@ -16,7 +16,11 @@ supabase = create_client(url,key)
 app = Flask(__name__)
 
 @app.route("/", methods=['GET','POST'])
-def comeco():   # Definindo a rota principal do site (homepage/login)
+def comeco():   # Definindo a rota principal do site (homepage)
+    return render_template('index.html')
+
+@app.route("/login", methods=['GET','POST'])
+def login():
     cliente = None
 
     if request.method == 'POST':
@@ -36,10 +40,10 @@ def comeco():   # Definindo a rota principal do site (homepage/login)
         return render_template('agendamento.html', dados = cliente, client_id = client_id) # Fazendo a pessoa ir pro site agendamento.html
         
     else:
-        return render_template('index.html')
+        return render_template('login.html')
 
-@app.route("/fim", methods=['GET','POST']) # Definindo rota do agendamento para o fim do agendamento
-def termino(): 
+@app.route("/agendamento")
+def agendamento():
     agendamento = None
 
     if request.method == 'POST':
@@ -87,7 +91,12 @@ def termino():
             return render_template('agendamento.html', conclusao = conclusao)
 
     else:   
-        return render_template('index.html')
+        return render_template('login.html')
+
+
+@app.route("/fim", methods=['GET','POST']) # Definindo rota do agendamento para o fim do agendamento
+def termino(): 
+    return "receba"
 
 if __name__ == '__main__':  # Faz o código rodar as rotas do Flesk
     app.run(debug=True)

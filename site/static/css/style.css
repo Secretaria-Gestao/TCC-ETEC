@@ -26,13 +26,13 @@ main{
     display: grid;
     grid-column: 1fr;
     width: 39vw;
-    margin: 100px auto;
+    margin: auto;
     border-radius: 25px;
     border: 2px solid var(--border-color-cadastro);
     background-color: var(--background-color-cadastro);
     backdrop-filter: blur(10px);
     padding: 60px;
-    text-align: center
+    text-align: center;
 }
 
 .fim {
@@ -45,7 +45,9 @@ input, select, option{
     margin-top: 20px;
     border-radius: 5px;
     border: 1px solid var(--border-color-cadastro);
+    min-width: 200px;
 }
+
 
 #add_servico{
     margin-top: 20px;
@@ -55,6 +57,7 @@ input, select, option{
     width: 30px;
     height: 30px;
     font-size: large;
+    margin-left: -2em;
 }
 
 #cadastro_form{
@@ -66,8 +69,4 @@ input, select, option{
     width: 100%;
     max-width: 400px;
     justify-self: center;
-}
-
-select:nth-child(1){
-    text-align: center;
 }
