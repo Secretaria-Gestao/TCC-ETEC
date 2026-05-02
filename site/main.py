@@ -23,16 +23,16 @@ def homepage():
 def login():
     return render_template('login.html')
 
-@app.route("/agendamento", methods=['POST', ''])
+@app.route("/agendamento", methods=['POST'])
 def agendamento():
     cliente = None
 
     cliente = {
         'client_nome': request.form.get('nome'),
-        'client_numero': request.form.get('numero')
+        'client_email': request.form.get('email')
     }
 
-    checagem_client = supabase.table('clientes').select('client_numero').eq()
+    checagem_client = supabase.table('clientes').select('client_email').eq('client_email', cliente['client_email'])
 
     print(cliente['client_nome'])
 

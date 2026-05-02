@@ -1,31 +1,32 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-    <link rel="stylesheet" href="../static/css/style.css" />
-  </head>
 
-  <body>
-    <main>
-      <h1>Login</h1>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <link rel="stylesheet" href="../static/css/style.css" />
+  <script src="../static/js/script.js" defer></script>
+</head>
 
-      <br /><br />
+<body>
+  <main>
+    <h1>Login</h1>
 
-      <form action="/agendamento" id="cadastro_form" method="post">
-        <input type="text" name="nome" placeholder="Insira seu nome" />
-        <input type="tel" name="numero" placeholder="Insira seu numero" />
-        <input type="submit" value="Enviar" />
-      </form>
+    <br /><br />
 
-      <br /><br /><br />
+    <input type="email" name="email" autofocus placeholder="Insira seu email">
+    <button onclick="pegarDados()"> Entrar com o email </button>
+    <br />
 
+    <button type="google" onclick="google()" name="google" class="google_login"> Entrar com o google </button>
+    <br><br>
 
-      <div id="sigup">
-        <a href="#">Mudei de telefone</a>
-      </div>
+    <div id="sigup">
+      <a href="#">Mudei de email</a>
+    </div>
 
-    </main>
-  </body>
+  </main>
+</body>
+
 </html>
