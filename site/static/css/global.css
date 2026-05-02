@@ -1,0 +1,65 @@
+:root {
+    --background-gradient-color-light: #4b1231;
+    --background-gradient-color-dark: #270a1e;
+    --background-color-error: #8a3254;
+    --font-color-error: #ffd5df;
+    --background-transparent:#7d264d34;
+    --font-color: var(--background-button);
+    --font-color-transparent: var(--background-gradient-color-light);
+    --border-color: var(--background-button);
+    --border-transparent: #a1005b;
+    --background-button: #ffbcd6;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@100..900&display=swap');
+
+.m-plus {
+  font-family: "M PLUS 1", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+* {
+    padding: 0%;
+    margin: 0%;
+    font-family: "M PLUS 1", 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:active {
+    opacity: 0.3;
+}
+
+button[disabled] {
+    opacity: 0.7;
+}
+
+.clear {
+    background: transparent;
+    border: none;
+    color: var(--font-color);
+}
+
+.solid {
+    background: var(--background-button);
+    color: var(--font-color-transparent);
+    border: none;
+}
+
+.outline {
+    background: transparent;
+    color: var(--font-color);
+}
+
+.error{
+    background: var(--background-color-error);
+    color: var(--font-color-error);
+    margin: 4px;
+    padding: 2px;
+    border-radius: 5px;
+    display: none;
+}

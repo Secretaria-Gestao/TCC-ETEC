@@ -2,31 +2,56 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login</title>
-  <link rel="stylesheet" href="../static/css/style.css" />
-  <script src="../static/js/script.js" defer></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="../static/css/index.css" />
+    <link rel="stylesheet" href="../static/css/global.css" />
+    <script src="../static/js/validation.js" defer></script>
+    <script src="../static/js/login.js" defer></script>
 </head>
 
 <body>
-  <main>
-    <h1>Login</h1>
+    <form>
+        <h1>Login</h1>
+            <div>
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" onchange="onChangeEmail()" placeholder="seu@email.com"/>
+                <div class="error m-plus" id="email-required-error">
+                    Email é obrigatório
+                </div>
+                <div class="error m-plus" id="email-invalid-error">
+                    Email é inválido
+                </div>
+            </div>
+            <div>
+                <label for="password">Senha</label>
+                <input type="password" name="password" id="password" onchange="onChangePassaword()" placeholder="sua senha"/>
+                <div class="error m-plus" id="password-required-error">
+                    Senha é obrigatória
+                </div>
+            </div>
 
-    <br /><br />
+            <div>
+                <button type="button" class="clear" id="recover-password-button">
+                    Recuperar senha
+                </button>
+            </div>
+            <div>
+                <button type="button" class="solid m-plus" id="login-button" onclick="login()">
+                    Entrar
+                </button>
+            </div>
+            <div>
+                <button type="button" onclick="google()" name="google" class="solid m-plus"> Entrar com o google </button>
+            </div>
 
-    <input type="email" name="email" autofocus placeholder="Insira seu email">
-    <button onclick="pegarDados()"> Entrar com o email </button>
-    <br />
 
-    <button type="google" onclick="google()" name="google" class="google_login"> Entrar com o google </button>
-    <br><br>
-
-    <div id="sigup">
-      <a href="#">Mudei de email</a>
-    </div>
-
-  </main>
+            <div>
+                <button type="button" class="outline">
+                    Registrar
+                </button>
+            </div>
+        </form>
 </body>
-
 </html>
