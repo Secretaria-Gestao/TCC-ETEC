@@ -26,8 +26,9 @@ div{
 }
 
 form{
-    display: grid;
-    grid-column: 1fr;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 input, button{
