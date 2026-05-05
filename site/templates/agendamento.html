@@ -1,59 +1,58 @@
 <!doctype html>
 <html lang="en">
-  
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agendamento</title>
     <link rel="stylesheet" href="../static/css/fonts.css" />
     <link rel="stylesheet" href="../static/css/global.css" />
-    <link rel="stylesheet" href="../static/css/agentamento.css">
-    <script src="../static/js/script.js"defer></script>
-</head>
+    <link rel="stylesheet" href="../static/css/agentamento.css" />
+    <script src="../static/js/script.js" defer></script>
+  </head>
 
-<body>
-  <main>
-    <h1>Bem vindo {{ dados.client_nome }}!</h1>
-    <h1>Agendamento</h1>
-    <br /><br />
+  <body>
+    <header>
+        <h1>Bem vindo!</h1>
+        <h1>Agendamento</h1>
+    </header>
+    
+    <main>
+        <form method="post" action="/fim">
+            <label for="servico">Selecione o serviço:</label>
 
+            <div id="lista_servicos">
+            <button type="button" class="add_servico" id="add_servico">+</button>
+            <select name="servico">
+                <option value="Barba">Barba</option>
+                <option value="Cabelo">Cabelo</option>
+                <option value="Hidratação capilar">Hidratação capilar</option>
+                <option value="Coloração">Coloração</option>
+                <option value="Manicure">manicure</option>
+            </select>
+            </div>
 
-    <form method="post" action="/fim">
+            <div>
+            <label for="profissional">Selecione o(a) profissional: </label>
 
-      Selecione o serviço: <br>
-      <div>
-        <button type="button" id="add_servico">+</button>
-        <select name="servico">
-          <option value="Barba"> Barba </option>
-          <option value="Cabelo"> Cabelo </option>
-          <option value="Hidratação capilar"> Hidratação capilar </option>
-          <option value="Coloração"> Coloração </option>
-          <option value="Manicure"> manicure </option>
-        </select>
-      </div>
-      <br><br>
+            <select name="profissional">
+                <option value="Roberto">Roberto</option>
+                <option value="Ronaldo">Ronaldo</option>
+                <option value="Rosalva">Rosalva</option>
+                <option value="Leila">Leila</option>
+            </select>
+            </div>
 
-      Selecione o(a) profissional: <br>
-      <select name="profissional">
-        <option value="Roberto"> Roberto </option>
-        <option value="Ronaldo"> Ronaldo </option>
-        <option value="Rosalva"> Rosalva </option>
-        <option value="Leila"> Leila </option>
-      </select>
+            <div><label>Para que dia?</label><input type="date" name="data" /></div>
 
-      <input name="client_id" type="hidden" value="{{ client_id }}"><br><br>
+            <div>
+            <label>Em que horas?</label><input type="time" name="horario" />
+            </div>
 
-      <label>Para que dia?</label><br><input type="date" name="data"><br><br>
-      <label>Em que horas?</label><br><input type="time" name="horario"><br>
-      <br>
+            <div>
+            <input type="submit" class="enviar" value="Enviar" />
+            </div>
 
-      <input type="submit" value="Enviar" />
-
-    </form>
-  </main>
-
-  <footer>
-    &copy;
-  </footer>
-</body>
+        </form>
+    </main>
+  </body>
 </html>

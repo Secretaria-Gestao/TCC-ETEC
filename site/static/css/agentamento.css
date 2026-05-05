@@ -1,0 +1,35 @@
+body{
+    background: var(--background-gradient-color-light);
+    color: var(--font-color);
+}
+
+input, .enviar, select{
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    padding: 10px;
+    margin: 2px;
+}
+
+.add_servico{
+    color: var(--border-transparent);
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border: 2px solid var(--background-transparent);
+    border-radius: 50px;
+}
+
+main{
+    width: 90vw;
+    height: 85vh;
+    justify-self: center;
+    background: var(--background-transparent);
+}
+
+form{
+    width: 40%;
+    height: 80%;
+    margin: 30px;
+    padding: 10px;
+    background-color: blueviolet;
+}
