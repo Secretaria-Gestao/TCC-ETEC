@@ -1,29 +1,24 @@
 :root {
     --background-gradient-color-light: #4b1231;
     --background-gradient-color-dark: #270a1e;
+    --background-transparent:#7d264d34;
     --background-color-error: #8a3254;
     --font-color-error: #ffd5df;
-    --background-transparent:#7d264d34;
     --font-color: var(--background-button);
-    --font-color-transparent: var(--background-gradient-color-light);
+    --font-color-transparent: var(--background-gradient-color-dark);
     --border-color: var(--background-button);
     --border-transparent: #a1005b;
     --background-button: #ffbcd6;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@100..900&display=swap');
-
-.m-plus {
-  font-family: "M PLUS 1", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 600;
-  font-style: normal;
-}
-
 * {
     padding: 0%;
     margin: 0%;
-    font-family: "M PLUS 1", 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: "Poppins", sans-serif;
+}
+
+input::placeholder{
+    color: var(--border-transparent);
 }
 
 button {
