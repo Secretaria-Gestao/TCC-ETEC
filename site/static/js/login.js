@@ -1,7 +1,3 @@
-async function mandarDados() {
-    method: 'POST';
-}
-
 function onChangeEmail() {
     toggleBottonsDisable();
     toggleEmailErrors();

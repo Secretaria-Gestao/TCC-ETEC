@@ -14,50 +14,40 @@
 
 <body>
     <main>
-        <h1>Login</h1>
-        <form>
-            <div>
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" onchange="onChangeEmail()" placeholder="seu@email.com"/>
-                <div class="error" id="email-required-error">
-                    Email é obrigatório
-                </div>
-                <div class="error" id="email-invalid-error">
-                    Email é inválido
-                </div>
+        <form> 
+            <h1>Login</h1><br>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" onchange="onChangeEmail()" placeholder="seu@email.com" />
+            <div class="error" id="email-required-error">
+                Email é obrigatório
+            </div>
+            <div class="error" id="email-invalid-error">
+                Email é inválido
             </div>
 
-            <div>
-                <label for="password">Senha</label>
-                <input type="password" name="password" id="password" onchange="onChangePassaword()" placeholder="sua senha"/>
-                <div class="error" id="password-required-error">
-                    Senha é obrigatória
-                </div>
-            </div>
-            
-            <div>
-                <button type="button" class="clear " id="recover-password-button">
-                    Recuperar senha
-                </button>
+            <label for="password">Senha</label>
+            <input type="password" name="password" id="password" onchange="onChangePassaword()"
+                placeholder="sua senha" />
+            <div class="error" id="password-required-error">
+                Senha é obrigatória
             </div>
 
-            <div>
-                <button type="button" class="solid " id="login-button" onclick="login()">
-                    Entrar
-                </button>
-            </div>
+            <button type="button" class="clear " id="recover-password-button">
+                Recuperar senha
+            </button>
 
-            <div>
-                <button type="button" onclick="google()" name="google" class="solid "> Entrar com o google </button>
-            </div>
-            
-            <div>
-                <button type="button" class="outline ">
-                    Registrar
-                </button>
-            </div>
-            
+            <button type="button" class="solid " id="login-button" onclick="login()">
+                Entrar
+            </button>
+
+            <button type="button" onclick="google()" name="google" class="solid "> Entrar com o google </button>
+
+            <button type="button" class="outline ">
+                Registrar
+            </button>
+
         </form>
     </main>
 </body>
+
 </html>
