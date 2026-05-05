@@ -7,8 +7,11 @@
     <title>Login</title>
     <link rel="stylesheet" href="../static/css/login.css" />
     <link rel="stylesheet" href="../static/css/global.css" />
-    <script src="../static/js/validation.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../static/js/supabase.js"></script>
     <script src="../static/js/login.js" defer></script>
+    <script src="../static/js/validation.js" defer></script>
+
 </head>
 
 <body>
@@ -39,7 +42,7 @@
                 Entrar
             </button>
 
-            <button type="button" onclick="google()" name="google" class="solid "> Entrar com o google </button>
+            <button type="button" onclick="linkMagico()" name="google" class="solid "> Entrar com o google </button>
 
             <button type="button" class="outline ">
                 Registrar
