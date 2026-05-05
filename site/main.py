@@ -1,8 +1,9 @@
 # Bibliotecas necessarias (se for tentar mexer no python e testar o funcionamento)
 import os
-from flask import Flask, render_template, request
+from flask import Flask
 from dotenv import load_dotenv
 from supabase import create_client
+from routes import register_routes
 
 load_dotenv() # Carregando o .env local 
 
@@ -15,32 +16,7 @@ supabase = create_client(url,key)
 
 app = Flask(__name__)
 
-@app.route("/", methods=['GET'])
-def homepage():
-    return render_template('index.html')
-
-@app.route("/login")
-def login():
-    return render_template('login.html')
-
-@app.route("/agendamento", methods=['POST'])
-def agendamento():
-    cliente = None
-
-    cliente = {
-        'client_nome': request.form.get('nome'),
-        'client_email': request.form.get('email')
-    }
-
-    checagem_client = supabase.table('clientes').select('client_email').eq('client_email', cliente['client_email'])
-
-    print(cliente['client_nome'])
-
-    return render_template('agendamento.html')
-
-@app.route("/fim", methods=['POST'])
-def fim():
-    return render_template('fim.html')
+register_routes(app)
 
 if __name__ == '__main__':  # Faz o código rodar as rotas do Flesk
     app.run(debug=True)
