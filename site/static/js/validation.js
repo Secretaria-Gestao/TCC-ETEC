@@ -1,11 +1,20 @@
 function validateEmail(email) {
-  return /\S+@\S+\.\S+/.test(email);
+	return /\S+@\S+\.\S+/.test(email);
 }
 
-const SUPABASE_URL = "https://qtgubbbrntnltrpyywqx.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_vQdySC4Ec0oLE5CRBHx-sw_DkDzLkYu"
+async function linkMagico() {
+	const { data, error } = await supabaseClient.auth.signInWithOtp( {
+		email: form.email().value,
+		options: {
+			emailRedirectTo: '/agendamento',
+		},
+	})
 
-// function pegarDados() {
-//     let userEmail = document.getElementsByName('email')[0].value;
-//     console.log(userEmail);
-// }
+	if (error) {
+		alert('Erro ao tentar logar');
+	}
+	else {
+		alert('Email valido! Cheque sua caixa de email.')
+	}
+
+}
