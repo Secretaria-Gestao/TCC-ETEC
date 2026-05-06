@@ -17,7 +17,7 @@
 
 <body>
     <main>
-        <form> 
+        <form onsubmit="return false"> 
             <h1 id="logando">Login</h1>
             <h1 id="cadastrando" class="oculto">Cadastrar</h1><br>
             <label for="email">Email</label>
@@ -40,7 +40,7 @@
                 Recuperar senha
             </button>
 
-            <button type="submit" class="solid " id="login-button" onclick="login_EmailPassword()">
+            <button type="submit" class="solid " id="login-button" onclick="login_EmailPassword(event)">
                 Entrar
             </button>
 

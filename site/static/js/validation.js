@@ -9,15 +9,21 @@ async function login_EmailPassword(event) {
 		password: form.password().value,
 	})
 
+	const user = localStorage.getItem("acess_token");
+	
 	if (error) {
 		alert('Erro ao tentar logar');
 	}
 	
-	else {
-		window.location.href ='/agendamento';
-	}
-
+	fetch('/validacaoUser', {
+		method: 'POST',
+		headers: 
+	})
 }
+
+
+console.log("receba", user);
+
 
 async function signUp_EmailPassword(event) {
 	event.preventDefault()
@@ -25,12 +31,9 @@ async function signUp_EmailPassword(event) {
 		email: form.email().value,
 		password: form.password().value,
 	})
-
+	
+	console.log(error);
 	if (error) {
-		alert('Erro ao tentar logar');
+		alert('Erro ao tentar cadastrar');
 	}
-	else {
-		await login_EmailPassword();
-	}
-
 }

@@ -21,7 +21,7 @@ input, .enviar, select{
 
 main{
     width: 90vw;
-    height: 85vh;
+    height: 75vh;
     justify-self: center;
     background: var(--background-transparent);
 }
@@ -31,5 +31,10 @@ form{
     height: 80%;
     margin: 30px;
     padding: 10px;
-    background-color: blueviolet;
+    /* background-color: blueviolet; */
+}
+
+header {
+    margin-left: 5vw;
+    padding-top: 10px;
 }
