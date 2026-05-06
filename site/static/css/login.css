@@ -39,3 +39,12 @@ input, button{
     width: 90%;
     max-width: 500px;
 }
+
+a {
+    color: var(--font-color);
+    text-decoration: none;
+    background-color: var(--border-transparent);
+    border-radius: 10px;
+    width: max-content;
+    padding: 5px;
+}

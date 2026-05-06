@@ -1,19 +1,19 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, Blueprint
 
-app = Flask(__name__)
+html_routes = Blueprint('html_routes', __name__)
 
-@app.route("/")
+@html_routes.route("/")
 def homepage():
     return render_template('index.html')
 
-@app.route("/login")
+@html_routes.route("/login")
 def login():
     return render_template('login.html')
 
-@app.route("/agendamento", methods=['POST'])
+@html_routes.route("/agendamento", methods=['POST'])
 def agendamento():
     return render_template('agendamento.html')
 
-@app.route("/fim", methods=['POST'])
+@html_routes.route("/fim", methods=['POST'])
 def fim():
     return render_template('fim.html')
