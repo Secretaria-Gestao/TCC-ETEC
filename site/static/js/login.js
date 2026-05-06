@@ -1,3 +1,25 @@
+const btn_cadastrar = document.getElementById('cadastrar');
+const cadastrando =document.getElementById('cadastrando');
+const logando =document.getElementById('logando');
+const btn_entrar_conta = document.getElementById('btn_entrar_conta');
+
+btn_cadastrar.textContent = 'Cadastrar-se';
+
+btn_cadastrar.addEventListener('click', () => {
+    cadastrando.classList.toggle('oculto');
+    logando.classList.toggle('oculto');
+
+    if (logando.classList.contains('oculto')) {
+        form.loginButton().onclick = signUp_EmailPassword;
+        btn_cadastrar.textContent = 'Entrar na conta';
+    }
+    else {
+        form.loginButton().onclick = login_EmailPassword;
+        btn_cadastrar.textContent = 'Cadastrar-se';
+    }
+
+} )
+
 function onChangeEmail() {
     toggleBottonsDisable();
     toggleEmailErrors();

@@ -18,7 +18,8 @@
 <body>
     <main>
         <form> 
-            <h1>Login</h1><br>
+            <h1 id="logando">Login</h1>
+            <h1 id="cadastrando" class="oculto">Cadastrar</h1><br>
             <label for="email">Email</label>
             <input type="email" name="email" id="email" onchange="onChangeEmail()" placeholder="seu@email.com" />
             <div class="error" id="email-required-error">
@@ -39,15 +40,14 @@
                 Recuperar senha
             </button>
 
-            <button type="button" class="solid " id="login-button" onclick="login()">
+            <button type="button" class="solid " id="login-button" onclick="login_EmailPassword()">
                 Entrar
             </button>
 
-            <button type="button" name="google" class="solid "> Entrar com o google </button>
-            <button type="button" onclick="linkMagico()" name="google" class="solid "> Entrar com link </button>
+            <button type="button" name="google" onclick="loginGoogle()" class="solid "> Entrar com o google </button>
 
-            <button type="button" class="outline ">
-                Registrar
+            <button type="button" id="cadastrar" class="outline ">
+                
             </button>
 
         </form>

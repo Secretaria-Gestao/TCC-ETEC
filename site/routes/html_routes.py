@@ -10,7 +10,7 @@ def homepage():
 def login():
     return render_template('login.html')
 
-@html_routes.route("/agendamento", methods=['POST'])
+@html_routes.route("/agendamento", methods=['GET'])
 def agendamento():
     return render_template('agendamento.html')
 

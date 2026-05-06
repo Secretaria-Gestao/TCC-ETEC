@@ -58,3 +58,7 @@ button[disabled] {
     border-radius: 5px;
     display: none;
 }
+
+.oculto {
+    display: none;
+}

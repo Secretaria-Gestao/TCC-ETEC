@@ -2,19 +2,28 @@ function validateEmail(email) {
 	return /\S+@\S+\.\S+/.test(email);
 }
 
-async function linkMagico() {
-	const { data, error } = await supabaseClient.auth.signInWithOtp( {
+async function signUp_EmailPassword() {
+	const { data, error } = await supabaseClient.auth.signUp( {
 		email: form.email().value,
-		options: {
-			emailRedirectTo: 'http://127.0.0.1:5000/agendamento',
-		},
+		password: form.password().value,
+	})
+
+	if (error) {
+		alert('Erro ao tentar logar');
+	}
+
+}
+async function login_EmailPassword() {
+	const { data, error } = await supabaseClient.auth.signInWithPassword( {
+		email: form.email().value,
+		password: form.password().value,
 	})
 
 	if (error) {
 		alert('Erro ao tentar logar');
 	}
 	else {
-		alert('Email valido! Cheque sua caixa de email.')
+		window.location.href ='/agendamento';
 	}
 
 }
