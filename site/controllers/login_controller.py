@@ -1,5 +1,6 @@
 from flask import Flask, request
 
-def validacaoUser():
-    request.get_json()
+def validandoUser():
+    dados = request.get_json()
+    print(dados)
     
