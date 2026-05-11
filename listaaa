@@ -1,0 +1,50 @@
+1. O Front-end (HTML & JavaScript)
+Você construiu uma interface inteligente e reativa, sem recarregar a página.
+
+UI Dinâmica: Uma tela única de Login/Cadastro. Você usou classList.toggle e alterou os eventos onclick dos botões para alternar entre os modos de entrar e registrar.
+
+Coleta de Dados: Abandonou o envio padrão do formulário HTML, delegando tudo para o JS interceptar (pegarDados()) e extrair o e-mail via document.getElementsByName('email')[0].value.
+
+Comunicação com Supabase: Funções login_EmailPassword e signUp_EmailPassword batendo direto no Supabase.
+
+Comunicação com o Flask: Uso de fetch com async/await para enviar o token de acesso (que você extraiu de data.session.access_token) para o seu servidor. Você entendeu perfeitamente a
+necessidade de usar headers e JSON.stringify para empacotar isso.
+
+
+
+Checklist Front-end: Autenticação (HTML & JS)
+1. Estrutura do Formulário (HTML)
+
+Remover os atributos action e method da tag <form> para evitar o comportamento padrão de recarregar a página.
+
+Garantir que a captação de dados seja focada apenas no e-mail, conforme o escopo atual (sem campos de telefone/WhatsApp).
+
+Usar botões do tipo <button type="button"> em vez de submit, acionando o JavaScript via onclick.
+
+2. Comportamento da Tela (UI/UX)
+
+Construir o Login e o Cadastro
+
+Usar JavaScript (classList.toggle) para alternar a visualização dos elementos quando o usuário clicar em "Registrar".
+
+Ao alternar os modos, certificar-se de mudar qual função será chamada no clique do botão principal (Entrar vs. Cadastrar).
+
+3. Lógica do JavaScript (Supabase)
+
+Criar a função pegarDados() para extrair o valor digitado usando document.getElementsByName('email')[0].value.
+
+Criar as funções login_EmailPassword e signUp_EmailPassword para interagir com o Supabase.
+
+Obrigatório: Usar async e await em todas as funções de comunicação para que o código aguarde as respostas do banco ou da API.
+
+4. Integração com o Backend (Flask)
+
+Ao realizar o login com sucesso no Supabase, capturar o token em data.session.access_token.
+
+Criar uma requisição fetch (POST) para enviar esse token para a rota do Flask.
+
+Na configuração do fetch, incluir obrigatoriamente:
+
+headers: { 'Content-Type': 'application/json' }
+
+body: JSON.stringify({ token: suaVariavelDoToken })
