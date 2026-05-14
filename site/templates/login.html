@@ -18,8 +18,9 @@
 <body>
     <main>
         <form onsubmit="return false"> 
-            <h1 id="logando">Login</h1>
-            <h1 id="cadastrando" class="oculto">Cadastrar</h1><br>
+
+            <h1 id="logando">Entrar na conta</h1><br>
+
             <label for="email">Email</label>
             <input type="email" name="email" id="email" onchange="onChangeEmail()" placeholder="seu@email.com" />
             <div class="error" id="email-required-error">
@@ -28,7 +29,7 @@
             <div class="error" id="email-invalid-error">
                 Email é inválido
             </div>
-
+            <br>
             <label for="password">Senha</label>
             <input type="password" name="password" id="password" onchange="onChangePassaword()"
                 placeholder="sua senha" />
@@ -40,13 +41,14 @@
                 Recuperar senha
             </button>
 
+
             <button type="submit" class="solid " id="login-button" onclick="login_EmailPassword(event)">
                 Entrar
             </button>
 
-            <button type="button" name="google" onclick="loginGoogle()" class="solid "> Entrar com o google </button>
+            <button type="button" name="google" onclick="loginGoogle()" class="solid google"> <img src="https://cdn-icons-png.flaticon.com/256/2504/2504739.png" alt="Imagem Google" class="img_google">  Entrar com o google </button>
 
-            <button type="button" id="cadastrar" class="outline ">
+            <button type="button" id="btn_cadastrar" class="outline "> Cadastrar-se
                 
             </button>
 

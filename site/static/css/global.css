@@ -37,6 +37,9 @@ button[disabled] {
     background: transparent;
     border: none;
     color: var(--font-color);
+    width: max-content;
+    padding: 0;
+    margin: 10px 0 6% 0;
 }
 
 .solid {

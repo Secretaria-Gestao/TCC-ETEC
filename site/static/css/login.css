@@ -48,3 +48,14 @@ a {
     width: max-content;
     padding: 5px;
 }
+
+.img_google{
+    width: 20px;
+    height: 20px;
+    filter: drop-shadow(1px 1px rgb(255, 255, 255)) drop-shadow(-1px -1px rgb(255, 255, 255));
+    margin-right: 2%;
+}
+.google{
+    text-align: center;
+    display: flexbox;
+}

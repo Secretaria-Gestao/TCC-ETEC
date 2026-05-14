@@ -56,3 +56,21 @@ const form = {
     passwordRequiredError: () => document.getElementById("password-required-error"),
     recoverPassword: () => document.getElementById("recover-password-button"),
 }
+
+const logar = {
+    btn_cadastrar: () => document.getElementById('btn_cadastrar'),
+    msg_logando: () => document.getElementById('logando')
+}
+
+logar.btn_cadastrar().addEventListener('click', () => {
+    if (logar.btn_cadastrar().textContent == "Entrar na conta") {
+        logar.btn_cadastrar().textContent = "Cadastrar-se";
+        logar.msg_logando().textContent = "Entrar na conta";
+        
+    }
+    else {
+        logar.btn_cadastrar().textContent = "Entrar na conta";
+        logar.msg_logando().textContent = "Cadastrar";
+    }
+    
+})
