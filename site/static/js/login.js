@@ -66,7 +66,6 @@ logar.btn_cadastrar().addEventListener('click', () => {
     if (logar.btn_cadastrar().textContent == "Entrar na conta") {
         logar.btn_cadastrar().textContent = "Cadastrar-se";
         logar.msg_logando().textContent = "Entrar na conta";
-        
     }
     else {
         logar.btn_cadastrar().textContent = "Entrar na conta";
