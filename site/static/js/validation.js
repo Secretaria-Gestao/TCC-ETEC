@@ -5,23 +5,34 @@ function validateEmail(email) {
 async function mandarDados() {
     const { data, error } = await supabase.auth.signInWithPassword({
         email: form.email().value,
-		senha: form.password().value
+		password: form.password().value
 	}
 	)
 
 	if (error) {
 		alert('DEU RUIM');
-		
+		return;
 	}
-	else {
-		token = data.session.access_token;
-		localStorage.setItem('token', token);
+	
+	const token = data.session.access_token;
+	localStorage.setItem('token', token);
 
-		fetch('/validacaoUser', {
+	try{
+		const response = await fetch('/validacaoUser', {
 			method: 'post',
-			
-		} )
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${token}`
+			},
+			body: JSON.stringify({ email: form.email().value })
+    	});
+
+		if (!response.ok) {
+  			alert('Erro na validação');
+			return;
+		}
 	}
-
-
+	catch (try) {
+    	alert('Erro na !@$%*&¢ da validação' + try.message);
+	}
 }

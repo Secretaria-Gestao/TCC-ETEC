@@ -1,3 +1,7 @@
+*{
+    font-size: 15px;
+}
+
 body{
     background: var(--background-gradient-color-light);
     color: var(--font-color);
@@ -8,30 +12,68 @@ input, .enviar, select{
     border: 2px solid var(--border-color);
     padding: 10px;
     margin: 2px;
+    height: 50px;
 }
 
-.add_servico{
+.btn_servico{
     color: var(--border-transparent);
     width: 40px;
     height: 40px;
     font-size: 20px;
     border: 2px solid var(--background-transparent);
     border-radius: 50px;
+    cursor: pointer;
+}
+
+
+.lista_servicos{
+    display: grid;
+    gap: 1em;
+}
+
+.servico_adicionado{
+    justify-content: center;
+    display: grid;
+    grid-template-columns: 30% 55% 5%;
+    gap: 5%;
+}
+
+.servico_adicionado label, button{
+    align-self: center;
+}
+
+.enviar{
+    position: absolute;
+    left: 55vw;
+    bottom: 4.6vh;
+    width: 10%;
+}
+
+.profissional_selecionado{
+    margin-top: 8%;
+    display: grid;
+    justify-content: center;
+    text-align: center;
+    grid-template-columns: 90%;
 }
 
 main{
-    width: 90vw;
-    height: 75vh;
+    width: 45vw;
+    height: 90vh;
+    margin: 25px 0 0 100px;
     justify-self: center;
     background: var(--background-transparent);
+    border-radius: 15px;
+    border: 1px solid var(--border-transparent);
 }
 
 form{
-    width: 40%;
-    height: 80%;
-    margin: 30px;
-    padding: 10px;
-    /* background-color: blueviolet; */
+    width: 90%;
+    height: 90%;
+    padding: 0px;
+    margin: auto;
+    margin-top: 5%;
+    background-color: rgb(71, 46, 95);
 }
 
 header {
