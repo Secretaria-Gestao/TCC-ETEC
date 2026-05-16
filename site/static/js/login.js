@@ -1,3 +1,4 @@
+import {logar, cadastrar} from "./validation.js";
 
 function onChangeEmail() {
     toggleBottonsDisable();
@@ -45,7 +46,8 @@ function isPasswordValid() {
     return true;
 }
 
-const form = {
+export const form = {
+    nome: () => document.getElementById('userName'),
     email: () => document.getElementById("email"),
     emailRequiredError: () => document.getElementById("email-required-error"),
     emailInvalidError: () => document.getElementById("email-invalid-error"),
@@ -57,19 +59,24 @@ const form = {
     recoverPassword: () => document.getElementById("recover-password-button"),
 }
 
-const logar = {
+const logando = {
     btn_cadastrar: () => document.getElementById('btn_cadastrar'),
-    msg_logando: () => document.getElementById('logando')
+    msg_logando: () => document.getElementById('logando'),
+    lblNome: () => document.getElementById('lblNome')
 }
 
-logar.btn_cadastrar().addEventListener('click', () => {
-    if (logar.btn_cadastrar().textContent == "Entrar na conta") {
-        logar.btn_cadastrar().textContent = "Cadastrar-se";
-        logar.msg_logando().textContent = "Entrar na conta";
+logando.btn_cadastrar().addEventListener('click', () => {
+    logando.lblNome().classList.toggle('oculto')
+    if (logando.btn_cadastrar().textContent == "Entrar na conta") {
+        logando.btn_cadastrar().textContent = "Cadastrar-se";
+        logando.msg_logando().textContent = "Entrar na conta";
+        form.loginButton().onclick = logar;
+        
     }
     else {
-        logar.btn_cadastrar().textContent = "Entrar na conta";
-        logar.msg_logando().textContent = "Cadastrar";
+        logando.btn_cadastrar().textContent = "Entrar na conta";
+        logando.msg_logando().textContent = "Cadastrar";
+        form.loginButton().onclick = cadastrar;
     }
     
 })

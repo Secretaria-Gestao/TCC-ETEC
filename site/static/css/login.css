@@ -60,3 +60,11 @@ a {
     text-align: center;
     display: flexbox;
 }
+
+.oculto {
+    display: none;
+}
+
+#lblNome {
+    width: 100%;
+}

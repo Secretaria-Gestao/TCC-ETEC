@@ -1,9 +1,5 @@
 from flask import Flask, jsonify, request
 
-def validandoUser():
-    abc = "RECEBA"
+def cadastroUser():
     dados = request.get_json()
-    
-    
-    
-    return abc
+    return dados
