@@ -3,36 +3,46 @@ function validateEmail(email) {
 }
 
 async function mandarDados() {
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email: form.email().value,
-		password: form.password().value
+
+	event.preventDefault;
+
+	const { data, error } = await supabase.auth.signInWithPassword({
+		email: form.email().value,
+		password: form.password().value,
 	}
 	)
+
+	console.log('tá indo');
 
 	if (error) {
 		alert('DEU RUIM');
 		return;
+		console.log('deu errado');
 	}
-	
-	const token = data.session.access_token;
-	localStorage.setItem('token', token);
 
-	try{
-		const response = await fetch('/validacaoUser', {
-			method: 'post',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${token}`
-			},
-			body: JSON.stringify({ email: form.email().value })
-    	});
+	else {
+		const token = data.session.access_token;
+		localStorage.setItem('token', token);
+		console.log('deu certo')
+		window.location.replace('/agendamento');
+	}
 
-		if (!response.ok) {
-  			alert('Erro na validação');
-			return;
-		}
-	}
-	catch (try) {
-    	alert('Erro na !@$%*&¢ da validação' + try.message);
-	}
+	// try {
+	// 	const response = await fetch('/validacaoUser', {
+	// 		method: 'post',
+	// 		headers: {
+	// 			'Content-Type': 'application/json',
+	// 			'Authorization': `Bearer ${token}`
+	// 		},
+	// 		body: JSON.stringify({ email: form.email().value })
+	// 	});
+
+	// 	if (!response.ok) {
+	// 		alert('Erro na validação');
+	// 		return;
+	// 	}
+	// }
+	// catch (try) {
+	// 	alert('Erro na !@$%*&¢ da validação' + try.message);
+	// }
 }

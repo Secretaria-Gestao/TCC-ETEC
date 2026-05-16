@@ -9,15 +9,15 @@
     <link rel="stylesheet" href="../static/css/fonts.css" />
     <link rel="stylesheet" href="../static/css/global.css" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../static/js/supabase_config.js"></script>
+    <script type="module" src="../static/js/SupabaseConfig.js"></script>
     <script src="../static/js/login.js" defer></script>
-    <script src="../static/js/validation.js" defer></script>
+    <script type="module" src="../static/js/validation.js" defer></script>
 
 </head>
 
 <body>
     <main>
-        <form onsubmit="false"> 
+        <form onsubmit="return false"> 
 
             <h1 id="logando">Entrar na conta</h1><br>
 
@@ -41,7 +41,7 @@
             </button>
 
 
-            <button type="submit" class="solid " id="login-button" onclick="login_EmailPassword(event)">
+            <button type="submit" class="solid " id="login-button" onclick="mandarDados()">
                 Entrar
             </button>
 
