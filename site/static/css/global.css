@@ -1,14 +1,14 @@
 :root {
-    --background-gradient-color-light: #4b1231;
-    --background-gradient-color-dark: #270a1e;
-    --background-transparent:#7d264d34;
-    --background-color-error: #8a3254;
+    --background-gradient-color-light: #4e4e4e;
+    --background-gradient-color-dark: #2e2e2e;
+    --background-transparent:#88888834;
+    --background-color-error: #8a8a8a;
     --font-color-error: #ffd5df;
     --font-color: var(--background-button);
     --font-color-transparent: var(--background-gradient-color-dark);
     --border-color: var(--background-button);
-    --border-transparent: #a1005b;
-    --background-button: #ffbcd6;
+    --border-transparent: #b6b6b6;
+    --background-button: #ffffff;
 }
 
 * {

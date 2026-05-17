@@ -1,5 +1,6 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request
+from database import supabase
 
 def cadastroUser():
-    dados = request.get_json()
-    return dados
+    data = request.get_json()
+    supabase.table('clientes').insert(data).execute()

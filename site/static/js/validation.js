@@ -23,18 +23,18 @@ export async function cadastrar() {
 	else {
 		const tokenUser = JSON.parse(localStorage.getItem('sb-qtgubbbrntnltrpyywqx-auth-token'));
 		
-		fetch('/cadastroUser', {
+		await fetch('/cadastroUser', {
 			method: 'post',
 			
 			headers: {
-				'Content_Type': 'application/json',
+				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${tokenUser}`
 			},
 
 			body: JSON.stringify({
-				nome: form.email().value,
-				email: form.email().value,
-				tokenUser: tokenUser.access_token
+				id_cliente: tokenUser.user.id,
+				nome_cliente: form.nome().value,
+				email_cliente: form.email().value
 			})
 			
 		})
