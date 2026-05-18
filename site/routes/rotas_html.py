@@ -1,4 +1,5 @@
 from flask import Flask, render_template, Blueprint
+# from controllers.agendamento_controller import agendar
 
 rotas_html = Blueprint('rotas_html', __name__)
 
