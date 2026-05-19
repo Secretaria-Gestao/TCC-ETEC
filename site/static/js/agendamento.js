@@ -1,4 +1,4 @@
-import { tokenUser } from './validation.js';
+// import { tokenUser } from './validation.js';
 
 function add_servico() {
     let serv_add_list = document.getElementById('lista_servicos');
@@ -20,33 +20,38 @@ function add_servico() {
     serv_add_list.appendChild(novo_servico);
 }
 
-window.add_servico = add_servico;
 
 function remover_servico(btn_remover_serv) {
     const servico = btn_remover_serv.parentElement;
     servico.remove();
 }
 
-if (tokenUser) {
+// window.add_servico = add_servico;
+// window.remover_servico = remover_servico
 
-    console.log('tem token pelo visto');
+// console.log('rodando');
 
-    const resposta = await fetch('/agendamentoUser', {
-        headers: {
-            'Conten-Type': 'application/json',
-            'Authorization': `Bearer ${tokenUSer}`
-        },
+// if (!tokenUser) {
 
-        body: {
-            tokenUSer: json.stringify({ id_cliente: tokenUser.user.id})
-        }
-    })
+//     console.log('tem token pelo visto');
+
+//     const resposta = await fetch('/agendamentoUser', {
+//         headers: {
+//             'Conten-Type': 'application/json',
+//             'Authorization': `Bearer ${tokenUSer}`
+//         },
+
+//         body: {
+//             tokenUSer: json.stringify({ id_cliente: tokenUser.user.id})
+//         }
+//     })
 
 
-    const status = await resposta.json();
-    console.log(status.id);
+//     const status = await resposta.json();
+//     console.log(status);
 
-}
-else {
-    console.log('não tem token pelo visto');
-}
+// }
+
+// else {
+//     console.log('não tem token pelo visto');
+// }
