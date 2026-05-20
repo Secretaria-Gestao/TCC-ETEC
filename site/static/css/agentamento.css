@@ -59,8 +59,10 @@ input, .enviar, select{
 
 main{
     width: 45vw;
-    height: 90vh;
-    margin: 25px 0 0 100px;
+    max-width: 900px;
+    height: max-content;
+    min-height: 500px;
+    margin: 25px 0 0 0;
     justify-self: center;
     background: var(--background-transparent);
     border-radius: 15px;
@@ -70,8 +72,8 @@ main{
 form{
     width: 90%;
     height: 90%;
-    padding: 0px;
-    margin: auto;
+    padding: 25px;
+    margin: 5% auto 5%;
     margin-top: 5%;
     background-color: rgb(71, 46, 95);
 }

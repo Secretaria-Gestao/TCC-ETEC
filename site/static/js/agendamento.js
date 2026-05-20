@@ -26,6 +26,26 @@ function remover_servico(btn_remover_serv) {
     servico.remove();
 }
 
+const btn_enviar = document.getElementById('btn-enviar');
+
+const form = {
+    servico: () => document.querySelectorAll('servico'),
+    btn_enviar: () => document.getElementById('btn-enviar')
+    // profissional:
+    // data: 
+}
+
+btn_enviar.addEventListener('click', () => {
+    fetch('/agendando', {
+        headers: {
+            'Content-Type': 'Application/json'
+        },
+        body: {
+            'info':  
+        }
+    })
+})
+
 // window.add_servico = add_servico;
 // window.remover_servico = remover_servico
 
