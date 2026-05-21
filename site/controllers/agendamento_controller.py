@@ -24,4 +24,26 @@ def agendamentoUser():
         
 def agendar():
     info = request.get_json()
-    print(info)
+    print('Dados recebidos:', info)
+
+    campos_necessarios = ['id_cliente', 'servicos', 'profissional', 'data_hora']
+    for campo in campos_necessarios:
+        if campo not in info:
+            return jsonify({'sucesso': False, 'erro': f'Campo ausente: {campo}'}), 400
+
+    try:
+        novo_agendamento = {
+            'id_cliente':   info['id_cliente'],
+            'servicos':     info['servicos'],
+            'profissional': info['profissional'],
+            'data_hora':    info['data_hora']
+        }
+
+        resultado = supabase.table('agendamentos').insert(novo_agendamento).execute()
+        print('Agendamento inserido:', resultado)
+
+        return jsonify({'sucesso': True, 'resultado': 'Agendamento realizado com sucesso!'})
+
+    except Exception as e:
+        print('Erro ao agendar:', e)
+        return jsonify({'sucesso': False, 'erro': str(e)}), 500
