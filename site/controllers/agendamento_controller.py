@@ -7,14 +7,16 @@ def agendamentoUser():
         return jsonify({ 'Erro': 'Dados inválidos.'}), 400
     
     try:
-        user = supabase.table('clientes').select('id_cliente').eq('id_cliente', info.user.id).execute()
+        user = supabase.table('clientes').select('id_cliente').eq('id_cliente', info['user']['id']).execute()
 
         if user:
-            return jsonify({ 'resultado': 'Token valido.'})
             print('Deu certo o token')
+            return jsonify({ 'resultado': 'Token valido.'})
+            
         else:
-            return jsonify({ 'resultado': 'Token invalido.'})
             print('Deu errado o token')
+            return jsonify({ 'resultado': 'Token invalido.'})
+            
         
     except:
         print('Deu erro galera')
