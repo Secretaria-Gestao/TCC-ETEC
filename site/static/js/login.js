@@ -78,5 +78,6 @@ logando.btn_cadastrar().addEventListener('click', () => {
         logando.msg_logando().textContent = "Cadastrar";
         form.loginButton().onclick = cadastrar;
     }
-    
+    window.logar = logar;
+window.cadastrar = cadastrar;
 })
