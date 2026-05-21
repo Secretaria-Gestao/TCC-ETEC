@@ -38,7 +38,7 @@ const form = {
     horario: () => document.getElementsByName('horario')
 }
 
-btn_enviar.addEventListener('click', () => {
+form.btn_enviar().addEventListener('click', () => {
     let listaServicos = [];  
 
     form.servico().forEach((elemento) => {
@@ -50,13 +50,16 @@ btn_enviar.addEventListener('click', () => {
     console.log(listaServicos);
 
     fetch('/agendando', {
+        method: 'POST',
         headers: {
             'Content-Type': 'Application/json'
         },
-        body: {
+        body: JSON.stringify({
             servicos: listaServicos,
-            
-        }
+            profissional: form.profissional(),
+            data: form.data(),
+            horario: form.horario()
+        })
     })
 })
 

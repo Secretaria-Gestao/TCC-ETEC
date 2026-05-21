@@ -22,5 +22,4 @@ def agendamentoUser():
         
 def agendar():
     info = request.get_json()
-    
     print(info)

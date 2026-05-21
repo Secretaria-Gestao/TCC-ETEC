@@ -9,7 +9,7 @@ rotas_json = Blueprint('rotas_json', __name__)
 def validando():
     return cadastroUser()
 
-@rotas_json.route('/agendando')
+@rotas_json.route('/agendando', methods=['POST'])
 def agendamento():
     return agendar()
 
