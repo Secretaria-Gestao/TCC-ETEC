@@ -39,30 +39,51 @@ const form = {
 }
 
 form.btn_enviar().addEventListener('click', () => {
-    let listaServicos = [];  
+   
+    const tokenRaw = localStorage.getItem('sb-qtgubbbrntnltrpyywqx-auth-token');
+    const token = JSON.parse(tokenRaw);
+    const id_cliente = token?.user?.id;
 
+    if (!id_cliente) {
+        alert('Você precisa estar logado para agendar!');
+        window.location.replace('/login');
+        return;
+    }
+
+    let listaServicos = [];
     form.servico().forEach((elemento) => {
         listaServicos.push(elemento.value);
-    })
+    });
 
-    listaServicos = JSON.stringify(listaServicos);
-
-    console.log(listaServicos);
+    const data = form.data().value;
+    const horario = form.horario().value;
+    const dataHora = `${data}T${horario}:00`;
 
     fetch('/agendando', {
         method: 'POST',
         headers: {
-            'Content-Type': 'Application/json'
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+            id_cliente: id_cliente,
             servicos: listaServicos,
-            profissional: form.profissional(),
-            data: form.data(),
-            horario: form.horario()
+            profissional: form.profissional().value,
+            data_hora: dataHora
         })
     })
-})
-
+    .then(resposta => resposta.json())
+    .then(resultado => {
+        if (resultado.sucesso) {
+            window.location.replace('/fim');
+        } else {
+            alert('Erro ao agendar: ' + (resultado.erro || 'Tente novamente.'));
+        }
+    })
+    .catch(erro => {
+        console.error('Erro na requisição:', erro);
+        alert('Erro de conexão. Tente novamente.');
+    });
+});
 // window.add_servico = add_servico;
 // window.remover_servico = remover_servico
 
