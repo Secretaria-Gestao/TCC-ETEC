@@ -3,11 +3,11 @@
     --background-gradient-color-dark: #2e2e2e;
     --background-transparent:#88888834;
     --background-color-error: #8a8a8a;
-    --font-color-error: #ffd5df;
+    --font-color-error: #a0a0a0;
     --font-color: var(--background-button);
     --font-color-transparent: var(--background-gradient-color-dark);
     --border-color: var(--background-button);
-    --border-transparent: #b6b6b6;
+    --border-transparent: #505050;
     --background-button: #ffffff;
 }
 

@@ -7,7 +7,7 @@ body{
     color: var(--font-color);
 }
 
-input, .enviar, select{
+input, button, select{
     border-radius: 10px;
     border: 2px solid var(--border-color);
     padding: 10px;
@@ -31,6 +31,10 @@ input, .enviar, select{
     gap: 1em;
 }
 
+select{
+    width: 100%;
+}
+
 .servico_adicionado{
     justify-content: center;
     display: grid;
@@ -42,11 +46,15 @@ input, .enviar, select{
     align-self: center;
 }
 
-.enviar{
-    position: absolute;
-    left: 55vw;
-    bottom: 4.6vh;
-    width: 10%;
+.div_btn{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.enviar, .resetar{
+    width: 35%;
+    justify-self: center;
 }
 
 .profissional_selecionado{
@@ -58,23 +66,28 @@ input, .enviar, select{
 }
 
 main{
-    width: 45vw;
-    max-width: 900px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 80vw;
     height: max-content;
     min-height: 500px;
-    margin: 25px 0 0 0;
-    justify-self: center;
+    margin: 2% auto 5%;
+}
+
+.card_1{
+    width: 90%;
+    height: 90%;
+    padding: 25px;
+    margin: auto;
     background: var(--background-transparent);
     border-radius: 15px;
     border: 1px solid var(--border-transparent);
 }
-
-form{
+.card_2{
     width: 90%;
     height: 90%;
     padding: 25px;
-    margin: 5% auto 5%;
-    margin-top: 5%;
+    margin: auto;
     background-color: rgb(71, 46, 95);
 }
 

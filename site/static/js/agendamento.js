@@ -8,14 +8,18 @@ function add_servico() {
 
     novo_servico.innerHTML =
         `<label for="servico">Selecione outro serviço:</label>
-        <select name="servico">
+        <select name="servico" class="servico">
             <option value="Barba">Barba</option>
             <option value="Cabelo">Cabelo</option>
             <option value="Hidratação capilar">Hidratação capilar</option>
             <option value="Coloração">Coloração</option>
             <option value="Manicure">Manicure</option>
         </select>
-        <button type="button" class="btn_servico" onclick="remover_servico(this)">—</button>`;
+        <button type="button" class="btn_servico" onclick="remover_servico(this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+            </svg>
+        </button>`;
 
     serv_add_list.appendChild(novo_servico);
 }
@@ -26,22 +30,32 @@ function remover_servico(btn_remover_serv) {
     servico.remove();
 }
 
-const btn_enviar = document.getElementById('btn-enviar');
-
 const form = {
-    servico: () => document.querySelectorAll('servico'),
-    btn_enviar: () => document.getElementById('btn-enviar')
-    // profissional:
-    // data: 
+    servico: () => document.querySelectorAll('.servico'),
+    btn_enviar: () => document.getElementById('btn-enviar'),
+    profissional: () => document.getElementsByName('profissional'),
+    data: () => document.getElementsByName('data'),
+    horario: () => document.getElementsByName('horario')
 }
 
 btn_enviar.addEventListener('click', () => {
+    let listaServicos = [];  
+
+    form.servico().forEach((elemento) => {
+        listaServicos.push(elemento.value);
+    })
+
+    listaServicos = JSON.stringify(listaServicos);
+
+    console.log(listaServicos);
+
     fetch('/agendando', {
         headers: {
             'Content-Type': 'Application/json'
         },
         body: {
-            'info':  
+            servicos: listaServicos,
+            
         }
     })
 })
