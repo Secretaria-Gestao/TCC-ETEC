@@ -33,9 +33,9 @@ function remover_servico(btn_remover_serv) {
 const form = {
     servico: () => document.querySelectorAll('.servico'),
     btn_enviar: () => document.getElementById('btn-enviar'),
-    profissional: () => document.getElementsByName('profissional'),
-    data: () => document.getElementsByName('data'),
-    horario: () => document.getElementsByName('horario')
+    profissional: () => document.querySelector('[name="profissional"]'), 
+    data: () => document.querySelector('[name="data"]'),                 
+    horario: () => document.querySelector('[name="horario"]')            
 }
 
 form.btn_enviar().addEventListener('click', () => {

@@ -34,9 +34,9 @@ def agendar():
     try:
         novo_agendamento = {
             'id_cliente':   info['id_cliente'],
-            'servicos':     info['servicos'],
+            'servico':     info['servicos'],
             'profissional': info['profissional'],
-            'data_hora':    info['data_hora']
+            'horario':    info['data_hora']
         }
 
         resultado = supabase.table('agendamentos').insert(novo_agendamento).execute()

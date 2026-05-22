@@ -15,6 +15,6 @@ def login():
 def agendamento():
     return render_template('agendamento.html')
 
-@rotas_html.route("/fim", methods=['POST'])
+@rotas_html.route("/fim")
 def fim():
     return render_template('fim.html')

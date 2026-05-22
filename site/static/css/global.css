@@ -1,7 +1,7 @@
 :root {
     --background-gradient-color-light: #4e4e4e;
     --background-gradient-color-dark: #2e2e2e;
-    --background-transparent:#88888834;
+    --background-transparent: #88888834;
     --background-color-error: #8a8a8a;
     --font-color-error: #a0a0a0;
     --font-color: var(--background-button);
@@ -17,7 +17,7 @@
     font-family: "Poppins", sans-serif;
 }
 
-input::placeholder{
+input::placeholder {
     color: var(--border-transparent);
 }
 
@@ -53,12 +53,27 @@ button[disabled] {
     color: var(--font-color);
 }
 
-.error{
+.error {
     background: var(--background-color-error);
     color: var(--font-color-error);
     margin: 4px;
     padding: 2px;
     border-radius: 5px;
     display: none;
+}
+
+.fim {
+
+    display: grid;
+    grid-column: 1fr;
+    width: 39vw;
+    max-width: 600px;
+    margin: auto;
+    border-radius: 25px;
+    border: 2px solid var(--border-transparent);
+    background-color: var(--background-transparent);
+    backdrop-filter: blur(10px);
+    padding: 60px;
+    text-align: center;
 }
 
