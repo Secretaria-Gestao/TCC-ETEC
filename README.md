@@ -55,5 +55,3 @@
 | 18   | Baixa      | Como colaborador, quero que meus clientes possam visualizar o próprio histórico de serviços para relembrar como ficou um serviço especifico feito no salão                               | 2          | 7      |
 
 
-
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
