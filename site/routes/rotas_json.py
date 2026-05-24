@@ -5,6 +5,7 @@ from controllers.agendamento_controller import agendar
 
 rotas_json = Blueprint('rotas_json', __name__)
 
+# Rotas de API chamadas pelo JavaScript. A regra principal fica nos controllers.
 @rotas_json.route('/cadastroUser', methods=['POST'])
 def validando():
     return cadastroUser()
@@ -12,8 +13,4 @@ def validando():
 @rotas_json.route('/agendando', methods=['POST'])
 def agendamento():
     return agendar()
-
-# @rotas_json.route('/agendamentoUser')
-# def meio():
-#     return agendamentoUser()
 

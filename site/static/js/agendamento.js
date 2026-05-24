@@ -1,6 +1,7 @@
 // import { tokenUser } from './validation.js';
 
 function add_servico() {
+    // Cria mais um select de servico para permitir agendar combos no mesmo horario.
     let serv_add_list = document.getElementById('lista_servicos');
 
     const novo_servico = document.createElement('div');
@@ -26,11 +27,13 @@ function add_servico() {
 
 
 function remover_servico(btn_remover_serv) {
+    // Remove apenas o bloco do servico ligado ao botao clicado.
     const servico = btn_remover_serv.parentElement;
     servico.remove();
 }
 
 const form = {
+    // Seletores principais do formulario de agendamento.
     servico: () => document.querySelectorAll('.servico'),
     btn_enviar: () => document.getElementById('btn-enviar'),
     profissional: () => document.querySelector('[name="profissional"]'), 
@@ -40,6 +43,7 @@ const form = {
 
 form.btn_enviar().addEventListener('click', () => {
    
+    // O Supabase salva o usuario logado no localStorage; usamos o id dele no agendamento.
     const tokenRaw = localStorage.getItem('sb-qtgubbbrntnltrpyywqx-auth-token');
     const token = JSON.parse(tokenRaw);
     const id_cliente = token?.user?.id;
@@ -51,6 +55,7 @@ form.btn_enviar().addEventListener('click', () => {
     }
 
     let listaServicos = [];
+    // Coleta todos os servicos escolhidos, incluindo os adicionados dinamicamente.
     form.servico().forEach((elemento) => {
         listaServicos.push(elemento.value);
     });
@@ -59,6 +64,7 @@ form.btn_enviar().addEventListener('click', () => {
     const horario = form.horario().value;
     const dataHora = `${data}T${horario}:00`;
 
+    // Envia para a rota Flask, que monta o registro final e grava no Supabase.
     fetch('/agendando', {
         method: 'POST',
         headers: {

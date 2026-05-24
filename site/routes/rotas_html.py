@@ -3,6 +3,7 @@ from flask import Flask, render_template, Blueprint
 
 rotas_html = Blueprint('rotas_html', __name__)
 
+# Rotas de tela: cada funcao apenas entrega um template HTML para o navegador.
 @rotas_html.route("/")
 def homepage():
     return render_template('index.html')

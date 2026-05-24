@@ -1,12 +1,13 @@
-function validateEmail(email) {
+export function validateEmail(email) {
 	return /\S+@\S+\.\S+/.test(email);
 }
 
 import { supabase } from './SupabaseConfig.js';
 import { form } from './login.js';
 
-export async function cadastrar() {
-	event.preventDefault();
+export async function cadastrar(event) {
+	// Primeiro cria o usuario no Supabase Auth; depois salva o perfil no backend.
+	event?.preventDefault();
 
 	const { data, error } = await supabase.auth.signUp({
 		email: form.email().value,
@@ -19,12 +20,13 @@ export async function cadastrar() {
 	}
 
 	else {
+		// Mantem a tabela "clientes" sincronizada com o usuario criado no Auth.
 		await fetch('/cadastroUser', {
 			method: 'post',
 
 			headers: {
 				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${data.access_token}`
+				'Authorization': `Bearer ${data.session?.access_token || ''}`
 			},
 
 			body: JSON.stringify({
@@ -37,8 +39,9 @@ export async function cadastrar() {
 	}
 }
 
-export async function logar() {
-	event.preventDefault;
+export async function logar(event) {
+	// Login direto no Supabase Auth; em caso de sucesso o usuario segue para agendar.
+	event?.preventDefault();
 
 	const { data, error } = await supabase.auth.signInWithPassword({
 		email: form.email().value,
@@ -58,28 +61,8 @@ export async function logar() {
 	}
 }
 
+// Token reutilizavel para fluxos que precisarem saber quem esta logado.
 export const tokenUser =  JSON.parse(localStorage.getItem('sb-qtgubbbrntnltrpyywqx-auth-token'))
 
 window.cadastrar = cadastrar;
 window.logar = logar;
-
-
-// try {
-// 	const response = await fetch('/validacaoUser', {
-// 		method: 'post',
-// 		headers: {
-// 			'Content-Type': 'application/json',
-// 			'Authorization': `Bearer ${token}`
-// 		},
-// 		body: JSON.stringify({ email: form.email().value })
-// 	});
-
-// 	if (!response.ok) {
-// 		alert('Erro na validação');
-// 		return;
-// 	}
-// }
-// catch (try) {
-// 	alert('Erro na !@$%*&¢ da validação' + try.message);
-// }
-// }
