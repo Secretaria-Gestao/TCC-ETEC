@@ -8,5 +8,5 @@ app = Flask(__name__)
 # As rotas ficam separadas na pasta routes para manter o main.py simples.
 register_routes(app)
 
-if __name__ == '__main__':  # Faz o código rodar as rotas do Flesk
+if __name__ == "__main__":  # Faz o código rodar as rotas do Flesk
     app.run(debug=True)

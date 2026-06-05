@@ -1,21 +1,26 @@
 from flask import Flask, render_template, Blueprint
+
 # from controllers.agendamento_controller import agendar
 
-rotas_html = Blueprint('rotas_html', __name__)
+rotas_html = Blueprint("rotas_html", __name__)
+
 
 # Rotas de tela: cada funcao apenas entrega um template HTML para o navegador.
 @rotas_html.route("/")
 def homepage():
-    return render_template('index.html')
+    return render_template("index.html")
+
 
 @rotas_html.route("/login")
 def login():
-    return render_template('login.html')
+    return render_template("login.html")
+
 
 @rotas_html.route("/agendamento")
 def agendamento():
-    return render_template('agendamento.html')
+    return render_template("agendamento.html")
+
 
 @rotas_html.route("/fim")
 def fim():
-    return render_template('fim.html')
+    return render_template("fim.html")

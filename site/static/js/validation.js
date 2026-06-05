@@ -11,7 +11,7 @@ export async function cadastrar(event) {
 
 	const { data, error } = await supabase.auth.signUp({
 		email: form.email().value,
-		password: form.password().value,
+		password: form.password().value
 	}
 	);
 
@@ -21,7 +21,7 @@ export async function cadastrar(event) {
 
 	else {
 		// Mantem a tabela "clientes" sincronizada com o usuario criado no Auth.
-		await fetch('/cadastroUser', {
+		const resposta = await fetch('/cadastroUser', {
 			method: 'post',
 
 			headers: {
@@ -35,7 +35,14 @@ export async function cadastrar(event) {
 				email_cliente: form.email().value
 			})
 		})
-		window.location.replace('/agendamento');
+
+		if (resposta.ok) {
+			window.location.replace('/agendamento');
+		}
+
+		else {
+			alert("Deu erro ao cadastrar")
+		}
 	}
 }
 
@@ -46,23 +53,16 @@ export async function logar(event) {
 	const { data, error } = await supabase.auth.signInWithPassword({
 		email: form.email().value,
 		password: form.password().value
-	}
-	);
+	});
 
 	if (error) {
 		alert('DEU RUIM LOGIN');
-		return;
-		console.log('deu errado');
 	}
 
 	else {
-		console.log('deu certo');
 		window.location.replace('/agendamento');
 	}
 }
-
-// Token reutilizavel para fluxos que precisarem saber quem esta logado.
-export const tokenUser =  JSON.parse(localStorage.getItem('sb-qtgubbbrntnltrpyywqx-auth-token'))
 
 window.cadastrar = cadastrar;
 window.logar = logar;

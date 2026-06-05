@@ -1,54 +1,76 @@
 from flask import Flask, request, jsonify
 from database import supabase
+from .autenticacao import autenticar
 
-def agendamentoUser():
-    # Fluxo de validacao do usuario pelo token/id recebido do front.
-    # Hoje esta separado do agendamento principal para poder evoluir depois.
-    info = request.get_json()
-    if not info:
-        return jsonify({ 'Erro': 'Dados inválidos.'}), 400
-    
-    try:
-        user = supabase.table('clientes').select('id_cliente').eq('id_cliente', info['user']['id']).execute()
 
-        if user:
-            print('Deu certo o token')
-            return jsonify({ 'resultado': 'Token valido.'})
-            
-        else:
-            print('Deu errado o token')
-            return jsonify({ 'resultado': 'Token invalido.'})
-            
-        
-    except:
-        print('Deu erro galera')
-        
-        
 def agendar():
     # Endpoint usado pela tela de agendamento para gravar o horario no Supabase.
     info = request.get_json()
-    print('Dados recebidos:', info)
 
     # Garante que o front mandou tudo que a tabela precisa receber.
-    campos_necessarios = ['id_cliente', 'servicos', 'profissional', 'data_hora']
+    campos_necessarios = ["servicos", "profissional", "data_hora"]
     for campo in campos_necessarios:
         if campo not in info:
-            return jsonify({'sucesso': False, 'erro': f'Campo ausente: {campo}'}), 400
+            return jsonify({"sucesso": False, "erro": f"Campo ausente: {campo}"}), 400
+
+    token = request.headers.get("Authorization")
+
+    if not token:
+        return jsonify({"sucesso": False, "erro": "token ausente."}), 401
+
+    token = token.replace("Bearer ", "")
+
+    id_cliente = autenticar(token)
+
+    if id_cliente is None:
+        return jsonify({"sucesso": False, "erro": "Token é invalido"}) 401
 
     try:
         # Mapeia os nomes usados no JavaScript para os nomes das colunas no banco.
-        novo_agendamento = {
-            'id_cliente':   info['id_cliente'],
-            'servico':     info['servicos'],
-            'profissional': info['profissional'],
-            'horario':    info['data_hora']
-        }
+        profissional_escolhido = (
+            supabase.table("profissionais")
+            .select("id_profissional")
+            .eq("nome_profissional", info["profissional"])
+            .execute()
+        )
 
-        resultado = supabase.table('agendamentos').insert(novo_agendamento).execute()
-        print('Agendamento inserido:', resultado)
+        id_profissional = profissional_escolhido.data[0]["id_profissional"]
 
-        return jsonify({'sucesso': True, 'resultado': 'Agendamento realizado com sucesso!'})
+        checagem_agendamento = (
+            supabase.table("agendamentos")
+            .select("*")
+            .eq("id_profissional", id_profissional)
+            .eq("horario", info["data_hora"])
+            .execute()
+        )
+
+        if not checagem_agendamento.data:
+            novo_agendamento = {
+                "id_cliente": id_cliente,
+                "id_profissional": id_profissional,
+                "servico": info["servicos"],
+                "horario": info["data_hora"],
+            }
+
+            resultado = (
+                supabase.table("agendamentos").insert(novo_agendamento).execute()
+            )
+
+            return jsonify(
+                {"sucesso": True, "resultado": "Agendamento realizado com sucesso!"}
+            )
+            
+        else:
+            return (
+                jsonify(
+                    {
+                        "sucesso": False,
+                        "erro": "Profissional já possui serviço neste horário.",
+                    },
+                ),
+                409,
+            )
 
     except Exception as e:
-        print('Erro ao agendar:', e)
-        return jsonify({'sucesso': False, 'erro': str(e)}), 500
+        print("Erro ao agendar:", e)
+        return jsonify({"sucesso": False, "erro": str(e)}), 500

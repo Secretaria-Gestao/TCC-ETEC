@@ -1,4 +1,21 @@
-// import { tokenUser } from './validation.js';
+// Se a pessoa não tem token, nem chega no agendamento
+
+(() => {
+    const tokenRaw = localStorage.getItem('sb-qtgubbbrntnltrpyywqx-auth-token');
+    const token = JSON.parse(tokenRaw);
+    const id_cliente = token?.user?.id;
+
+    if (!id_cliente) {
+        alert('Você precisa estar logado para agendar!');
+        window.location.replace('/login');
+        return;
+    }
+
+    window.token = token
+    window.id_cliente = id_cliente
+
+})()
+
 
 function add_servico() {
     // Cria mais um select de servico para permitir agendar combos no mesmo horario.
@@ -25,7 +42,6 @@ function add_servico() {
     serv_add_list.appendChild(novo_servico);
 }
 
-
 function remover_servico(btn_remover_serv) {
     // Remove apenas o bloco do servico ligado ao botao clicado.
     const servico = btn_remover_serv.parentElement;
@@ -36,86 +52,45 @@ const form = {
     // Seletores principais do formulario de agendamento.
     servico: () => document.querySelectorAll('.servico'),
     btn_enviar: () => document.getElementById('btn-enviar'),
-    profissional: () => document.querySelector('[name="profissional"]'), 
-    data: () => document.querySelector('[name="data"]'),                 
-    horario: () => document.querySelector('[name="horario"]')            
+    profissional: () => document.querySelector('[name="profissional"]'),
+    data: () => document.querySelector('[name="data"]'),
+    horario: () => document.querySelector('[name="horario"]')
 }
 
 form.btn_enviar().addEventListener('click', () => {
-   
-    // O Supabase salva o usuario logado no localStorage; usamos o id dele no agendamento.
-    const tokenRaw = localStorage.getItem('sb-qtgubbbrntnltrpyywqx-auth-token');
-    const token = JSON.parse(tokenRaw);
-    const id_cliente = token?.user?.id;
-
-    if (!id_cliente) {
-        alert('Você precisa estar logado para agendar!');
-        window.location.replace('/login');
-        return;
-    }
-
     let listaServicos = [];
     // Coleta todos os servicos escolhidos, incluindo os adicionados dinamicamente.
     form.servico().forEach((elemento) => {
         listaServicos.push(elemento.value);
     });
 
-    const data = form.data().value;
+    const dia = form.data().value;
     const horario = form.horario().value;
-    const dataHora = `${data}T${horario}:00`;
+    const dataHora = `${dia}T${horario}`;
 
     // Envia para a rota Flask, que monta o registro final e grava no Supabase.
     fetch('/agendando', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token.access_token}`
         },
         body: JSON.stringify({
-            id_cliente: id_cliente,
             servicos: listaServicos,
             profissional: form.profissional().value,
             data_hora: dataHora
         })
     })
-    .then(resposta => resposta.json())
-    .then(resultado => {
-        if (resultado.sucesso) {
-            window.location.replace('/fim');
-        } else {
-            alert('Erro ao agendar: ' + (resultado.erro || 'Tente novamente.'));
-        }
-    })
-    .catch(erro => {
-        console.error('Erro na requisição:', erro);
-        alert('Erro de conexão. Tente novamente.');
-    });
+        .then(resposta => resposta.json())
+        .then(resultado => {
+            if (resultado.sucesso) {
+                window.location.replace('/fim');
+            } else {
+                alert('Erro ao agendar: ' + (resultado.erro || 'Tente novamente.'));
+            }
+        })
+        .catch(erro => {
+            console.error('Erro na requisição:', erro);
+            alert('Erro de conexão. Tente novamente.');
+        });
 });
-// window.add_servico = add_servico;
-// window.remover_servico = remover_servico
-
-// console.log('rodando');
-
-// if (!tokenUser) {
-
-//     console.log('tem token pelo visto');
-
-//     const resposta = await fetch('/agendamentoUser', {
-//         headers: {
-//             'Conten-Type': 'application/json',
-//             'Authorization': `Bearer ${tokenUSer}`
-//         },
-
-//         body: {
-//             tokenUSer: json.stringify({ id_cliente: tokenUser.user.id})
-//         }
-//     })
-
-
-//     const status = await resposta.json();
-//     console.log(status);
-
-// }
-
-// else {
-//     console.log('não tem token pelo visto');
-// }
