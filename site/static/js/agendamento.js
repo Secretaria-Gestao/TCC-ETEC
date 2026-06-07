@@ -27,11 +27,11 @@ function add_servico() {
     novo_servico.innerHTML =
         `<label for="servico">Selecione outro serviço:</label>
         <select name="servico" class="servico">
-            <option value="Barba">Barba</option>
-            <option value="Cabelo">Cabelo</option>
-            <option value="Hidratação capilar">Hidratação capilar</option>
-            <option value="Coloração">Coloração</option>
-            <option value="Manicure">Manicure</option>
+            <option value="1">Barba</option>
+            <option value="2">Cabelo</option>
+            <option value="3">Hidratação capilar</option>
+            <option value="4">Coloração</option>
+            <option value="5">Manicure</option>
         </select>
         <button type="button" class="btn_servico" onclick="remover_servico(this)">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
@@ -61,8 +61,11 @@ form.btn_enviar().addEventListener('click', () => {
     let listaServicos = [];
     // Coleta todos os servicos escolhidos, incluindo os adicionados dinamicamente.
     form.servico().forEach((elemento) => {
-        listaServicos.push(elemento.value);
+        listaServicos.push(Number(elemento.value))
     });
+
+
+    console.log(listaServicos)
 
     const dia = form.data().value;
     const horario = form.horario().value;

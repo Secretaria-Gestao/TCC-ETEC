@@ -49,13 +49,22 @@ def agendar():
             novo_agendamento = {
                 "id_cliente": id_cliente,
                 "id_profissional": id_profissional,
-                "servico": info["servicos"],
                 "horario": info["data_hora"],
             }
 
-            resultado = (
-                supabase.table("agendamentos").insert(novo_agendamento).execute()
-            )
+            resultado = supabase.table("agendamentos").insert(novo_agendamento).execute()
+
+            id_agendamento = resultado.data[0]["id_agendamento"]
+
+            for servico in info["servicos"]:
+                agendamento_servicos = {
+                    "id_agendamento": id_agendamento,
+                    "id_servicos": servico,
+                }
+
+                supabase.table("agendamento_servicos").insert(
+                    agendamento_servicos
+                ).execute()
 
             return jsonify(
                 {"sucesso": True, "resultado": "Agendamento realizado com sucesso!"}
