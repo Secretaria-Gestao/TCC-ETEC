@@ -19,45 +19,62 @@
     <main>
         <form onsubmit="return false">
 
-            <h1 id="logando">Entrar na conta</h1><br>
+            <b>
+                <p id="logando">Entrar na conta</p>
+            </b>
 
-            <div id="lblNome" class="oculto">
-                <label for="nome">Nome</label><br>
-                <input type="text" id="userName" placeholder="Seu nome" />
+            <div class="campo">
+                <div id="lblNome" class="oculto">
+                    <label for="nome">Nome</label><br>
+                    <input type="text" id="userName" placeholder="Seu nome" />
+                </div>
             </div>
 
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" onchange="onChangeEmail()" placeholder="seu@email.com" />
-            <div class="error" id="email-required-error">
-                Email é obrigatório
+            <div class="campo">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" onchange="onChangeEmail()" placeholder="seu@email.com" />
+
+                <div class="error" id="email-required-error">
+                    Email é obrigatório
+                </div>
+
+                <div class="error" id="email-invalid-error">
+                    Email é inválido
+                </div>
             </div>
-            <div class="error" id="email-invalid-error">
-                Email é inválido
-            </div>
-            <br>
-            <label for="password">Senha</label>
-            <input type="password" name="password" id="password" onchange="onChangePassaword()"
-                placeholder="sua senha" />
-            <div class="error" id="password-required-error">
-                Senha é obrigatória
+
+            <div class="campo">
+                <label for="password">Senha</label>
+                <input type="password" name="password" id="password" onchange="onChangePassaword()"
+                    placeholder="sua senha" />
+
+                <div class="error" id="password-required-error">
+                    Senha é obrigatória
+                </div>
             </div>
 
             <button type="button" class="clear " id="recover-password-button">
                 Recuperar senha
             </button>
 
-
-            <button type="submit" class="solid " id="login-button" >
+            
+            <button type="submit" class="solid " id="login-button">
                 Entrar
             </button>
-
-            <button type="button" name="google" onclick="loginGoogle()" class="solid google">
-                <img src="https://cdn-icons-png.flaticon.com/256/2504/2504739.png" alt="Imagem Google" class="img_google" /> Entrar com o google
-            </button>
-
+            
             <button type="button" id="btn_cadastrar" class="outline ">
                 Cadastrar-se
             </button>
+            
+            <p class="ou"> Ou </p>
+
+            <p class="txtgoogle">Sem tempo para perder? Entre com o Google</p>
+
+            <button type="button" name="google" onclick="loginGoogle()" class="solid google">
+                <img src="https://cdn-icons-png.flaticon.com/256/2504/2504739.png" alt="Imagem Google"
+                    class="img_google" /> Entrar com o google
+            </button>
+
 
         </form>
     </main>

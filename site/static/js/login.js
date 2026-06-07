@@ -74,20 +74,31 @@ window.onChangePassaword = onChangePassaword;
 window.logar = logar;
 window.cadastrar = cadastrar;
 
+let numero = 1;
+// console.log(logarCadastrar);
+
 logando.btn_cadastrar().addEventListener('click', () => {
+    // console.log(logarCadastrar);
+
     // Alterna entre os modos "Entrar" e "Cadastrar" usando o mesmo formulario.
-    logando.lblNome().classList.toggle('oculto')
-    if (logando.btn_cadastrar().textContent == "Entrar na conta") {
+    logando.lblNome().classList.toggle('oculto');
+    form.recoverPassword().classList.toggle('oculto');
+
+    if (numero % 2 == 0) {
+        console.log("par")
         logando.btn_cadastrar().textContent = "Cadastrar-se";
         logando.msg_logando().textContent = "Entrar na conta";
         form.loginButton().onclick = logar;
-
+        form.loginButton().textContent = "Entrar";
     }
     else {
-        logando.btn_cadastrar().textContent = "Entrar na conta";
-        logando.msg_logando().textContent = "Cadastrar";
+        console.log("impar")
+        logando.btn_cadastrar().textContent = "Já tenho uma conta";
+        logando.msg_logando().textContent = "Cadastrar-se";
         form.loginButton().onclick = cadastrar;
+        form.loginButton().textContent = "  Criar conta";
     }
-    window.logar = logar;
-    window.cadastrar = cadastrar;
+
+    numero += 1
+
 })

@@ -23,10 +23,11 @@ def agendar():
     id_cliente = autenticar(token)
 
     if id_cliente is None:
-        return jsonify({"sucesso": False, "erro": "Token é invalido"}) 401
+        return jsonify({"sucesso": False, "erro": "Token é invalido"}), 401
 
     try:
         # Mapeia os nomes usados no JavaScript para os nomes das colunas no banco.
+
         profissional_escolhido = (
             supabase.table("profissionais")
             .select("id_profissional")
@@ -38,7 +39,7 @@ def agendar():
 
         checagem_agendamento = (
             supabase.table("agendamentos")
-            .select("*")
+            .select("id_agendamento")
             .eq("id_profissional", id_profissional)
             .eq("horario", info["data_hora"])
             .execute()
@@ -59,7 +60,7 @@ def agendar():
             return jsonify(
                 {"sucesso": True, "resultado": "Agendamento realizado com sucesso!"}
             )
-            
+
         else:
             return (
                 jsonify(

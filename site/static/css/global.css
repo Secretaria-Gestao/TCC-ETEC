@@ -3,7 +3,7 @@
     --background-gradient-color-dark: #2e2e2e;
     --background-transparent: #88888834;
     --background-color-error: #8a8a8a;
-    --font-color-error: #a0a0a0;
+    --font-color-error: #eeeaea;
     --font-color: var(--background-button);
     --font-color-transparent: var(--background-gradient-color-dark);
     --border-color: var(--background-button);
@@ -39,7 +39,7 @@ button[disabled] {
     color: var(--font-color);
     width: max-content;
     padding: 0;
-    margin: 10px 0 6% 0;
+    margin-top: -6px;
 }
 
 .solid {
@@ -56,8 +56,8 @@ button[disabled] {
 .error {
     background: var(--background-color-error);
     color: var(--font-color-error);
-    margin: 4px;
-    padding: 2px;
+    margin: -10px 0px 4px 0px;
+    padding: 2px 10px 2px 10px;
     border-radius: 5px;
     display: none;
 }
