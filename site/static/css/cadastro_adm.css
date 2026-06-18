@@ -1,0 +1,18 @@
+.etapas {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 20px;
+}
+
+input {
+    width: 93.5%;
+}
+
+.inputWidth {
+    width: 67%;
+}
+
+button {
+    margin-top: 20px;
+}
+

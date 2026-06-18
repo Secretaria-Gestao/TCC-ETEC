@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="../static/css/login.css" />
+    <link rel="stylesheet" href="../static/css/fonts.css" />
+    <link rel="stylesheet" href="../static/css/global.css" />
+    <link rel="stylesheet" href="../static/css/cadastro_adm.css">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="../static/js/SupabaseConfig.js"></script> -->
+    <!-- <script type="module" src="../static/js/login.js"></script>
+    <script type="module" src="../static/js/validation.js"></script> -->
+    <script src="../static/js/cadastro_adm.js" defer></script>
+
+</head>
+
+<body>
+    <main>
+        <form onsubmit="return false">
+
+            <b>
+                <p id="logando">Cadastrar-se</p>
+            </b>
+
+            <div class="etapas">
+
+                <div class="etapa">
+                    <p>Acesso</p>
+                    <hr />
+                </div>
+
+                <div class="etapa">
+                    <p>Dados pessoais</p>
+                    <hr class="oculto" />
+                </div>
+
+                <div class="etapa">
+                    <p>Salão</p>
+                    <hr class="oculto" />
+                </div>
+
+            </div>
+
+            <div class="campo">
+                <div id="lblEmail" class="inputWidth">
+                    <label for="Email">Email</label><br>
+                    <input type="text" id="userName" placeholder="Seu Email" />
+                </div>
+            </div>
+
+            <div class="campo">
+                <div id="lblSenha" class="inputWidth">
+                    <label for="Senha">Senha</label><br>
+                    <input type="text" id="userName" placeholder="Seu Senha" />
+                </div>
+            </div>
+
+            <button id="btn_continuar">Continuar</button>
+            
+            
+        </form>
+    </main>
+</body>
+
+</html>
