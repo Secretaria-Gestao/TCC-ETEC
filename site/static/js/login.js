@@ -51,6 +51,9 @@ export const form = {
     // Centraliza os seletores da tela para evitar espalhar getElementById pelo arquivo.
     nome: () => document.getElementById('userName'),
     email: () => document.getElementById("email"),
+    telefone: () => document.getElementById('telefone'),
+    cargo: () => document.getElementById('cargo') ,
+    salao_associado: () => document.getElementById('salao_associado'),
     emailRequiredError: () => document.getElementById("email-required-error"),
     emailInvalidError: () => document.getElementById("email-invalid-error"),
 

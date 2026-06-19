@@ -10,13 +10,13 @@ btn_continuar.addEventListener('click', () => {
         etapa++
     }
     else {
-        const 
+        // cadastrar(event)
     }
     console.log(etapa)
 
 })
 
-export async function cadastrar(event) {
+async function cadastrar(event) {
     // Primeiro cria o usuario no Supabase Auth; depois salva o perfil no backend.
     event?.preventDefault();
 
@@ -32,7 +32,7 @@ export async function cadastrar(event) {
 
     else {
         
-        const resposta = await fetch('/cadastroUser', {
+        const respostaCadastro = await fetch('profissional/cadastroUser', {
             method: 'post',
 
             headers: {
@@ -44,14 +44,42 @@ export async function cadastrar(event) {
                 id_profissional: data.user.id,
                 email_profissional : form.email().value,
                 nome_profissional: form.nome().value,
-                cpf: '',
-                cargo: '',
-                salao_associado: '',
+                telefone: form.telefone().value,
+                cargo: form.cargo().value,
+                salao_associado: form.salao_associado().value
 
             })
         })
 
-        if (resposta.ok) {
+        if (respostaCadastro.ok) {
+            window.location.replace('/agendamento');
+        }
+
+        else {
+            alert("Deu erro ao cadastrar")
+        }
+
+
+        const respostaSalao = await fetch('profissional/salao', {
+            method: 'post',
+
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${data.session?.access_token || ''}`
+            },
+
+            body: JSON.stringify({
+                id_profissional: data.user.id,
+                email_profissional : form.email().value,
+                nome_profissional: form.nome().value,
+                telefone: form.telefone().value,
+                cargo: form.cargo().value,
+                salao_associado: form.salao_associado().value
+
+            })
+        })
+
+        if (respostaSalao.ok) {
             window.location.replace('/agendamento');
         }
 

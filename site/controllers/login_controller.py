@@ -7,3 +7,11 @@ def cadastroUser():
     data = request.get_json()
     supabase.table('clientes').insert(data).execute()
     return jsonify({'sucesso': True, 'resultado': 'Cliente cadastrado com sucesso!'})
+
+def cadastroUserProfissional():
+    # Depois do Supabase Auth criar o usuario, o front envia estes dados extras
+    # para manter o perfil do cliente tambem na tabela "profissionais".
+    data = request.get_json()
+    supabase.table('profissionais').insert(data).execute()
+    return jsonify({'sucesso': True, 'resultado': 'Profissional cadastrado com sucesso!'})
+
