@@ -1,0 +1,120 @@
+body {
+    background: repeating-linear-gradient(to top right, var(--background-gradient-color-light) 10% 20%, var(--background-gradient-color-dark) 20% 40%) no-repeat fixed center;
+    color: var(--font-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+main {
+    display: grid;
+    grid-column: 1fr;
+    width: 39vw;
+    max-width: 600px;
+    margin: auto;
+    border-radius: 25px;
+    border: 2px solid var(--border-transparent);
+    background-color: var(--background-transparent);
+    backdrop-filter: blur(10px);
+    padding: 60px;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#logando {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0px;
+}
+
+input,
+button {
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    padding: 10px;
+    margin: 2px 0px 4px 0px;
+    width: 67%;
+    max-width: 500px;
+    /* flex: 1; */
+}
+
+input {
+    margin-bottom: 10px;
+}
+
+.ou {
+    margin: 10px 0px 12px 0px;
+    display: flex;
+    position: relative;
+    width: 67%;
+    gap: 10px;
+}
+
+.ou::after,
+.ou::before {
+    align-self: center;
+    content: '';
+    flex: 1;
+    background-color: var(--border-color);
+    height: 1px;
+    
+}
+
+.ou::after {
+    left: 0;
+}
+
+.ou::before {
+    right: 0;
+}
+
+.txtgoogle {
+    margin-bottom: 12px;
+}
+
+#login-button {
+    margin-top: 6%;
+}
+
+a {
+    color: var(--font-color);
+    text-decoration: none;
+    background-color: var(--border-transparent);
+    border-radius: 10px;
+    width: max-content;
+    padding: 5px;
+}
+
+.img_google {
+    width: 20px;
+    height: 20px;
+    filter: drop-shadow(1px 1px 1px rgba(110, 62, 62, 0.685)) drop-shadow(-1px -1px rgb(255, 195, 195));
+    margin-right: 2%;
+    margin-bottom: -1%;
+}
+
+.google {
+    text-align: center;
+    display: flexbox;
+}
+
+.oculto {
+    display: none;
+}
+
+#lblNome {
+    width: 100%;
+}

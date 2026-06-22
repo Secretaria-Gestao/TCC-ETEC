@@ -1,3 +1,37 @@
 site/static/teste_ao_vivo.html
+<<<<<<< HEAD
 .vscode
 .venv
+=======
+
+venv/
+.venv/
+.env
+__pycache__/
+*.pyc
+.prettierrc
+I.a.md
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+>>>>>>> 8599658aedee2a036c9dccdd433cb0dce9b8a77b
