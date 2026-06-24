@@ -1,5 +1,5 @@
 body {
-    background: repeating-linear-gradient(to top right, var(--background-gradient-color-light) 10% 20%, var(--background-gradient-color-dark) 20% 40%) no-repeat fixed center;
+    background: repeating-linear-gradient(to top right, var(--background-gradient-color-light) 10% 35%, var(--background-gradient-color-dark) 35% 40%, var(--background-gradient-color-light) 40% 45%) no-repeat fixed center;
     color: var(--font-color);
     display: flex;
     justify-content: center;
@@ -20,11 +20,6 @@ main {
     padding: 60px;
     text-align: center;
 }
-
-/* 
-div {
-    margin: 4%;
-} */
 
 form {
     display: flex;

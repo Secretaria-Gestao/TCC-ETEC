@@ -1,17 +1,21 @@
+import { Link } from 'react-router'
+
 import './Box.css'
 
 function Box() {
-    return (
-        <main>
-		<form>
-			<p>Bem-te-vi</p>
+	return (
+		<main className="homepage-main">
+			<div className="homepage-box">
+				<p>Bem-te-vi</p>
 
-			<p>Deseja agendar um horário?</p> <br />
+				<p>Deseja agendar um horário?</p> <br />
 
-			<a href="/login">Clique aqui para fazer o login!</a>
-		</form>
-	</main>
-    )
+				<Link to={'/cadastro/cliente'} className='homepage-link'> Agendar um horário </Link>
+				<Link to={'/cadastro/profissional'} className='homepage-link'> Sou profissional </Link>
+
+			</div>
+		</main>
+	)
 }
 
 export default Box

@@ -1,8 +1,8 @@
 import './Homepage.css'
-import Box from './components/Box.jsx'
+import Box from './components/Box'
 
 function Homepage() {
-    return (
+    return(
         <Box />
     )
 }

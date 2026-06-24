@@ -1,24 +1,32 @@
-*{
+.agendamento-form,
+.agendamento-form *{
     font-size: 15px;
+    box-sizing: border-box;
 }
 
-body{
+.agendamento-page{
+    min-height: 100vh;
     background: var(--background-gradient-color-light);
     color: var(--font-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-header{
+.agendamento-form .agendamento-header{
     display: flex;
     margin-bottom: 5%;
     box-sizing: border-box;
     justify-content: space-between;
 }
 
-h1{
+.agendamento-form .agendamento-title{
     font-size: 300%;
 }
 
-input, button, select{
+.agendamento-form input,
+.agendamento-form button,
+.agendamento-form select{
     border-radius: 10px;
     border: 2px solid var(--border-color);
     padding: 10px;
@@ -26,7 +34,7 @@ input, button, select{
     height: 50px;
 }
 
-.btn_servico{
+.agendamento-form .btn_servico{
     color: var(--border-transparent);
     width: 40px;
     height: 40px;
@@ -37,38 +45,40 @@ input, button, select{
 }
 
 
-.lista_servicos{
+.agendamento-form .lista_servicos{
     display: grid;
     gap: 1em;
 }
 
-select{
+.agendamento-form select{
     width: 100%;
 }
 
-.servico_adicionado{
+.agendamento-form .servico_adicionado{
     justify-content: center;
     display: grid;
     grid-template-columns: 30% 55% 5%;
     gap: 5%;
 }
 
-.servico_adicionado label, button{
+.agendamento-form .servico_adicionado label,
+.agendamento-form button{
     align-self: center;
 }
 
-.div_btn{
+.agendamento-form .div_btn{
     width: 100%;
     display: flex;
     justify-content: space-between;
 }
 
-.enviar, .resetar{
+.agendamento-form .enviar,
+.agendamento-form .resetar{
     width: 35%;
     justify-self: center;
 }
 
-.profissional_selecionado{
+.agendamento-form .profissional_selecionado{
     margin-top: 8%;
     display: grid;
     justify-content: center;
@@ -76,34 +86,34 @@ select{
     grid-template-columns: 90%;
 }
 
-main{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 80vw;
-    height: max-content;
-    min-height: 500px;
-    margin: 2% auto 5%;
-    gap: 15px;
+.agendamento-form .agendamento-main{
+    display: flex;
+    width: 100%;
+    gap: 50px;
 }
 
-.card_1{
-    width: 90%;
-    height: 90%;
+.agendamento-form .card_1{
+    flex: 1;
+    width: auto;
+    min-width: 600px;
+    height: 500px;
     padding: 25px;
     margin: auto;
     background: var(--background-transparent);
     border-radius: 15px;
     border: 1px solid var(--border-transparent);
 }
-.card_2{
-    width: 90%;
-    height: 90%;
+.agendamento-form .card_2{
+    flex: 1;
+    width: auto;
+    min-width: 650px;
+    height: 500px;
     padding: 25px;
     margin: auto;
     background-color: rgb(71, 46, 95);
 }
 
-.logo {
+.agendamento-form .logo {
     width: 20%;
     height: 20%;
 }

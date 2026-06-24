@@ -1,4 +1,4 @@
-body { 
+.cadastro-page {
     background: repeating-linear-gradient(to top right, var(--background-gradient-color-light) 10% 35%, var(--background-gradient-color-dark) 35% 40%, var(--background-gradient-color-light) 40% 45%) no-repeat fixed center;
     color: var(--font-color);
     display: flex;
@@ -7,7 +7,7 @@ body {
     height: 100vh;
 }
 
-main {
+.cadastro-main {
     display: grid;
     grid-column: 1fr;
     width: 39vw;
@@ -19,4 +19,10 @@ main {
     backdrop-filter: blur(10px);
     padding: 60px;
     text-align: center;
+}
+
+.cadastro-form hr {
+    border: none;
+    height: 2px;
+    background-color: var(--border-color);
 }

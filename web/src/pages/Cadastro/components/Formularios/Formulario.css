@@ -1,16 +1,16 @@
 
-form {
+.cadastro-form {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-#logando {
+.cadastro-form #logando {
     font-size: 30px;
-    margin-bottom: 10px;    
+    margin-bottom: 10px;
 }
 
-.campo {
+.cadastro-form .campo {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18,22 +18,23 @@ form {
     margin-bottom: 0px;
 }
 
-input,
-button {
+.cadastro-form input,
+.cadastro-form button {
     border-radius: 10px;
     border: 2px solid var(--border-color);
     padding: 10px;
-    margin: 2px 0px 4px 0px;
-    width: 67%;
+    margin: 10px;
+    width: 57%;
     max-width: 500px;
     flex: 1;
+    height: max-content;
 }
 
-input {
+.cadastro-form input {
     margin-bottom: 10px;
 }
 
-.ou {
+.cadastro-form .ou {
     margin: 10px 0px 12px 0px;
     display: flex;
     position: relative;
@@ -41,41 +42,41 @@ input {
     gap: 10px;
 }
 
-.ou::after,
-.ou::before {
+.cadastro-form .ou::after,
+.cadastro-form .ou::before {
     align-self: center;
     content: '';
     flex: 1;
     background-color: var(--border-color);
     height: 1px;
-    
+
 }
 
-.ou::after {
+.cadastro-form .ou::after {
     left: 0;
 }
 
-.ou::before {
+.cadastro-form .ou::before {
     right: 0;
 }
 
-.txtgoogle {
+.cadastro-form .txtgoogle {
     margin-bottom: 12px;
 }
 
-#login-button {
+.cadastro-form #login-button {
     margin-top: 6%;
 }
 
-.img_google {
+.cadastro-form .img_google {
     width: 20px;
     height: 20px;
     filter: drop-shadow(1px 1px 1px rgba(110, 62, 62, 0.685)) drop-shadow(-1px -1px rgb(255, 195, 195));
     margin-right: 2%;
-    margin-bottom: -1%;
+    margin-bottom: -2%;
 }
 
-.google {
+.cadastro-form .google {
     text-align: center;
     display: flexbox;
 }
@@ -84,23 +85,28 @@ input {
     display: none;
 }
 
-#lblNome {
+.cadastro-form #lblNome {
     width: 100%;
 }
 
-.etapas {
+.cadastro-form .etapas {
     display: flex;
     gap: 1rem;
     margin-bottom: 20px;
 }
 
-button {
-    width: 35%;
-}
 
-select {
+.cadastro-form select {
     min-width: 100px;
     text-align: center;
     padding: 10px;
     border-radius: 10px;
+}
+
+.cadastro-form .clear {
+    background: transparent;
+    border: none;
+    width: max-content;
+    padding: 0;
+    margin: 0;
 }

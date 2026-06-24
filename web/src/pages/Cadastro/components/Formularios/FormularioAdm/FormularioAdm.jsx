@@ -1,19 +1,18 @@
 import { useState } from "react"
 import '../Formulario.css'
-import { logar, cadastrar } from "../../../../../services/acessar-conta.js"
+import { logar, cadastrarGerente, cadastrarSalao } from "../../../../../services/cadastro-login.js"
 
 function Formulario() {
     const [formulario, setFormulario] = useState({
-        email: "",
+        email_profissional: "",
         senha: "",
 
-        nome: "",
-        sobrenome: "",
-        telefone: "",
+        nome_profissional: "",
+        telefone_profissional: "",
 
-        nomeSalao: "",
-        endereco: "",
-        tipoSalao: ""
+        nome_salao: "",
+        endereco_salao: "",
+        categoria_salao: ""
 
     })
 
@@ -43,9 +42,9 @@ function Formulario() {
         })
     }
 
-    function enviarFormulario(event) {
-        cadastrar(formulario.nome, formulario.email, formulario.senha)
-
+    async function enviarFormulario(event) {
+        const resposta = await cadastrarSalao( formulario.nome_salao, formulario.categoria_salao, formulario.endereco_salao )
+        await cadastrarGerente( formulario.email_profissional, formulario.senha, formulario.nome_profissional, formulario.telefone_profissional, resposta)
     }
 
     const [etapaAtual, setEtapaAtual] = useState(1)
@@ -67,8 +66,8 @@ function Formulario() {
 
     return (
         <>
-            <main>
-                <form >
+            <main className="cadastro-main">
+                <form className="cadastro-form">
                     <b>
                         <p id="logando"> {mudarForm.msgForm} </p>
                     </b>
@@ -98,7 +97,7 @@ function Formulario() {
 
                     <div className={etapas.etapa1}>
                         <label htmlFor="email">Email</label>
-                        <input type="email" name="email" id="email" placeholder="seu@email.com" onChange={mudarValor} />
+                        <input type="email" name="email_profissional" id="email" placeholder="seu@email.com" onChange={mudarValor} />
 
                         <div className="error" id="email-required-error">
                             Email é obrigatório
@@ -123,34 +122,32 @@ function Formulario() {
 
                     <div className={etapas.etapa2}>
 
-                        <label htmlFor="userName">Nome</label><br />
-                        <input id="userName" name="nome" placeholder="Seu nome" onChange={mudarValor} />
+                        <label htmlFor="userName">Nome de usuário</label>
+                        <input id="userName" name="nome_profissional" placeholder="Como deseja ser chamado" onChange={mudarValor} />
                     </div>
 
-                    <div className={etapas.etapa2}>
-                        <label htmlFor="sobrenome">sobrenome</label><br />
-                        <input id="sobrenome" name="sobrenome" placeholder="Seu sobrenome" onChange={mudarValor} />
-                    </div>
 
                     <div className={etapas.etapa2}>
-                        <label htmlFor="telefone">telefone</label><br />
-                        <input id="telefone" name="telefone" placeholder="Seu telefone" onChange={mudarValor} />
+                        <label htmlFor="telefone">telefone</label>
+                        <input id="telefone" name="telefone_profissional" placeholder="Seu telefone" onChange={mudarValor} />
                     </div>
 
                     {/* Etapa 3 */}
 
                     <div className={etapas.etapa3}>
-                        <label htmlFor="nomeSalao">nomeSalao</label><br />
-                        <input id="nomeSalao" name="nomeSalao" placeholder="Nome do seu salão" onChange={mudarValor} />
+                        <label htmlFor="nomeSalao">Nome do salão</label>
+                        <input id="nomeSalao" name="nome_salao" placeholder="Nome do seu salão" onChange={mudarValor} />
                     </div>
 
                     <div className={etapas.etapa3}>
-                        <label htmlFor="endereco">endereco</label><br />
-                        <input id="endereco" name="endereco" placeholder="Endereço do salão" onChange={mudarValor} />
+                        <label htmlFor="endereco">Endereço do salão</label>
+                        <input id="endereco" name="endereco_salao" placeholder="Endereço do salão" onChange={mudarValor} />
                     </div>
 
+                    <p className={etapas.etapa3}> Categoria do salão </p>
+
                     <div className={etapas.etapa3}>
-                        <select name="Opções" onChange={mudarValor}>
+                        <select name="categoria_salao" onChange={mudarValor}>
                             <option value="opcoes" disabled> Opções </option>
                             <option value="salaoDeCabeleireiro"> Salão de cabeleireiro </option>
                             <option value="barbearia"> Barbearia </option>

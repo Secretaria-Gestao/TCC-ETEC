@@ -1,6 +1,6 @@
 import { useState } from "react"
 import '../Formulario.css'
-import { logar, cadastrar } from "../../../../../services/acessar-conta.js"
+import { logar, cadastrarCliente } from "../../../../../services/cadastro-login.js"
 
 function Formulario() {
     const [formulario, setFormulario] = useState({
@@ -40,15 +40,14 @@ function Formulario() {
             logar(formulario.email, formulario.senha)
         }
         else {
-            cadastrar(formulario.nome, formulario.email, formulario.senha)
+            cadastrarCliente(formulario.nome, formulario.email, formulario.senha)
         }
     }
-
     
     return (
         <>
-            <main>
-                <form onSubmit={enviarFormulario}>
+            <main className="cadastro-main">
+                <form className="cadastro-form" onSubmit={enviarFormulario}>
                     <b>
                         <p id="logando"> {mudarForm.msgForm} </p>
                     </b>
