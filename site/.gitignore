@@ -1,7 +1,0 @@
-venv/
-.venv/
-.env
-__pycache__/
-*.pyc
-.prettierrc
-I.a.md

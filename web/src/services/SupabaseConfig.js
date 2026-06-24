@@ -1,4 +1,4 @@
-import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import {createClient} from '@supabase/supabase-js';
 
 // Configuracao usada pelo front para autenticar usuarios direto pelo Supabase Auth.
 const  SUPABASE_URL= 'https://qtgubbbrntnltrpyywqx.supabase.co';

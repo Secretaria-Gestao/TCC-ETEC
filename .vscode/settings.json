@@ -1,0 +1,10 @@
+{
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/package-lock.json": true,
+    "**/package.json": true,
+    "**/vite.config.js": true,
+    "**/eslint.config.js": true,
+    "**/README.md": true
+  }
+}

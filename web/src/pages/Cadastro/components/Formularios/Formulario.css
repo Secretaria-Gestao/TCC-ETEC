@@ -1,0 +1,106 @@
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#logando {
+    font-size: 30px;
+    margin-bottom: 10px;    
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0px;
+}
+
+input,
+button {
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    padding: 10px;
+    margin: 2px 0px 4px 0px;
+    width: 67%;
+    max-width: 500px;
+    flex: 1;
+}
+
+input {
+    margin-bottom: 10px;
+}
+
+.ou {
+    margin: 10px 0px 12px 0px;
+    display: flex;
+    position: relative;
+    width: 67%;
+    gap: 10px;
+}
+
+.ou::after,
+.ou::before {
+    align-self: center;
+    content: '';
+    flex: 1;
+    background-color: var(--border-color);
+    height: 1px;
+    
+}
+
+.ou::after {
+    left: 0;
+}
+
+.ou::before {
+    right: 0;
+}
+
+.txtgoogle {
+    margin-bottom: 12px;
+}
+
+#login-button {
+    margin-top: 6%;
+}
+
+.img_google {
+    width: 20px;
+    height: 20px;
+    filter: drop-shadow(1px 1px 1px rgba(110, 62, 62, 0.685)) drop-shadow(-1px -1px rgb(255, 195, 195));
+    margin-right: 2%;
+    margin-bottom: -1%;
+}
+
+.google {
+    text-align: center;
+    display: flexbox;
+}
+
+.oculto {
+    display: none;
+}
+
+#lblNome {
+    width: 100%;
+}
+
+.etapas {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 20px;
+}
+
+button {
+    width: 35%;
+}
+
+select {
+    min-width: 100px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+}
