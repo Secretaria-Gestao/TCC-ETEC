@@ -8,15 +8,15 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/cadastro/cliente': {
-        target: 'http://127.0.0.1:5000',
+        target: 'https://secretaria-gestao-api.vercel.app',
         changeOrigin: true,
       },
       '/api/cadastro/gerente': {
-        target: 'http://127.0.0.1:5000',
+        target: 'https://secretaria-gestao-api.vercel.app',
         changeOrigin: true,
       },
       '/api/cadastro/salao': {
-        target: 'http://127.0.0.1:5000',
+        target: 'https://secretaria-gestao-api.vercel.app',
         changeOrigin: true,
       },
 
