@@ -1,8 +1,13 @@
 import { useState } from "react"
-import '../Formulario.css'
+import { useNavigate } from "react-router"
+
 import { logar, cadastrarCliente } from "../../../../../services/cadastro-login.js"
+import '../Formulario.css'
 
 function Formulario() {
+
+    const navegar = useNavigate()
+
     const [formulario, setFormulario] = useState({
         nome: "",
         email: "",
@@ -33,17 +38,22 @@ function Formulario() {
         })
     }
 
-    function enviarFormulario(event) {
+    async function enviarFormulario(event) {
         event.preventDefault()
 
         if (mudarForm.btnEnviar == "Entrar") {
             logar(formulario.email, formulario.senha)
         }
+        
         else {
-            cadastrarCliente(formulario.nome, formulario.email, formulario.senha)
+            const resultado = await cadastrarCliente(formulario.nome, formulario.email, formulario.senha)
+
+            if (resultado) {
+                navegar('/agendamento')
+            }
         }
     }
-    
+
     return (
         <>
             <main className="cadastro-main">
