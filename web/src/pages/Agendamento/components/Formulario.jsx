@@ -1,5 +1,4 @@
 import './Formulario.css'
-import logo from '../../../assets/logo_pequena.png'
 
 function Formulario() {
     return (
@@ -52,7 +51,7 @@ function Formulario() {
                 <div className="card_2">
                     <header className="agendamento-header">
                         <h1 className="agendamento-title">Agendamento</h1>
-                        <img className="logo" src={logo} alt="logo secretária gestão" />
+                        <img className="logo" src="/logo_pequena.png" alt="logo secretária gestão" />
                     </header>
                     <div>
                         <select name="local" className="local">
