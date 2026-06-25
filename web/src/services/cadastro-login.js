@@ -1,4 +1,7 @@
 import { supabase } from './SupabaseConfig.js';
+import { useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
 
 export async function cadastrarCliente(nome, email, senha) {
 
@@ -31,7 +34,7 @@ export async function cadastrarCliente(nome, email, senha) {
         })
 
         if (resposta.ok) {
-            window.location.replace('/agendamento');
+            navigate("/agendamento")
         }
 
         else {
