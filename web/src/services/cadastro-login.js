@@ -1,5 +1,5 @@
 import { supabase } from './SupabaseConfig.js';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const navigate = useNavigate();
 
