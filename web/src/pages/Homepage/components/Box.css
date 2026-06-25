@@ -20,4 +20,5 @@
     padding: 5px;
     border-radius: 10px;
     margin-top: 10px;
+    color: var(--font-color);
 }
