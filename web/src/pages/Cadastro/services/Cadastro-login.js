@@ -1,4 +1,4 @@
-import { supabase } from './SupabaseConfig.js';
+import { supabase } from '../../../services/SupabaseConfig.js';
 
 export async function cadastrarCliente(nome, email, senha) {
 
@@ -121,9 +121,9 @@ export async function logar(email, senha) {
         alert('DEU RUIM LOGIN');
         console.log(error)
     }
-
+    
     else {
-        alert('FOII LOGIN');
-        // window.location.replace('/agendamento');
+        return "deu bom"
     }
+
 }

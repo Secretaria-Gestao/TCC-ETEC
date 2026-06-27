@@ -1,5 +1,5 @@
 import './Agendamento.css'
-import Formulario from './components/Formulario.jsx'
+import Formulario from './components/Formulario/Formulario.jsx'
 import { Link } from 'react-router'
 
 function Agendamento() {

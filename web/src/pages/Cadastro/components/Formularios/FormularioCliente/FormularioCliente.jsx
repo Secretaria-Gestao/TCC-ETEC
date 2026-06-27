@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
 
-import { logar, cadastrarCliente } from "../../../../../services/cadastro-login.js"
+import { logar, cadastrarCliente } from "../../../services/Cadastro-login.js"
 import '../Formulario.css'
 
 function Formulario() {
@@ -25,7 +25,7 @@ function Formulario() {
     }
 
     const [mudarForm, setMudarForm] = useState({
-        msgForm: "Cadastrar-se",
+        msgForm: "Entrar na conta",
         btnEnviar: "Entrar",
         classeOculto: "oculto",
     })
@@ -42,7 +42,11 @@ function Formulario() {
         event.preventDefault()
 
         if (mudarForm.btnEnviar == "Entrar") {
-            logar(formulario.email, formulario.senha)
+            const resultado = logar(formulario.email, formulario.senha)
+
+            if (resultado) {
+                navegar('/agendamento')
+            }
         }
         
         else {
@@ -100,7 +104,7 @@ function Formulario() {
                     </button>
 
                     <button type="button" id="btn_cadastrar" className="outline" onClick={mudarMsgForm}>
-                        {mudarForm.msgForm}
+                        {mudarForm.msgForm == "Entrar na conta" ? "Cadastrar-se" : "Entrar na conta"}
                     </button>
 
                     <p className="ou"> Ou </p>

@@ -8,7 +8,7 @@ def agendar():
     info = request.get_json()
 
     # Garante que o front mandou tudo que a tabela precisa receber.
-    campos_necessarios = ["servicos", "profissional", "data_hora"]
+    campos_necessarios = ["servicos", "profissional", "data_hora", "endereco"]
     for campo in campos_necessarios:
         if campo not in info:
             return jsonify({"sucesso": False, "erro": f"Campo ausente: {campo}"}), 400
@@ -50,6 +50,8 @@ def agendar():
                 "id_cliente": id_cliente,
                 "id_profissional": id_profissional,
                 "horario": info["data_hora"],
+                "endereco": info["endereco"],
+                "status": "Pendente"
             }
 
             resultado = supabase.table("agendamentos").insert(novo_agendamento).execute()

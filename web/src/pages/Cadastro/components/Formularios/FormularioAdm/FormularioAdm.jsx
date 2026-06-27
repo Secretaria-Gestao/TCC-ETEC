@@ -1,6 +1,6 @@
 import { useState } from "react"
 import '../Formulario.css'
-import { logar, cadastrarGerente, cadastrarSalao } from "../../../../../services/cadastro-login.js"
+import { logar, cadastrarGerente, cadastrarSalao } from "../../../services/Cadastro-login.js"
 
 function Formulario() {
     const [formulario, setFormulario] = useState({

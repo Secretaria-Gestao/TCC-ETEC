@@ -21,6 +21,6 @@ def validandoGerente():
 def validandoSalao():
     return cadastroSalao()
 
-@rotas_json.route("/agendando", methods=["POST"])
+@rotas_json.route("/api/agendando", methods=["POST"])
 def agendamento():
     return agendar()
