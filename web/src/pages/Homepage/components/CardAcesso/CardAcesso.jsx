@@ -1,11 +1,11 @@
 import { Link } from 'react-router'
 
-import './Box.css'
+import './CardAcesso.css'
 
-function Box() {
+function CardAcesso() {
 	return (
 		<main className="homepage-main">
-			<div className="homepage-box">
+			<div className="homepage-CardAcesso">
 				<p>Bem-te-vi</p>
 
 				<p>Deseja agendar um horário?</p> <br />
@@ -18,4 +18,4 @@ function Box() {
 	)
 }
 
-export default Box
+export default CardAcesso

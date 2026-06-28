@@ -1,9 +1,9 @@
 import './Homepage.css'
-import Box from './components/Box'
+import CardAcesso from './components/CardAcesso/CardAcesso.jsx'
 
 function Homepage() {
     return(
-        <Box />
+        <CardAcesso />
     )
 }
 

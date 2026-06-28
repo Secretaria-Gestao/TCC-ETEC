@@ -1,8 +1,11 @@
 import { useState } from "react"
-import '../Formulario.css'
+import { useNavigate } from "react-router"
 import { logar, cadastrarGerente, cadastrarSalao } from "../../../services/Cadastro-login.js"
+import '../Formulario.css'
 
 function Formulario() {
+    const navegar = useNavigate()
+
     const [formulario, setFormulario] = useState({
         email_profissional: "",
         senha: "",
@@ -43,8 +46,22 @@ function Formulario() {
     }
 
     async function enviarFormulario(event) {
-        const resposta = await cadastrarSalao( formulario.nome_salao, formulario.categoria_salao, formulario.endereco_salao )
-        await cadastrarGerente( formulario.email_profissional, formulario.senha, formulario.nome_profissional, formulario.telefone_profissional, resposta)
+        const respostaSalao = await cadastrarSalao(formulario.nome_salao, formulario.categoria_salao, formulario.endereco_salao)
+        let respostaCadastro = false
+
+        if (respostaSalao) {
+            respostaCadastro = await cadastrarGerente(
+                formulario.email_profissional,
+                formulario.senha,
+                formulario.nome_profissional,
+                formulario.telefone_profissional,
+                formulario.nome_salao
+            )
+        }
+
+        if (respostaCadastro) {
+            navegar("/agendamento")
+        }
     }
 
     const [etapaAtual, setEtapaAtual] = useState(1)

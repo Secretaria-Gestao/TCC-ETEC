@@ -1,9 +1,9 @@
 import './Fim.css'
-import Box from './components/Box/Box.jsx'
+import CardConclusao from './components/CardConclusao/CardConclusao.jsx'
 
 function Fim() {
     return (
-        <Box />
+        <CardConclusao />
     )
 }
 

@@ -98,14 +98,13 @@ export async function cadastrarGerente(email_profissional, senha, nome_profissio
             })
         })
 
-        if (resposta.ok) {
-            window.location.replace('/agendamento');
+        if (!resposta.ok) {
+            const erro =  await resposta.json()
+            console.log(erro)
+            return false
         }
 
-        else {
-            alert("Deu erro ao cadastrar")
-            console.log(resposta)
-        }
+        return true
     }
 }
 
@@ -120,10 +119,9 @@ export async function logar(email, senha) {
     if (error) {
         alert('DEU RUIM LOGIN');
         console.log(error)
+        return false
     }
     
-    else {
-        return "deu bom"
-    }
+    return true
 
 }
