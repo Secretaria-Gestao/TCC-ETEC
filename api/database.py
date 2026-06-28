@@ -12,3 +12,7 @@ key = os.getenv("SUPABASE_KEY")  # Pegando a senha do Supabase
 # No .env fica tipo SUPABASE_URL=url.com.br (o link e senha do supabase tá no render)
 # Esse client e importado pelos controllers sempre que precisam ler/gravar dados.
 supabase = create_client(url, key)
+
+# Client com permissão de admin, usado para criar usuários pelo painel do ADM.
+service_key = os.getenv("SUPABASE_SERVICE_KEY")
+supabase_admin = create_client(url, service_key)
