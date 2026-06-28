@@ -1,4 +1,4 @@
-function Box() {
+function CardConclusao() {
     return (
         <main className="fim-main">
             <div>
@@ -8,4 +8,4 @@ function Box() {
     )
 }
 
-export default Box
+export default CardConclusao

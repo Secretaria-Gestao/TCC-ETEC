@@ -42,7 +42,7 @@ function Formulario() {
         event.preventDefault()
 
         if (mudarForm.btnEnviar == "Entrar") {
-            const resultado = logar(formulario.email, formulario.senha)
+            const resultado = await logar(formulario.email, formulario.senha)
 
             if (resultado) {
                 navegar('/agendamento')
