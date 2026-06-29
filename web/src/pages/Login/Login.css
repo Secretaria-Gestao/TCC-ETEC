@@ -1,4 +1,4 @@
-.cadastro-page {
+.login-page {
     background: repeating-linear-gradient(to top right, var(--background-gradient-color-light) 10% 35%, var(--background-gradient-color-dark) 35% 40%, var(--background-gradient-color-light) 40% 45%) no-repeat fixed center;
     color: var(--font-color);
     display: flex;
@@ -7,7 +7,7 @@
     height: 100vh;
 }
 
-.cadastro-main {
+.login-main {
     display: grid;
     grid-column: 1fr;
     width: 39vw;
@@ -21,7 +21,7 @@
     text-align: center;
 }
 
-.cadastro-form hr {
+.login-form hr {
     border: none;
     height: 2px;
     background-color: var(--border-color);

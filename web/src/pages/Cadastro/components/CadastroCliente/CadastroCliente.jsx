@@ -1,10 +1,10 @@
 import { useState } from "react"
-import { useNavigate } from "react-router"
+import { useNavigate, Link } from "react-router"
 
-import { logar, cadastrarCliente } from "../../../services/Cadastro-login.js"
+import { cadastrarCliente } from "../../services/CadastroCliente.js"
 import '../Formulario.css'
 
-function Formulario() {
+function CadastroCliente() {
 
     const navegar = useNavigate()
 
@@ -24,38 +24,15 @@ function Formulario() {
         })
     }
 
-    const [mudarForm, setMudarForm] = useState({
-        msgForm: "Entrar na conta",
-        btnEnviar: "Entrar",
-        classeOculto: "oculto",
-    })
-
-    function mudarMsgForm() {
-        setMudarForm({
-            msgForm: mudarForm.msgForm == "Cadastrar-se" ? "Entrar na conta" : "Cadastrar-se",
-            btnEnviar: mudarForm.btnEnviar == "Entrar" ? "Cadastrar-se" : "Entrar",
-            classeOculto: mudarForm.classeOculto == "oculto" ? "" : "oculto",
-        })
-    }
-
     async function enviarFormulario(event) {
         event.preventDefault()
 
-        if (mudarForm.btnEnviar == "Entrar") {
-            const resultado = await logar(formulario.email, formulario.senha)
+        const resultado = await cadastrarCliente(formulario.nome, formulario.email, formulario.senha)
 
-            if (resultado) {
-                navegar('/agendamento')
-            }
+        if (resultado) {
+            navegar('/agendamento')
         }
-        
-        else {
-            const resultado = await cadastrarCliente(formulario.nome, formulario.email, formulario.senha)
 
-            if (resultado) {
-                navegar('/agendamento')
-            }
-        }
     }
 
     return (
@@ -63,11 +40,11 @@ function Formulario() {
             <main className="cadastro-main">
                 <form className="cadastro-form" onSubmit={enviarFormulario}>
                     <b>
-                        <p id="logando"> {mudarForm.msgForm} </p>
+                        <p id="logando"> Cadastrar-se </p>
                     </b>
 
                     <div className="campo">
-                        <div id="lblNome" className={mudarForm.classeOculto}>
+                        <div id="lblNome" >
                             <label htmlFor="userName">Nome</label><br />
                             <input id="userName" name="nome" placeholder="Seu nome" onChange={mudarValor} />
                         </div>
@@ -95,17 +72,13 @@ function Formulario() {
                         </div>
                     </div>
 
-                    <button type="button" className="clear" id="recover-password-button">
-                        Recuperar senha
-                    </button>
-
                     <button type="submit" className="solid" id="login-button">
-                        {mudarForm.btnEnviar}
+                        Cadastrar-se
                     </button>
 
-                    <button type="button" id="btn_cadastrar" className="outline" onClick={mudarMsgForm}>
-                        {mudarForm.msgForm == "Entrar na conta" ? "Cadastrar-se" : "Entrar na conta"}
-                    </button>
+                    <Link to="/login/cliente" className="outline button-link">
+                        Entrar na conta
+                    </Link>
 
                     <p className="ou"> Ou </p>
 
@@ -125,4 +98,4 @@ function Formulario() {
     )
 }
 
-export default Formulario
+export default CadastroCliente

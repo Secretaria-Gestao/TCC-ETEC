@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
     --background-gradient-color-light: #DEF4FF;
     --background-gradient-color-dark: #FFB247;
@@ -11,6 +13,15 @@
     --background-button: #320B07;
 }
 
+@theme {
+    --color-azulClaro: var(--background-gradient-color-light);
+    --color-amarelo: var(--background-gradient-color-dark);
+    --color-cinza: var(--background-transparent);
+    --color-laranja: var(--background-color-error);
+    --color-escuro: var(--font-color-error);
+    --color-marrom: var(--background-button);
+}
+
 * {
     padding: 0%;
     margin: 0%;
@@ -21,7 +32,7 @@ input::placeholder {
     color: var(--border-transparent);
 }
 
-button {
+button, Link {
     cursor: pointer;
 }
 
@@ -31,6 +42,11 @@ button:active {
 
 button[disabled] {
     opacity: 0.7;
+}
+
+.main-principal {
+    @apply w-dvw h-dvh bg-no-repeat bg-fixed bg-center ;
+    background: repeating-linear-gradient(to top right, var(--background-gradient-color-light) 10% 35%, var(--background-gradient-color-dark) 35% 40%, var(--background-gradient-color-light) 40% 45%);
 }
 
 .clear {
@@ -61,21 +77,7 @@ button[disabled] {
     border-radius: 5px;
     display: none;
 }
-
-.fim {
-
-    display: grid;
-    grid-column: 1fr;
-    width: 39vw;
-    max-width: 600px;
-    margin: auto;
-    border-radius: 25px;
-    border: 2px solid var(--border-transparent);
-    background-color: var(--background-transparent);
-    backdrop-filter: blur(10px);
-    padding: 60px;
-    text-align: center;
-}
+ 
 
 .Voltar {
     position: absolute;

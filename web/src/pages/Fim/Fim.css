@@ -1,5 +1,4 @@
 .fim-main {
-
     display: grid;
     grid-column: 1fr;
     width: 39vw;
@@ -11,4 +10,5 @@
     backdrop-filter: blur(10px);
     padding: 60px;
     text-align: center;
+
 }

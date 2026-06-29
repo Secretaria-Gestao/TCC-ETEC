@@ -11,7 +11,7 @@ function CardAcesso() {
 				<p>Deseja agendar um horário?</p> <br />
 
 				<Link to={'/cadastro/cliente'} className='homepage-link'> Agendar um horário </Link>
-				<Link to={'/cadastro/profissional'} className='homepage-link'> Sou profissional </Link>
+				<Link to={'/cadastro/gerente'} className='homepage-link'> Sou profissional </Link>
 
 			</div>
 		</main>

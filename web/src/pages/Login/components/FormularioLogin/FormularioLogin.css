@@ -1,0 +1,109 @@
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-form #logando {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.login-form .campo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0px;
+}
+
+.login-form input,
+.login-form button,
+.login-form .button-link {
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    padding: 10px;
+    margin: 10px;
+    width: 57%;
+    max-width: 500px;
+    flex: 1;
+    height: max-content;
+    font: inherit;
+}
+
+.login-form #btn_cadastrar {
+    border: 1px solid var(--border-color);
+}
+
+.login-form .button-link {
+    box-sizing: border-box;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.login-form input {
+    margin-bottom: 10px;
+}
+
+.login-form .ou {
+    margin: 10px 0px 12px 0px;
+    display: flex;
+    position: relative;
+    width: 67%;
+    gap: 10px;
+}
+
+.login-form .ou::after,
+.login-form .ou::before {
+    align-self: center;
+    content: '';
+    flex: 1;
+    background-color: var(--border-color);
+    height: 1px;
+
+}
+
+.login-form .ou::after {
+    left: 0;
+}
+
+.login-form .ou::before {
+    right: 0;
+}
+
+.login-form .txtgoogle {
+    margin-bottom: 12px;
+}
+
+.login-form #login-button {
+    margin-top: 6%;
+}
+
+.login-form .img_google {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.login-form .google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.login-form #lblNome {
+    width: 100%;
+}
+
+.login-form .clear {
+    background: transparent;
+    border: none;
+    width: max-content;
+    padding: 0;
+    margin: 0;
+}

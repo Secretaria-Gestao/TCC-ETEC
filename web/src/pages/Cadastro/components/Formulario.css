@@ -19,7 +19,8 @@
 }
 
 .cadastro-form input,
-.cadastro-form button {
+.cadastro-form button,
+.cadastro-form .button-link {
     border-radius: 10px;
     border: 2px solid var(--border-color);
     padding: 10px;
@@ -28,6 +29,17 @@
     max-width: 500px;
     flex: 1;
     height: max-content;
+    font: inherit;
+}
+
+.cadastro-form .button-link {
+    box-sizing: border-box;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: 1px solid var(--border-color);
 }
 
 .cadastro-form input {
@@ -71,14 +83,14 @@
 .cadastro-form .img_google {
     width: 20px;
     height: 20px;
-    filter: drop-shadow(1px 1px 1px rgba(110, 62, 62, 0.685)) drop-shadow(-1px -1px rgb(255, 195, 195));
-    margin-right: 2%;
-    margin-bottom: -2%;
+    object-fit: contain;
 }
 
 .cadastro-form .google {
-    text-align: center;
-    display: flexbox;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .oculto {

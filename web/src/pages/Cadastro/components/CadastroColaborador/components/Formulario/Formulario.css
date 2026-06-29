@@ -1,0 +1,6 @@
+@reference "../../../../../../global.css";
+
+.cadastroProfInput {
+    @apply border-1 rounded-md p-3! w-full my-2! ;
+}
+

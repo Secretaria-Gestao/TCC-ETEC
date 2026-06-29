@@ -26,12 +26,18 @@
 
 .agendamento-form input,
 .agendamento-form button,
-.agendamento-form select{
+.agendamento-form select {
     border-radius: 10px;
     border: 2px solid var(--border-color);
     padding: 10px;
     margin: 2px;
     height: 50px;
+}
+
+.agendamento-form input,
+.agendamento-form select {
+
+    background-color: white;
 }
 
 .agendamento-form .btn_servico{

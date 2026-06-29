@@ -1,21 +1,22 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
-import { logar, cadastrarGerente, cadastrarSalao } from "../../../services/Cadastro-login.js"
+import { cadastrarGerente } from "../../services/CadastroGerente.js"
+import { cadastrarSalao } from "../../services/CadastroSalao.js"
 import '../Formulario.css'
 
-function Formulario() {
+function CadastroGerente() {
     const navegar = useNavigate()
 
     const [formulario, setFormulario] = useState({
-        email_profissional: "",
+        email: "",
         senha: "",
 
-        nome_profissional: "",
-        telefone_profissional: "",
+        nome: "",
+        telefone: "",
 
-        nome_salao: "",
-        endereco_salao: "",
-        categoria_salao: ""
+        nome: "",
+        endereco: "",
+        categoria: ""
 
     })
 
@@ -46,16 +47,16 @@ function Formulario() {
     }
 
     async function enviarFormulario(event) {
-        const respostaSalao = await cadastrarSalao(formulario.nome_salao, formulario.categoria_salao, formulario.endereco_salao)
+        const respostaSalao = await cadastrarSalao(formulario.nome, formulario.categoria, formulario.endereco)
         let respostaCadastro = false
 
         if (respostaSalao) {
             respostaCadastro = await cadastrarGerente(
-                formulario.email_profissional,
+                formulario.email,
                 formulario.senha,
-                formulario.nome_profissional,
-                formulario.telefone_profissional,
-                formulario.nome_salao
+                formulario.nome,
+                formulario.telefone,
+                formulario.nome
             )
         }
 
@@ -114,7 +115,7 @@ function Formulario() {
 
                     <div className={etapas.etapa1}>
                         <label htmlFor="email">Email</label>
-                        <input type="email" name="email_profissional" id="email" placeholder="seu@email.com" onChange={mudarValor} />
+                        <input type="email" name="email" id="email" placeholder="seu@email.com" onChange={mudarValor} />
 
                         <div className="error" id="email-required-error">
                             Email é obrigatório
@@ -140,32 +141,32 @@ function Formulario() {
                     <div className={etapas.etapa2}>
 
                         <label htmlFor="userName">Nome de usuário</label>
-                        <input id="userName" name="nome_profissional" placeholder="Como deseja ser chamado" onChange={mudarValor} />
+                        <input id="userName" name="nome" placeholder="Como deseja ser chamado" onChange={mudarValor} />
                     </div>
 
 
                     <div className={etapas.etapa2}>
                         <label htmlFor="telefone">telefone</label>
-                        <input id="telefone" name="telefone_profissional" placeholder="Seu telefone" onChange={mudarValor} />
+                        <input id="telefone" name="telefone" placeholder="Seu telefone" onChange={mudarValor} />
                     </div>
 
                     {/* Etapa 3 */}
 
                     <div className={etapas.etapa3}>
                         <label htmlFor="nomeSalao">Nome do salão</label>
-                        <input id="nomeSalao" name="nome_salao" placeholder="Nome do seu salão" onChange={mudarValor} />
+                        <input id="nomeSalao" name="nome" placeholder="Nome do seu salão" onChange={mudarValor} />
                     </div>
 
                     <div className={etapas.etapa3}>
                         <label htmlFor="endereco">Endereço do salão</label>
-                        <input id="endereco" name="endereco_salao" placeholder="Endereço do salão" onChange={mudarValor} />
+                        <input id="endereco" name="endereco" placeholder="Endereço do salão" onChange={mudarValor} />
                     </div>
 
                     <p className={etapas.etapa3}> Categoria do salão </p>
 
                     <div className={etapas.etapa3}>
-                        <select name="categoria_salao" onChange={mudarValor}>
-                            <option value="opcoes" disabled> Opções </option>
+                        <select name="categoria" onChange={mudarValor}>
+                            <option value="opcoes"> Opções </option>
                             <option value="salaoDeCabeleireiro"> Salão de cabeleireiro </option>
                             <option value="barbearia"> Barbearia </option>
                             <option value="manicure/Pedicure"> Manícure/Pedicure </option>
@@ -187,4 +188,4 @@ function Formulario() {
     )
 }
 
-export default Formulario
+export default CadastroGerente

@@ -1,4 +1,4 @@
-import { supabase } from '../../services/SupabaseConfig.js';
+import { supabase } from '../../../services/SupabaseConfig.js';
 
 function getToken() {
     const tokenRaw = localStorage.getItem('sb-qtgubbbrntnltrpyywqx-auth-token'); 
@@ -8,7 +8,7 @@ function getToken() {
 
 const API_URL = 'http://127.0.0.1:5000';
 
-export async function cadastrarProfissional({ email, senha, nome_profissional, cargo, telefone_profissional }) {
+export async function cadastrarColaborador({ email, senha, nome_profissional, cargo, telefone_profissional }) {
     const resposta = await fetch(`${API_URL}/api/cadastrar/profissional`, {
         method: 'POST',
         headers: {
