@@ -5,32 +5,35 @@ from controllers.autenticacao import autenticar
 def cadastrar_profissional():
     info = request.get_json()
 
-    campos_necessarios = ["email", "senha", "nome_profissional", "cargo", "telefone_profissional"]
+    campos_necessarios = ["email", "senha", "nome_profissional", "cargo", "nivel_acesso", "telefone_profissional"]
     for campo in campos_necessarios:
         if campo not in info:
-            return jsonify({"sucesso": False, "erro": f"Campo ausente: {campo}"}), 400
+            return jsonify({"sucesso": False, "erro": f"Campo ausente: {campo}."}), 400
 
+    email = info["email"].lower()
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
     try:
+        print("1")
         resposta_auth = supabase_admin.auth.admin.create_user({    # Cria o usuário no Supabase Auth
-            "email": info["email"],
+            "email": email,
             "password": info["senha"],
             "email_confirm": True
         })
-
-        id_profissional = resposta_auth.user.id
         
+        id_profissional = resposta_auth.user.id
+          
         supabase_admin.table("profissionais").insert({   # Insere na tabela profissionais
             "id_profissional": id_profissional,
-            "email_profissional": info["email"],
+            "email_profissional": email,
             "nome_profissional": info["nome_profissional"],
             "cargo": info["cargo"],
-            "telefone_profissional": info["telefone_profissional"]
+            "telefone_profissional": info["telefone_profissional"],
+            "nivel_acesso": info["nivel_acesso"]
         }).execute()
-
+        
         return jsonify({"sucesso": True, "resultado": "Profissional cadastrado com sucesso!"})
 
     except Exception as e:
@@ -73,11 +76,13 @@ def agendamentos_cliente(id_cliente):
         return jsonify({"sucesso": False, "erro": str(e)}), 500
 
 
-def buscar_profissional():
-    email = request.headers.get("X-Email")
+def buscar_profissionalEmail():
+    email = request.headers.get("X-Email").lower()
     if not email:
         return jsonify({"sucesso": False, "erro": "Email não informado"}), 400
 
+    print("Email recebido:", email)
+    
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
@@ -85,7 +90,7 @@ def buscar_profissional():
     try:
         resultado = (
             supabase_admin.table("profissionais")
-            .select("id_profissional, nome_profissional, email_profissional, cargo, telefone_profissional, salao_associado")
+            .select("*")
             .eq("email_profissional", email)
             .execute()
         )
@@ -94,6 +99,26 @@ def buscar_profissional():
             return jsonify({"sucesso": False, "erro": "Profissional não encontrado"}), 404
 
         return jsonify({"sucesso": True, "profissional": resultado.data[0]})
+
+    except Exception as e:
+        print("Erro ao buscar profissional:", e)
+        return jsonify({"sucesso": False, "erro": str(e)}), 500
+    
+def buscar_Todosprofissionais():
+    
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+
+    try:
+        resultado = (
+            supabase_admin.table("profissionais").select("*").execute()
+        )
+
+        if not resultado.data:
+            return jsonify({"sucesso": False, "erro": "Profissional não encontrado"}), 404
+
+        return jsonify({"sucesso": True, "profissional": resultado.data})
 
     except Exception as e:
         print("Erro ao buscar profissional:", e)
@@ -110,9 +135,11 @@ def vincular_profissional():
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
     try:
-        supabase_admin.table("profissionais").update({
+        resposta = supabase_admin.table("profissionais").update({
             "salao_associado": info["id_salao"]
         }).eq("id_profissional", info["id_profissional"]).execute()
+        
+        print(resposta)
 
         return jsonify({"sucesso": True, "resultado": "Profissional vinculado ao salão com sucesso!"})
 

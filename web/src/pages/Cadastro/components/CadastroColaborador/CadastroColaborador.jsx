@@ -18,6 +18,8 @@ function CadastroColaborador() {
         nivelAcesso: "1"
     })
 
+    const nomeUsuario = `${dados.nome} ${dados.sobrenome}`;
+
     return (
         <>
             <main className='main-principal flex'>
@@ -26,7 +28,7 @@ function CadastroColaborador() {
                         <BarraLateral />
                     </div>
                     <div className='w-full'>
-                        <Header />
+                        <Header dados={dados} nomeUsuario={nomeUsuario}/>
                         <hr className='w-10/12 place-self-center' />
                         <div className='flex justify-center h-8/10 items-center'>
                             <Formulario dados={dados} setDados={setDados} />

@@ -11,10 +11,10 @@ function CadastroGerente() {
         email: "",
         senha: "",
 
-        nome: "",
+        nome_profissional: "",
         telefone: "",
 
-        nome: "",
+        nome_salao: "",
         endereco: "",
         categoria: ""
 
@@ -47,21 +47,21 @@ function CadastroGerente() {
     }
 
     async function enviarFormulario(event) {
-        const respostaSalao = await cadastrarSalao(formulario.nome, formulario.categoria, formulario.endereco)
+        const respostaSalao = await cadastrarSalao(formulario.nome_salao, formulario.categoria, formulario.endereco)
         let respostaCadastro = false
 
         if (respostaSalao) {
             respostaCadastro = await cadastrarGerente(
                 formulario.email,
                 formulario.senha,
-                formulario.nome,
+                formulario.nome_profissional,
                 formulario.telefone,
-                formulario.nome
+                respostaSalao
             )
         }
 
         if (respostaCadastro) {
-            navegar("/agendamento")
+            navegar("/cadastro/colaborador")
         }
     }
 
@@ -141,7 +141,7 @@ function CadastroGerente() {
                     <div className={etapas.etapa2}>
 
                         <label htmlFor="userName">Nome de usuário</label>
-                        <input id="userName" name="nome" placeholder="Como deseja ser chamado" onChange={mudarValor} />
+                        <input id="userName" name="nome_profissional" placeholder="Como deseja ser chamado" onChange={mudarValor} />
                     </div>
 
 
@@ -154,7 +154,7 @@ function CadastroGerente() {
 
                     <div className={etapas.etapa3}>
                         <label htmlFor="nomeSalao">Nome do salão</label>
-                        <input id="nomeSalao" name="nome" placeholder="Nome do seu salão" onChange={mudarValor} />
+                        <input id="nomeSalao" name="nome_salao" placeholder="Nome do seu salão" onChange={mudarValor} />
                     </div>
 
                     <div className={etapas.etapa3}>
@@ -165,7 +165,7 @@ function CadastroGerente() {
                     <p className={etapas.etapa3}> Categoria do salão </p>
 
                     <div className={etapas.etapa3}>
-                        <select name="categoria" onChange={mudarValor}>
+                        <select name="categoria" onChange={mudarValor} className="border-2">
                             <option value="opcoes"> Opções </option>
                             <option value="salaoDeCabeleireiro"> Salão de cabeleireiro </option>
                             <option value="barbearia"> Barbearia </option>

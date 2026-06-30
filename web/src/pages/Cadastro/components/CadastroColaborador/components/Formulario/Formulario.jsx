@@ -36,15 +36,15 @@ function Formulario({dados, setDados}) {
         <form className="border-amber-950 border-2 w-6/10 h-auto min-h-8/10 p-8! rounded-2xl bg-azulClaro">
             <div className="grid grid-cols-2 gap-3">
 
-                <input className="cadastroProfInput" type="text" placeholder="Nome" onChange={mudarValor} />
-                <input className="cadastroProfInput" type="text" placeholder="Sobrenome" onChange={mudarValor} />
+                <input name="nome" className="cadastroProfInput" type="text" placeholder="Nome" onChange={mudarValor} />
+                <input name="sobrenome" className="cadastroProfInput" type="text" placeholder="Sobrenome" onChange={mudarValor} />
                 <select name="cargo" className="border-1 rounded-md p-2!" onChange={mudarValor}>
-                    <option value=""> Cargo </option>
-                    <option value=""> Barbeiro(a) </option>
-                    <option value=""> Cabeleireiro(a) </option>
-                    <option value=""> Manicure/Pedicure </option>
-                    <option value=""> Maquiador(a) </option>
-                    <option value=""> Recepcionista </option>
+                    <option value="Cargo"> Cargo </option>
+                    <option value="Barbeiro(a)"> Barbeiro(a) </option>
+                    <option value="Cabeleireiro(a)"> Cabeleireiro(a) </option>
+                    <option value="Manicure/Pedicure"> Manicure/Pedicure </option>
+                    <option value="Maquiador(a)"> Maquiador(a) </option>
+                    <option value="Recepcionista"> Recepcionista </option>
                 </select>
 
                 <div className="flex items-center gap-2!">

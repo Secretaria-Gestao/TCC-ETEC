@@ -1,18 +1,39 @@
-import { use, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-
-import { checagemToken, mandarAgendamento } from '../../services/Agendamento.js'
+import { mandarAgendamento } from '../../services/Agendamento.js'
 
 import './Formulario.css'
+import { pegarSessao } from '../../../../services/pegarSessao.js'
+import { buscarTodosProfissionais } from "../../../../services/BuscarProfissionais.js"
 
 
 function Formulario() {
-
     const navegar = useNavigate()
+
+    const [todosProfissionais, setTodosProfissionais] = useState([])
+
+    useEffect(() => {
+        async function buscarDados() {
+            const resposta = await buscarTodosProfissionais()
+
+            setTodosProfissionais(resposta.profissional)
+
+            if (resposta.profissional.length > 0) {
+                setDados((dadosAntigos) => ({
+                    ...dadosAntigos,
+                    profissional: resposta.profissional[0].nome_profissional
+                }))
+            }
+
+        }
+
+        buscarDados()
+
+    }, [])
 
     const [dados, setDados] = useState({
         servicos: [1],
-        profissional: "Roberto",
+        profissional: "",
         dia: "",
         horario: "",
         endereco: ""
@@ -21,7 +42,7 @@ function Formulario() {
     function resetarDados() {
         setDados({
             servicos: [1],
-            profissional: "Roberto",
+            profissional: "",
             dia: "",
             horario: "",
             endereco: "",
@@ -29,7 +50,7 @@ function Formulario() {
     }
 
     async function enviarDados() {
-        const resultadoToken = checagemToken()
+        const resultadoToken = await pegarSessao()
         console.log(resultadoToken)
 
         if (resultadoToken) {
@@ -82,6 +103,8 @@ function Formulario() {
         })
     }
 
+    console.log(dados)
+
     return (
         <form className='agendamento-form tudo'>
 
@@ -128,11 +151,15 @@ function Formulario() {
                     <div className="profissional_selecionado">
                         <label htmlFor="profissional">Selecione o(a) profissional: </label>
 
-                        <select name="profissional" onChange={mudarValorDados}>
-                            <option value="Roberto">Roberto</option>
-                            <option value="Ronaldo">Ronaldo</option>
-                            <option value="Rosalva">Rosalva</option>
-                            <option value="Leila">Leila</option>
+                        <select name="profissional" onChange={mudarValorDados} value={dados.profissional}>
+                            {
+                            todosProfissionais.map((profissional) => {
+                                return (
+                                    <option key={profissional.id_profissional} value={profissional.nome_profissional}>{profissional.nome_profissional}</option>
+                                )
+                            }
+                            )
+                        }
                         </select>
                     </div>
 

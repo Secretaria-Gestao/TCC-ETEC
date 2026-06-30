@@ -1,16 +1,3 @@
-export function checagemToken() {
-    const tokenRaw = localStorage.getItem('sb-qtgubbbrntnltrpyywqx-auth-token');
-    const token = JSON.parse(tokenRaw);
-    const id_cliente = token?.user?.id;
-
-    if (!id_cliente) {
-        return false;
-    }
-
-    return token
-
-}
-
 export async function mandarAgendamento(token, servicos, profissional, dia, horario, endereco) {
 
     const dataHora = `${dia}T${horario}`;

@@ -34,6 +34,9 @@ def agendar():
             .eq("nome_profissional", info["profissional"])
             .execute()
         )
+        
+        print(info["profissional"])
+        print(profissional_escolhido.data)
 
         id_profissional = profissional_escolhido.data[0]["id_profissional"]
 
