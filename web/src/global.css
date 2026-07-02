@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-    --background-gradient-color-light: #DEF4FF;
-    --background-gradient-color-dark: #FFB247;
+    --background-gradient-color-light: #85D6FF;
+    --background-gradient-color-dark: #2D353D;
     --background-transparent: #90ABDC34;
     --background-color-error: #EB620A;
     --font-color-error: #180402;
     --font-color: var(--background-button);
     --font-color-transparent: var(--background-gradient-color-dark);
     --border-color: var(--background-button);
-    --border-transparent: #EB620A;
+    --border-transparent: #FFC919;
     --background-button: #320B07;
 }
 

@@ -1,5 +1,5 @@
 .login-page {
-    background: repeating-linear-gradient(to top right, var(--background-gradient-color-light) 10% 35%, var(--background-gradient-color-dark) 35% 40%, var(--background-gradient-color-light) 40% 45%) no-repeat fixed center;
+    background: repeating-linear-gradient(to top right, var(--background-gradient-color-dark) 10% 35%, var(--background-gradient-color-light) 35% 40%, var(--background-gradient-color-dark) 40% 65%, var(--border-transparent) 65% 70%) no-repeat fixed center;
     color: var(--font-color);
     display: flex;
     justify-content: center;

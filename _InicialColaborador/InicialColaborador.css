@@ -1,0 +1,21 @@
+.InicialColaborador-Body {
+    background: var(--background-gradient-color-light) no-repeat fixed center;
+    color: var(--font-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.InicialColaborador-Header{
+    margin: 1%;
+    padding: 2%;
+    align-self: flex-start;
+    height: 40px;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.InicialColaborador-DivMiniCards{
+    display: flex;
+}
