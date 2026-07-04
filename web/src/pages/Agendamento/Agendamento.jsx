@@ -11,7 +11,6 @@ function Agendamento() {
             {rotaAtual.pathname == '/agendamento/agendar'?<Formulario/> : undefined}
             {rotaAtual.pathname == '/agendamento/meus-agendamentos'?<MeusAgendamentos/> : undefined}
 
-            <Formulario />
         </div>
     )
 }
