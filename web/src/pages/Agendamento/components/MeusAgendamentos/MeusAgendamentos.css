@@ -1,4 +1,4 @@
-.agenda-janela {
+.meus-agendamentos-agenda-janela {
     width: 92vw;
     max-width: 1180px;
     height: 88vh;
@@ -10,7 +10,7 @@
     overflow: hidden;
 }
 
-.sidebar {
+.meus-agendamentos-sidebar {
     width: 84px;
     border-right: 2px solid var(--border-transparent);
     display: flex;
@@ -19,7 +19,7 @@
     padding: 28px 0;
 }
 
-.logo {
+.meus-agendamentos-logo {
     font-weight: 700;
     font-size: 0.85rem;
     margin-bottom: 36px;
@@ -28,7 +28,7 @@
     text-align: center;
 }
 
-.nav-icone {
+.meus-agendamentos-nav-icone {
     width: 42px;
     height: 42px;
     display: flex;
@@ -43,21 +43,21 @@
     font-size: 1.15rem;
 }
 
-.nav-icone:hover {
+.meus-agendamentos-nav-icone:hover {
     opacity: 1;
     background: var(--background-transparent);
 }
 
-.nav-icone.ativo {
+.meus-agendamentos-nav-icone.ativo {
     opacity: 1;
     background: var(--background-gradient-color-dark);
 }
 
-.sidebar-rodape {
+.meus-agendamentos-sidebar-rodape {
     margin-top: auto;
 }
 
-.btn-sair {
+.meus-agendamentos-btn-sair {
     background: var(--background-button);
     color: var(--font-color-transparent);
     border: none;
@@ -67,11 +67,11 @@
     cursor: pointer;
 }
 
-.btn-sair:active {
+.meus-agendamentos-btn-sair:active {
     opacity: 0.3;
 }
 
-.conteudo {
+.meus-agendamentos-conteudo {
     flex: 1;
     padding: 26px 22px;
     display: flex;
@@ -79,7 +79,7 @@
     min-width: 0;
 }
 
-.navegacao-semana {
+.meus-agendamentos-navegacao-semana {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -89,7 +89,7 @@
     color: var(--font-color);
 }
 
-.navegacao-semana button {
+.meus-agendamentos-navegacao-semana button {
     background: none;
     border: none;
     font-size: 1.1rem;
@@ -100,12 +100,12 @@
     opacity: 0.7;
 }
 
-.navegacao-semana button:hover {
+.meus-agendamentos-navegacao-semana button:hover {
     opacity: 1;
     background: var(--background-transparent);
 }
 
-.grade-wrapper {
+.meus-agendamentos-grade-wrapper {
     flex: 1;
     overflow-y: auto;
     border: 2px solid var(--border-transparent);
@@ -113,13 +113,13 @@
     background: rgba(255,255,255,0.25);
 }
 
-table.grade {
+table.meus-agendamentos-grade {
     border-collapse: collapse;
     width: 100%;
     table-layout: fixed;
 }
 
-table.grade th {
+table.meus-agendamentos-grade th {
     position: sticky;
     top: 0;
     background: var(--background-gradient-color-light);
@@ -132,7 +132,7 @@ table.grade th {
     z-index: 2;
 }
 
-table.grade td {
+table.meus-agendamentos-grade td {
     border: 1px solid var(--border-transparent);
     height: 62px;
     vertical-align: top;
@@ -140,7 +140,7 @@ table.grade td {
     position: relative;
 }
 
-.coluna-hora {
+.meus-agendamentos-coluna-hora {
     width: 60px;
     font-size: 0.72rem;
     color: var(--font-color);
@@ -152,7 +152,7 @@ table.grade td {
     white-space: nowrap;
 }
 
-.cartao-agendamento {
+.meus-agendamentos-cartao-agendamento {
     background: var(--background-gradient-color-dark);
     border-left: 3px solid var(--background-button);
     border-radius: 6px;
@@ -164,12 +164,12 @@ table.grade td {
     height: 100%;
 }
 
-.cartao-agendamento b {
+.meus-agendamentos-cartao-agendamento b {
     display: block;
     font-size: 0.72rem;
 }
 
-.painel-direito {
+.meus-agendamentos-painel-direito {
     width: 270px;
     border-left: 2px solid var(--border-transparent);
     padding: 26px 18px;
@@ -179,14 +179,14 @@ table.grade td {
     overflow-y: auto;
 }
 
-.mini-calendario {
+.meus-agendamentos-mini-calendario {
     background: rgba(255,255,255,0.35);
     border: 2px solid var(--border-transparent);
     border-radius: 14px;
     padding: 14px;
 }
 
-.mini-calendario-cabecalho {
+.meus-agendamentos-mini-calendario-cabecalho {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -196,7 +196,7 @@ table.grade td {
     color: var(--font-color);
 }
 
-.mini-calendario-cabecalho button {
+.meus-agendamentos-mini-calendario-cabecalho button {
     background: none;
     border: none;
     cursor: pointer;
@@ -205,11 +205,11 @@ table.grade td {
     opacity: 0.7;
 }
 
-.mini-calendario-cabecalho button:hover {
+.meus-agendamentos-mini-calendario-cabecalho button:hover {
     opacity: 1;
 }
 
-.mini-grade {
+.meus-agendamentos-mini-grade {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 4px;
@@ -217,14 +217,14 @@ table.grade td {
     font-size: 0.7rem;
 }
 
-.mini-grade .dia-semana {
+.meus-agendamentos-mini-grade .meus-agendamentos-dia-semana {
     color: var(--font-color);
     opacity: 0.6;
     font-weight: 700;
     padding-bottom: 4px;
 }
 
-.mini-grade .dia {
+.meus-agendamentos-mini-grade .meus-agendamentos-dia {
     background: rgba(255,255,255,0.6);
     border-radius: 6px;
     padding: 5px 0;
@@ -232,18 +232,18 @@ table.grade td {
     cursor: pointer;
 }
 
-.mini-grade .dia.hoje {
+.meus-agendamentos-mini-grade .meus-agendamentos-dia.meus-agendamentos-hoje {
     background: var(--background-button);
     color: var(--font-color-transparent);
     font-weight: 700;
 }
 
-.mini-grade .dia.vazio {
+.meus-agendamentos-mini-grade .meus-agendamentos-dia.meus-agendamentos-vazio {
     background: transparent;
     cursor: default;
 }
 
-.selecao-equipe select {
+.meus-agendamentos-selecao-equipe select {
     width: 100%;
     padding: 10px 12px;
     border-radius: 10px;
@@ -253,7 +253,7 @@ table.grade td {
     background: rgba(255,255,255,0.5);
 }
 
-.titulo-secao {
+.meus-agendamentos-titulo-secao {
     font-size: 0.76rem;
     font-weight: 700;
     color: var(--font-color);
@@ -263,7 +263,7 @@ table.grade td {
     margin-bottom: 4px;
 }
 
-.cartao-profissional {
+.meus-agendamentos-cartao-profissional {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -273,7 +273,7 @@ table.grade td {
     padding: 10px 12px;
 }
 
-.avatar-placeholder {
+.meus-agendamentos-avatar-placeholder {
     width: 32px;
     height: 32px;
     border-radius: 8px;
@@ -287,19 +287,19 @@ table.grade td {
     flex-shrink: 0;
 }
 
-.cartao-profissional .nome {
+.meus-agendamentos-cartao-profissional .meus-agendamentos-nome {
     font-size: 0.82rem;
     font-weight: 600;
     color: var(--font-color);
 }
 
-.cartao-profissional .funcao {
+.meus-agendamentos-cartao-profissional .meus-agendamentos-funcao {
     font-size: 0.7rem;
     color: var(--font-color);
     opacity: 0.6;
 }
 
-.mensagem-vazio {
+.meus-agendamentos-mensagem-vazio {
     text-align: center;
     color: var(--font-color);
     opacity: 0.7;
@@ -307,11 +307,11 @@ table.grade td {
     padding: 40px 12px;
 }
 
-.sem-profissionais {
+.meus-agendamentos-sem-profissionais {
     font-size: 0.78rem;
     opacity: 0.65;
 }
 
 @media (max-width: 900px) {
-    .painel-direito { display: none; }
+    .meus-agendamentos-painel-direito { display: none; }
 }

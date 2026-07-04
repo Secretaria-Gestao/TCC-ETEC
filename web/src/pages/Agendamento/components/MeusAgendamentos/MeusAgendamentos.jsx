@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../../../../services/SupabaseConfig.js'
 import './MeusAgendamentos.css'
 
-const API_URL = 'http://127.0.0.1:5000'
-
 const HORARIOS = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00']
 const DIAS_SEMANA = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
@@ -35,7 +33,7 @@ function MeusAgendamentos() {
             const token = sessao.session.access_token
 
             try {
-                const resposta = await fetch(`${API_URL}/api/agendamentos/cliente/${id_cliente}`, {
+                const resposta = await fetch(`/api/agendamentos/cliente/${id_cliente}`, {
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
@@ -90,34 +88,34 @@ function MeusAgendamentos() {
     const diasMes = Array.from({ length: ultimoDiaMes.getDate() }, (_, i) => i + 1)
 
     return (
-        <div className="agenda-janela">
+        <div className="meus-agendamentos-agenda-janela">
 
-            <div className="sidebar">
-                <div className="logo">SALÃO</div>
+            <div className="meus-agendamentos-sidebar">
+                <div className="meus-agendamentos-logo">SALÃO</div>
 
-                <div className="nav-icone ativo" title="Agenda">📅</div>
-                <div className="nav-icone" title="Equipe">👥</div>
-                <div className="nav-icone" title="Galeria">🖼️</div>
-                <div className="nav-icone" title="Relatórios">📊</div>
+                <div className="meus-agendamentos-nav-icone ativo" title="Agenda">📅</div>
+                <div className="meus-agendamentos-nav-icone" title="Equipe">👥</div>
+                <div className="meus-agendamentos-nav-icone" title="Galeria">🖼️</div>
+                <div className="meus-agendamentos-nav-icone" title="Relatórios">📊</div>
 
-                <div className="sidebar-rodape">
-                    <button className="btn-sair" onClick={sair}>Sair</button>
+                <div className="meus-agendamentos-sidebar-rodape">
+                    <button className="meus-agendamentos-btn-sair" onClick={sair}>Sair</button>
                 </div>
             </div>
 
-            <div className="conteudo">
+            <div className="meus-agendamentos-conteudo">
 
-                <div className="navegacao-semana">
+                <div className="meus-agendamentos-navegacao-semana">
                     <button onClick={() => mudarSemana(-1)}>‹</button>
-                    <span id="titulo-semana">{tituloSemana}</span>
+                    <span id="meus-agendamentos-titulo-semana">{tituloSemana}</span>
                     <button onClick={() => mudarSemana(1)}>›</button>
                 </div>
 
-                <div className="grade-wrapper">
-                    <table className="grade">
+                <div className="meus-agendamentos-grade-wrapper">
+                    <table className="meus-agendamentos-grade">
                         <thead>
                             <tr>
-                                <th className="coluna-hora"></th>
+                                <th className="meus-agendamentos-coluna-hora"></th>
                                 {DIAS_SEMANA.map((dia) => (
                                     <th key={dia}>{dia}</th>
                                 ))}
@@ -126,7 +124,7 @@ function MeusAgendamentos() {
                         <tbody>
                             {HORARIOS.map((hora) => (
                                 <tr key={hora}>
-                                    <td className="coluna-hora">{hora}</td>
+                                    <td className="meus-agendamentos-coluna-hora">{hora}</td>
                                     {Array.from({ length: 7 }, (_, diaIndex) => {
                                         const dataCelula = new Date(domingo)
                                         dataCelula.setDate(dataCelula.getDate() + diaIndex)
@@ -142,7 +140,7 @@ function MeusAgendamentos() {
                                         return (
                                             <td key={diaIndex}>
                                                 {agendamentoDoSlot && (
-                                                    <div className="cartao-agendamento">
+                                                    <div className="meus-agendamentos-cartao-agendamento">
                                                         <b>{agendamentoDoSlot.profissional || 'Profissional'}</b>
                                                         {agendamentoDoSlot.salao}
                                                     </div>
@@ -156,25 +154,25 @@ function MeusAgendamentos() {
                     </table>
                 </div>
 
-                {mensagem && <p className="mensagem-vazio">{mensagem}</p>}
+                {mensagem && <p className="meus-agendamentos-mensagem-vazio">{mensagem}</p>}
             </div>
 
-            <div className="painel-direito">
+            <div className="meus-agendamentos-painel-direito">
 
-                <div className="mini-calendario">
-                    <div className="mini-calendario-cabecalho">
+                <div className="meus-agendamentos-mini-calendario">
+                    <div className="meus-agendamentos-mini-calendario-cabecalho">
                         <span>{MESES[dataReferenciaMes.getMonth()]} {dataReferenciaMes.getFullYear()}</span>
                         <div>
                             <button onClick={() => mudarMes(-1)}>‹</button>
                             <button onClick={() => mudarMes(1)}>›</button>
                         </div>
                     </div>
-                    <div className="mini-grade">
+                    <div className="meus-agendamentos-mini-grade">
                         {DIAS_SEMANA.map((dia) => (
-                            <div key={dia} className="dia-semana">{dia}</div>
+                            <div key={dia} className="meus-agendamentos-dia-semana">{dia}</div>
                         ))}
                         {vaziosMes.map((_, i) => (
-                            <div key={`vazio-${i}`} className="dia vazio"></div>
+                            <div key={`vazio-${i}`} className="meus-agendamentos-dia meus-agendamentos-vazio"></div>
                         ))}
                         {diasMes.map((dia) => {
                             const ehHoje = dia === hoje.getDate()
@@ -184,7 +182,7 @@ function MeusAgendamentos() {
                             return (
                                 <div
                                     key={dia}
-                                    className={`dia${ehHoje ? ' hoje' : ''}`}
+                                    className={`meus-agendamentos-dia${ehHoje ? ' meus-agendamentos-hoje' : ''}`}
                                     onClick={() => {
                                         setDataReferenciaSemana(new Date(dataReferenciaMes.getFullYear(), dataReferenciaMes.getMonth(), dia))
                                     }}
@@ -196,8 +194,8 @@ function MeusAgendamentos() {
                     </div>
                 </div>
 
-                <div className="selecao-equipe">
-                    <div className="titulo-secao">Equipe</div>
+                <div className="meus-agendamentos-selecao-equipe">
+                    <div className="meus-agendamentos-titulo-secao">Equipe</div>
                     <select value={filtroProfissional} onChange={(e) => setFiltroProfissional(e.target.value)}>
                         <option value="">Todos os profissionais</option>
                         {nomesUnicos.map((nome) => (
@@ -206,16 +204,16 @@ function MeusAgendamentos() {
                     </select>
                 </div>
 
-                <div className="titulo-secao">Profissionais dos seus agendamentos</div>
-                <div id="lista-profissionais">
+                <div className="meus-agendamentos-titulo-secao">Profissionais dos seus agendamentos</div>
+                <div id="meus-agendamentos-lista-profissionais">
                     {nomesUnicos.length === 0
-                        ? <p className="sem-profissionais">Nenhum profissional ainda.</p>
+                        ? <p className="meus-agendamentos-sem-profissionais">Nenhum profissional ainda.</p>
                         : nomesUnicos.map((nome) => (
-                            <div key={nome} className="cartao-profissional">
-                                <div className="avatar-placeholder">{nome.charAt(0).toUpperCase()}</div>
+                            <div key={nome} className="meus-agendamentos-cartao-profissional">
+                                <div className="meus-agendamentos-avatar-placeholder">{nome.charAt(0).toUpperCase()}</div>
                                 <div>
-                                    <div className="nome">{nome}</div>
-                                    <div className="funcao">Profissional</div>
+                                    <div className="meus-agendamentos-nome">{nome}</div>
+                                    <div className="meus-agendamentos-funcao">Profissional</div>
                                 </div>
                             </div>
                         ))
