@@ -64,7 +64,7 @@ function Formulario() {
                 dados.endereco
             )
 
-            respostaFetch.ok ? navegar("/fim") : alert("Deu ruim no agendamento")
+            respostaFetch.ok ? navegar("/agendamento/meus-agendamentos") : alert("Deu ruim no agendamento")
         }
 
         else {

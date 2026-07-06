@@ -1,0 +1,317 @@
+.meus-agendamentos-agenda-janela {
+    width: 92vw;
+    max-width: 1180px;
+    height: 88vh;
+    border-radius: 25px;
+    border: 2px solid var(--border-transparent);
+    background-color: var(--background-transparent);
+    backdrop-filter: blur(10px);
+    display: flex;
+    overflow: hidden;
+}
+
+.meus-agendamentos-sidebar {
+    width: 84px;
+    border-right: 2px solid var(--border-transparent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 0;
+}
+
+.meus-agendamentos-logo {
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 36px;
+    color: var(--font-color);
+    letter-spacing: 0.03em;
+    text-align: center;
+}
+
+.meus-agendamentos-nav-icone {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    color: var(--font-color);
+    opacity: 0.55;
+    cursor: pointer;
+    transition: opacity 0.15s, background 0.15s;
+    font-size: 1.15rem;
+}
+
+.meus-agendamentos-nav-icone:hover {
+    opacity: 1;
+    background: var(--background-transparent);
+}
+
+.meus-agendamentos-nav-icone.ativo {
+    opacity: 1;
+    background: var(--background-gradient-color-dark);
+}
+
+.meus-agendamentos-sidebar-rodape {
+    margin-top: auto;
+}
+
+.meus-agendamentos-btn-sair {
+    background: var(--background-button);
+    color: var(--font-color-transparent);
+    border: none;
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.meus-agendamentos-btn-sair:active {
+    opacity: 0.3;
+}
+
+.meus-agendamentos-conteudo {
+    flex: 1;
+    padding: 26px 22px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.meus-agendamentos-navegacao-semana {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-size: 0.92rem;
+    color: var(--font-color);
+}
+
+.meus-agendamentos-navegacao-semana button {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    color: var(--font-color);
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 8px;
+    opacity: 0.7;
+}
+
+.meus-agendamentos-navegacao-semana button:hover {
+    opacity: 1;
+    background: var(--background-transparent);
+}
+
+.meus-agendamentos-grade-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    border: 2px solid var(--border-transparent);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.25);
+}
+
+table.meus-agendamentos-grade {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+
+table.meus-agendamentos-grade th {
+    position: sticky;
+    top: 0;
+    background: var(--background-gradient-color-light);
+    font-size: 0.76rem;
+    color: var(--font-color);
+    font-weight: 700;
+    padding: 10px 4px;
+    border-bottom: 2px solid var(--border-transparent);
+    text-align: center;
+    z-index: 2;
+}
+
+table.meus-agendamentos-grade td {
+    border: 1px solid var(--border-transparent);
+    height: 62px;
+    vertical-align: top;
+    padding: 2px;
+    position: relative;
+}
+
+.meus-agendamentos-coluna-hora {
+    width: 60px;
+    font-size: 0.72rem;
+    color: var(--font-color);
+    opacity: 0.7;
+    text-align: right;
+    padding-right: 8px !important;
+    border: none !important;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+.meus-agendamentos-cartao-agendamento {
+    background: var(--background-gradient-color-dark);
+    border-left: 3px solid var(--background-button);
+    border-radius: 6px;
+    padding: 4px 6px;
+    font-size: 0.7rem;
+    color: var(--background-button);
+    line-height: 1.3;
+    overflow: hidden;
+    height: 100%;
+}
+
+.meus-agendamentos-cartao-agendamento b {
+    display: block;
+    font-size: 0.72rem;
+}
+
+.meus-agendamentos-painel-direito {
+    width: 270px;
+    border-left: 2px solid var(--border-transparent);
+    padding: 26px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    overflow-y: auto;
+}
+
+.meus-agendamentos-mini-calendario {
+    background: rgba(255,255,255,0.35);
+    border: 2px solid var(--border-transparent);
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.meus-agendamentos-mini-calendario-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 0.82rem;
+    margin-bottom: 10px;
+    color: var(--font-color);
+}
+
+.meus-agendamentos-mini-calendario-cabecalho button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--font-color);
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.meus-agendamentos-mini-calendario-cabecalho button:hover {
+    opacity: 1;
+}
+
+.meus-agendamentos-mini-grade {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    text-align: center;
+    font-size: 0.7rem;
+}
+
+.meus-agendamentos-mini-grade .meus-agendamentos-dia-semana {
+    color: var(--font-color);
+    opacity: 0.6;
+    font-weight: 700;
+    padding-bottom: 4px;
+}
+
+.meus-agendamentos-mini-grade .meus-agendamentos-dia {
+    background: rgba(255,255,255,0.6);
+    border-radius: 6px;
+    padding: 5px 0;
+    color: var(--font-color);
+    cursor: pointer;
+}
+
+.meus-agendamentos-mini-grade .meus-agendamentos-dia.meus-agendamentos-hoje {
+    background: var(--background-button);
+    color: var(--font-color-transparent);
+    font-weight: 700;
+}
+
+.meus-agendamentos-mini-grade .meus-agendamentos-dia.meus-agendamentos-vazio {
+    background: transparent;
+    cursor: default;
+}
+
+.meus-agendamentos-selecao-equipe select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 2px solid var(--border-transparent);
+    font-size: 0.82rem;
+    color: var(--font-color);
+    background: rgba(255,255,255,0.5);
+}
+
+.meus-agendamentos-titulo-secao {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--font-color);
+    opacity: 0.65;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+}
+
+.meus-agendamentos-cartao-profissional {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.4);
+    border: 2px solid var(--border-transparent);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.meus-agendamentos-avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--background-gradient-color-dark);
+    color: var(--background-button);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+.meus-agendamentos-cartao-profissional .meus-agendamentos-nome {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--font-color);
+}
+
+.meus-agendamentos-cartao-profissional .meus-agendamentos-funcao {
+    font-size: 0.7rem;
+    color: var(--font-color);
+    opacity: 0.6;
+}
+
+.meus-agendamentos-mensagem-vazio {
+    text-align: center;
+    color: var(--font-color);
+    opacity: 0.7;
+    font-size: 0.82rem;
+    padding: 40px 12px;
+}
+
+.meus-agendamentos-sem-profissionais {
+    font-size: 0.78rem;
+    opacity: 0.65;
+}
+
+@media (max-width: 900px) {
+    .meus-agendamentos-painel-direito { display: none; }
+}
