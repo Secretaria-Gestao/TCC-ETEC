@@ -1,18 +1,19 @@
 import { supabase } from '../../../services/SupabaseConfig.js';
+import notificarErro from './NotificacaoCadastro.js';
 
 export async function cadastrarGerente(email_profissional, senha, nome_profissional, telefone_profissional, salao_associado) {
-    const email = email_profissional.toLowerCase().trim();
-    const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: senha
-    });
+    try {
+        const email = email_profissional.toLowerCase().trim();
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: senha
+        });
 
-    if (error) {
-        alert('Deu erro ao cadastrar o gerente');
-        alert(error);
-    }
+        if (error) {
+            notificarErro()
+            return false
+        }
 
-    else {
         // Mantem a tabela "Profissionais" sincronizada com o usuario criado no Auth.
         const resposta = await fetch('/api/cadastro/gerente', {
             method: 'post',
@@ -34,12 +35,15 @@ export async function cadastrarGerente(email_profissional, senha, nome_profissio
         })
 
         if (!resposta.ok) {
-            const erro =  await resposta.json()
-            alert(erro)
+            notificarErro()
             return false
         }
 
         return true
+        
+    } catch (erro) {
+        console.error("Erro ao cadastrar gerente:", erro)
+        notificarErro("Não foi possível concluir o cadastro. Tente novamente mais tarde")
+        return false
     }
 }
-

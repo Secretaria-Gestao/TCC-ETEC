@@ -20,8 +20,6 @@ function CadastroGerente() {
 
     })
 
-    console.log(formulario)
-
     function mudarValor(evento) {
         const nomeCampo = evento.target.name
         const valorCampo = evento.target.value
@@ -84,7 +82,7 @@ function CadastroGerente() {
 
     return (
         <>
-            <main className="cadastro-main">
+            <main className="cadastro-main w-[94vw] max-w-[720px] p-5! max-[728px]:p-5! sm:p-7! md:w-[68vw] md:p-10! lg:w-[52vw] lg:p-14! xl:w-[39vw] xl:p-[60px]!">
                 <form className="cadastro-form">
                     <b>
                         <p id="logando"> {mudarForm.msgForm} </p>

@@ -16,7 +16,6 @@ def cadastrar_profissional():
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
     try:
-        print("1")
         resposta_auth = supabase_admin.auth.admin.create_user({    # Cria o usuário no Supabase Auth
             "email": email,
             "password": info["senha"],
@@ -37,7 +36,6 @@ def cadastrar_profissional():
         return jsonify({"sucesso": True, "resultado": "Profissional cadastrado com sucesso!"})
 
     except Exception as e:
-        print("Erro ao cadastrar profissional:", e)
         return jsonify({"sucesso": False, "erro": str(e)}), 500
 
 
@@ -72,7 +70,6 @@ def agendamentos_cliente(id_cliente):
         return jsonify({"sucesso": True, "agendamentos": agendamentos})
 
     except Exception as e:
-        print("Erro ao buscar agendamentos:", e)
         return jsonify({"sucesso": False, "erro": str(e)}), 500
 
 
@@ -81,8 +78,6 @@ def buscar_profissionalEmail():
     if not email:
         return jsonify({"sucesso": False, "erro": "Email não informado"}), 400
 
-    print("Email recebido:", email)
-    
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
@@ -101,7 +96,6 @@ def buscar_profissionalEmail():
         return jsonify({"sucesso": True, "profissional": resultado.data[0]})
 
     except Exception as e:
-        print("Erro ao buscar profissional:", e)
         return jsonify({"sucesso": False, "erro": str(e)}), 500
     
 def buscar_Todosprofissionais():
@@ -121,7 +115,6 @@ def buscar_Todosprofissionais():
         return jsonify({"sucesso": True, "profissional": resultado.data})
 
     except Exception as e:
-        print("Erro ao buscar profissional:", e)
         return jsonify({"sucesso": False, "erro": str(e)}), 500
 
 def vincular_profissional():
@@ -139,10 +132,7 @@ def vincular_profissional():
             "salao_associado": info["id_salao"]
         }).eq("id_profissional", info["id_profissional"]).execute()
         
-        print(resposta)
-
         return jsonify({"sucesso": True, "resultado": "Profissional vinculado ao salão com sucesso!"})
 
     except Exception as e:
-        print("Erro ao vincular profissional:", e)
         return jsonify({"sucesso": False, "erro": str(e)}), 500

@@ -10,11 +10,8 @@ export async function buscarSalao(email) {
     const infos_salao = await resposta.json()
 
     if (!infos_salao.sucesso) {
-        console.log("Deu ruim em buscar o salao:  ", resposta )
         return
     }
-    
-    console.log(infos_salao)
 
     return infos_salao.salao
 }

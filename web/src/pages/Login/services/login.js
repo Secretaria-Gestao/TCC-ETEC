@@ -1,16 +1,19 @@
 import { supabase } from '../../../services/SupabaseConfig.js';
+import { useNotificacaoStore } from '@/Notificacao/notificacaoStore.js';
 
-export async function logar(email, senha) {
-    // Login direto no Supabase Auth; em caso de sucesso o usuario segue para agendar.
+export async function logar(email, senha) { // Login direto no Supabase Auth
+    const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
         email: email,
         password: senha
     });
 
     if (error) {
-        alert('DEU RUIM LOGIN');
-        console.log(error)
+        mostrarNotificacao({
+            titulo: "Erro ao entrar na conta!",
+            texto: "Verifique e preencha todos os campos tentando novamente"
+        })
         return false
     }
     return true

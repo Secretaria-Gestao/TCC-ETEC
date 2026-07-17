@@ -1,4 +1,6 @@
 
+@reference "../../../../global.css";
+
 .login-form {
     display: flex;
     flex-direction: column;
@@ -21,12 +23,11 @@
 .login-form input,
 .login-form button,
 .login-form .button-link {
+    @apply w-full max-w-[500px] md:w-4/5 lg:w-7/12 xl:w-[57%];
     border-radius: 10px;
     border: 2px solid var(--border-color);
     padding: 10px;
     margin: 10px;
-    width: 57%;
-    max-width: 500px;
     flex: 1;
     height: max-content;
     font: inherit;
@@ -50,10 +51,10 @@
 }
 
 .login-form .ou {
+    @apply w-full max-w-[500px] md:w-4/5 lg:w-8/12 xl:w-[67%];
     margin: 10px 0px 12px 0px;
     display: flex;
     position: relative;
-    width: 67%;
     gap: 10px;
 }
 

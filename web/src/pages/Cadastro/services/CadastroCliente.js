@@ -1,19 +1,19 @@
 import { supabase } from '../../../services/SupabaseConfig.js';
+import notificarErro from './NotificacaoCadastro.js';
 
 export async function cadastrarCliente(nome, email, senha) {
+    try {
+        // Primeiro cria o usuario no Supabase Auth; depois salva o perfil no backend.
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: senha
+        });
 
-    // Primeiro cria o usuario no Supabase Auth; depois salva o perfil no backend.
-    const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: senha
-    });
+        if (error) {
+            notificarErro()
+            return false
+        }
 
-    if (error) {
-        alert('DEU RUIM CADASTRO');
-        alert(error);
-    }
-
-    else {
         // Mantem a tabela "clientes" sincronizada com o usuario criado no Auth.
         const resposta = await fetch('/api/cadastro/cliente', {
             method: 'post',
@@ -30,14 +30,15 @@ export async function cadastrarCliente(nome, email, senha) {
             })
         })
 
-        if (resposta.ok) {
-            return true
+        if (!resposta.ok) {
+            notificarErro()
+            return false
         }
 
-        else {
-            alert("Deu erro ao cadastrar")
-            console.log(resposta)
-        }
+        return true
+    } catch (erro) {
+        console.error("Erro ao cadastrar cliente:", erro)
+        notificarErro("Não foi possível concluir o cadastro. Tente novamente mais tarde")
+        return false
     }
 }
-

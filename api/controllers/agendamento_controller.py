@@ -35,9 +35,6 @@ def agendar():
             .execute()
         )
         
-        print(info["profissional"])
-        print(profissional_escolhido.data)
-
         id_profissional = profissional_escolhido.data[0]["id_profissional"]
 
         checagem_agendamento = (
@@ -87,5 +84,4 @@ def agendar():
             )
 
     except Exception as e:
-        print("Erro ao agendar:", e)
         return jsonify({"sucesso": False, "erro": str(e)}), 500

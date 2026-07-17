@@ -37,7 +37,7 @@ function CadastroCliente() {
 
     return (
         <>
-            <main className="cadastro-main">
+            <main className="cadastro-main w-[94vw] max-w-[820px] p-5! max-[728px]:p-5! sm:p-7! md:w-[80vw] md:p-10! lg:w-[70vw] lg:p-14! xl:w-[79vw] xl:p-[60px]!">
                 <form className="cadastro-form" onSubmit={enviarFormulario}>
                     <b>
                         <p id="logando"> Cadastrar-se </p>

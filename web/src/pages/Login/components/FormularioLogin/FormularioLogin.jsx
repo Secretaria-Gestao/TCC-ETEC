@@ -38,7 +38,7 @@ function FormularioLogin() {
 
     return (
         <>
-            <main className="login-main">
+            <main className="login-main w-[94vw] max-w-[720px] p-5! max-[728px]:p-5! sm:p-7! md:w-[68vw] md:p-10! lg:w-[52vw] lg:p-14! xl:w-[39vw] xl:p-[60px]!">
                 <form className="login-form" onSubmit={enviarFormulario}>
                     <b>
                         <p id="logando"> Entrar na conta </p>

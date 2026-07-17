@@ -1,16 +1,23 @@
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { mandarAgendamento } from '../../services/Agendamento.js'
 
-import './Formulario.css'
 import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { buscarTodosProfissionais } from "../../../../services/BuscarProfissionais.js"
-
+import { useNotificacaoStore } from "@/Notificacao"
+import './Formulario.css'
 
 function Formulario() {
     const navegar = useNavigate()
-
     const [todosProfissionais, setTodosProfissionais] = useState([])
+    const [dados, setDados] = useState({
+        servicos: [1],
+        profissional: "",
+        dia: "",
+        horario: "",
+        endereco: ""
+    })
+    const mostrarNotificacao = useNotificacaoStore((state) => state.mostrarNotificacao)
 
     useEffect(() => {
         async function buscarDados() {
@@ -24,20 +31,9 @@ function Formulario() {
                     profissional: resposta.profissional[0].nome_profissional
                 }))
             }
-
         }
-
         buscarDados()
-
     }, [])
-
-    const [dados, setDados] = useState({
-        servicos: [1],
-        profissional: "",
-        dia: "",
-        horario: "",
-        endereco: ""
-    })
 
     function resetarDados() {
         setDados({
@@ -51,7 +47,6 @@ function Formulario() {
 
     async function enviarDados() {
         const resultadoToken = await pegarSessao()
-        console.log(resultadoToken)
 
         if (resultadoToken) {
             const token = resultadoToken.access_token
@@ -64,19 +59,32 @@ function Formulario() {
                 dados.endereco
             )
 
-            respostaFetch.ok ? navegar("/agendamento/meus-agendamentos") : alert("Deu ruim no agendamento")
+            if (respostaFetch.ok) {
+                mostrarNotificacao({
+                    titulo: "Agendamento Concluído!",
+                    mostrarBotao: true,
+                    lblBotao: "Clique aqui para conferir seus agendamentos",
+                    textoBotao: "Meus agendamentos",
+                    funcaoBotao: () => {
+                        navegar("/agendamento/meus-agendamentos")
+                    }
+                })
+                return
+            }
+
+            mostrarNotificacao({
+                titulo: "Erro no agendamento!",
+                texto: "Confira novamente os dados e tente novamente"
+            })
         }
 
         else {
             alert("Você precisa estar logado!")
             navegar('/')
         }
-
     }
 
     function adicionarServico() {
-        const quantidadeServicos = dados.servicos
-
         setDados({
             ...dados,
             servicos: [...dados.servicos, 1]
@@ -103,22 +111,17 @@ function Formulario() {
         })
     }
 
-    console.log(dados)
-
     return (
         <form className='agendamento-form tudo'>
-
             <main className="agendamento-main">
                 <div className="card_1">
-
                     <div className="lista_servicos" id="lista_servicos">
-
-
                         {
                             dados.servicos.map((servico, indice) => {
                                 return (
                                     <div className="servico_adicionado" key={indice}>
                                         <label htmlFor="servico">Selecione o serviço:</label>
+
                                         <select name='servico' className="servico" value={servico} onChange={(evento) => mudarValorServico(evento, indice)} key={indice}>
                                             <option value="1">Barba</option>
                                             <option value="2">Cabelo</option>
@@ -144,8 +147,6 @@ function Formulario() {
                             })
                         }
 
-
-
                     </div>
 
                     <div className="profissional_selecionado">
@@ -153,13 +154,12 @@ function Formulario() {
 
                         <select name="profissional" onChange={mudarValorDados} value={dados.profissional}>
                             {
-                            todosProfissionais.map((profissional) => {
-                                return (
-                                    <option key={profissional.id_profissional} value={profissional.nome_profissional}>{profissional.nome_profissional}</option>
-                                )
+                                todosProfissionais.map((profissional) => {
+                                    return (
+                                        <option key={profissional.id_profissional} value={profissional.nome_profissional}>{profissional.nome_profissional}</option>
+                                    )
+                                })
                             }
-                            )
-                        }
                         </select>
                     </div>
 
@@ -167,6 +167,7 @@ function Formulario() {
                         <label>Dia marcado:</label>
                         <input type="date" name="dia" onChange={mudarValorDados} />
                     </div>
+
                     <div>
                         <label>Horario da sessão:</label>
                         <input type="time" name="horario" onChange={mudarValorDados} />
@@ -178,6 +179,7 @@ function Formulario() {
                         <h1 className="agendamento-title bold">Agendamento</h1>
                         <img className="logo" src="/logo_pequena.png" alt="logo secretária gestão" />
                     </header>
+
                     <div>
                         <select name="endereco" className="local" onChange={mudarValorDados}>
                             <option value="">Local</option>

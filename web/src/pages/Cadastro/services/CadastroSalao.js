@@ -1,25 +1,32 @@
-export async function cadastrarSalao(nome_salao, categoria_salao, endereco_salao,) {
-    const resposta = await fetch('/api/cadastro/salao', {
-        method: 'post',
+import notificarErro from './NotificacaoCadastro.js';
 
-        headers: {
-            'Content-type': 'application/json'
-        },
+export async function cadastrarSalao(nome_salao, categoria_salao, endereco_salao) {
+    try {
+        const resposta = await fetch('/api/cadastro/salao', {
+            method: 'post',
 
-        body: JSON.stringify({
-            nome_salao: nome_salao,
-            categoria_salao: categoria_salao,
-            endereco_salao: endereco_salao,
+            headers: {
+                'Content-type': 'application/json'
+            },
+
+            body: JSON.stringify({
+                nome_salao: nome_salao,
+                categoria_salao: categoria_salao,
+                endereco_salao: endereco_salao,
+            })
         })
-    })
 
-    if (!resposta.ok) {
-        alert("Deu erro ao cadastrar o salão")
-        alert(resposta)
-    }
+        if (!resposta.ok) {
+            notificarErro("Não foi possível cadastrar o salão")
+            return false
+        }
 
-    else {
         const dados = await resposta.json()
         return dados.id_salao
+        
+    } catch (erro) {
+        console.error("Erro ao cadastrar salão:", erro)
+        notificarErro("Não foi possível cadastrar o salão. Tente novamente mais tarde")
+        return false
     }
 }

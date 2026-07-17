@@ -29,6 +29,5 @@ def buscar_salao():
         
         
     except Exception as erro:
-        print("ERRO:", erro)
         return jsonify({"sucesso": False,"erro": str(erro)}), 500
     
