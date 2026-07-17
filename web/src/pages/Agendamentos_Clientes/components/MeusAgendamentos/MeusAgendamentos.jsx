@@ -22,36 +22,44 @@ function MeusAgendamentos() {
 
     useEffect(() => {
         async function carregarAgendamentos() {
-            const { data: sessao } = await supabase.auth.getSession()
+    const { data: sessao } = await supabase.auth.getSession()
 
-            if (!sessao.session) {
-                setMensagem('Você precisa estar logado para ver seus agendamentos.')
-                return
-            }
+    if (!sessao.session) {
+        setMensagem('Você precisa estar logado para ver seus agendamentos.')
+        return
+    }
 
-            const id_cliente = sessao.session.user.id
-            const token = sessao.session.access_token
+    // Tenta renovar o token automaticamente
+    const { data: sessaoAtualizada } = await supabase.auth.refreshSession()
+    
+    if (!sessaoAtualizada.session) {
+        setMensagem('Sua sessão expirou. Faça login novamente.')
+        return
+    }
 
-            try {
-                const resposta = await fetch(`/api/agendamentos/cliente/${id_cliente}`, {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                })
+    const id_cliente = sessaoAtualizada.session.user.id
+    const token = sessaoAtualizada.session.access_token
 
-                const resultado = await resposta.json()
+    try {
+        const resposta = await fetch(`/api/agendamentos/cliente/${id_cliente}`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
 
-                if (!resultado.sucesso) {
-                    setMensagem('Erro ao buscar agendamentos: ' + resultado.erro)
-                    return
-                }
+        const resultado = await resposta.json()
 
-                setAgendamentos(resultado.agendamentos || [])
-
-            } catch (erro) {
-                console.error('Erro na requisição:', erro)
-                setMensagem('Erro de conexão. Tente novamente.')
-            }
+        if (!resultado.sucesso) {
+            setMensagem('Erro ao buscar agendamentos: ' + resultado.erro)
+            return
         }
+
+        setAgendamentos(resultado.agendamentos || [])
+
+    } catch (erro) {
+        console.error('Erro na requisição:', erro)
+        setMensagem('Erro de conexão. Tente novamente.')
+    }
+}
 
         carregarAgendamentos()
     }, [])
