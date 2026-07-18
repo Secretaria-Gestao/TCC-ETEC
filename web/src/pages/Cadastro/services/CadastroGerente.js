@@ -28,7 +28,7 @@ export async function cadastrarGerente(email_profissional, senha, nome_profissio
                 email_profissional: email,
                 nome_profissional: nome_profissional,
                 salao_associado: salao_associado,
-                cargo: "gerente",
+                cargo: "Gerente",
                 nivel_acesso: "1",
                 telefone_profissional: telefone_profissional
             })

@@ -3,8 +3,8 @@ from controllers.login_controller import cadastroUserCliente
 from controllers.login_controller import cadastroUserGerente
 from controllers.login_controller import cadastroSalao
 from controllers.agendamento_controller import agendar
-from controllers.admin_controller import cadastrar_profissional, agendamentos_cliente, buscar_profissionalEmail, buscar_Todosprofissionais, vincular_profissional, meu_perfil, agendamentos_profissional, agendamentos_salao
-from controllers.buscarSalao import buscar_salao
+from controllers.admin_controller import cadastrar_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, meu_perfil, agendamentos_profissional, agendamentos_salao
+from controllers.buscar_salao import buscar_salao
 
 rotas_json = Blueprint("rotas_json", __name__)
 
@@ -36,7 +36,7 @@ def buscar_agendamentos(id_cliente):
 
 @rotas_json.route("/api/buscar/profissionais/email", methods=["GET"])
 def buscar_profEmail():
-    return buscar_profissionalEmail()
+    return buscar_profissional_email()
 
 @rotas_json.route("/api/buscar/profissionais/todos", methods=["GET"])
 def buscar_Todosprof():
@@ -45,10 +45,6 @@ def buscar_Todosprof():
 @rotas_json.route("/api/buscar/salao", methods=["POST"])
 def buscarSalao():
     return buscar_salao()
-
-@rotas_json.route("/api/vincular/profissional", methods=["PATCH"])
-def vincular_prof():
-    return vincular_profissional()
 
 @rotas_json.route("/api/perfil/meu-perfil", methods=["GET"])
 def meu_perfil_rota():

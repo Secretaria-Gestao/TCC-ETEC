@@ -1,34 +1,38 @@
-import './Header.css'
 import { cadastrarColaborador } from '../../../../services/CadastroColaborador.js'
-import { buscarProfissionalPorEmail } from '../../../../../../services/BuscarProfissionais.js'
 import { buscarSalao } from '../../../../../../services/BuscarSalao.js'
-import { supabase } from '../../../../../../services/SupabaseConfig.js'
+import { pegarSessao } from '../../../../../../services/pegarSessao.js'
+import { useNotificacaoStore } from "@/Notificacao/notificacaoStore.js"
 import { useEffect, useState } from 'react'
+import './Header.css'
 
 function Header({ dados, nomeUsuario }) {
-
     const [nomeSalao, setNomeSalao] = useState("carregando...")
+    const mostrarNotificacao = useNotificacaoStore((state) => state.mostrarNotificacao)
 
-    useEffect(() => {
+    useEffect(() => { // Precisa disso para fazer a busca do nome do salão usando o React
         async function pegarNomeSalao() {
-            const { data: { user }, error } = await supabase.auth.getUser()
+            const sessao = await pegarSessao()
 
-            if (error) {
+            if (!sessao) {
                 return
             }
 
-            const salao = await buscarSalao(user.email)
+            const salao = await buscarSalao(sessao.user.email)
             setNomeSalao(salao.nome_salao)
         }
 
         pegarNomeSalao()
-    }, []) // [] = roda só uma vez quando o componente aparecer na tela
+
+    }, []) // [] = roda só uma vez quando o componente aparecer na tela, para não re-renderizar a tela várias vezes causando lentidão
 
     async function mandarFormulario() {
-        const resposta = await cadastrarColaborador(dados.email, dados.senha, nomeUsuario, dados.cargo, dados.telefone, dados.nivelAcesso)
+        const resposta = await cadastrarColaborador(dados.email, dados.senha, nomeUsuario, dados.cargo, dados.telefone, dados.nivelAcesso);
 
         if (resposta) {
-            alert("Deu certo o cadastro do profissional")
+            mostrarNotificacao({
+                titulo: "Cadastro concluído!",
+                texto: "Profissional cadastrado no salão com sucesso."
+            });
         }
     }
 

@@ -7,11 +7,11 @@ export async function buscarSalao(email) {
         body: JSON.stringify({email_profissional: email})
     })
 
-    const infos_salao = await resposta.json()
+    const dadosSalao = await resposta.json()
 
-    if (!infos_salao.sucesso) {
+    if (!dadosSalao.sucesso) {
         return
     }
 
-    return infos_salao.salao
+    return dadosSalao.salao
 }

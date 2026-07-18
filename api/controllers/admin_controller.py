@@ -2,42 +2,68 @@ from flask import request, jsonify
 from database import supabase, supabase_admin
 from controllers.autenticacao import autenticar
 
-def cadastrar_profissional():
-    info = request.get_json()
+def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e já vincula também no mesmo salão do gerente
+    info = request.get_json(silent=True) or {}
+    id_profissional = None
 
     campos_necessarios = ["email", "senha", "nome_profissional", "cargo", "nivel_acesso", "telefone_profissional"]
     for campo in campos_necessarios:
-        if campo not in info:
+        if not info.get(campo):
             return jsonify({"sucesso": False, "erro": f"Campo ausente: {campo}."}), 400
 
-    email = info["email"].lower()
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
+
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
+    id_gerente = autenticar(token)
+
+    if not id_gerente:
+        return jsonify({"sucesso": False, "erro": "Token não autorizado"}), 401
+
     try:
+
+        resultado_gerente = supabase_admin.table("profissionais").select("cargo, salao_associado").eq("id_profissional", id_gerente).execute()
+
+        if not resultado_gerente.data:
+            return jsonify({"sucesso": False, "erro": "Não foi possível encontrar o gerente na tabela de profissionais"}), 404
+
+        gerente = resultado_gerente.data[0]
+
+        if gerente["cargo"].strip().lower() != "gerente":
+            return jsonify({"sucesso": False, "erro": "Somente gerentes podem cadastrar um profissional"}), 403
+
+        email_profissional = info["email"].strip().lower()
+
         resposta_auth = supabase_admin.auth.admin.create_user({    # Cria o usuário no Supabase Auth
-            "email": email,
+            "email": email_profissional,
             "password": info["senha"],
             "email_confirm": True
         })
-        
+
         id_profissional = resposta_auth.user.id
           
-        supabase_admin.table("profissionais").insert({   # Insere na tabela profissionais
+        supabase_admin.table("profissionais").insert({
             "id_profissional": id_profissional,
-            "email_profissional": email,
+            "email_profissional": email_profissional,
             "nome_profissional": info["nome_profissional"],
             "cargo": info["cargo"],
             "telefone_profissional": info["telefone_profissional"],
-            "nivel_acesso": info["nivel_acesso"]
+            "nivel_acesso": info["nivel_acesso"],
+            "salao_associado": gerente["salao_associado"]
         }).execute()
         
         return jsonify({"sucesso": True, "resultado": "Profissional cadastrado com sucesso!"})
 
     except Exception as e:
-        return jsonify({"sucesso": False, "erro": str(e)}), 500
+        if id_profissional:
+            try: # Usa um try aqui porque até esse delete pode dar erro
+                supabase_admin.auth.admin.delete_user(id_profissional)
 
+            except Exception as erro_exclusao:
+                print("Erro ao excluir usuário incompleto:", erro_exclusao)
+
+        return jsonify({"sucesso": False, "erro": str(e)}), 500
 
 def agendamentos_cliente(id_cliente):
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
@@ -73,32 +99,48 @@ def agendamentos_cliente(id_cliente):
         return jsonify({"sucesso": False, "erro": str(e)}), 500
 
 
-def buscar_profissionalEmail():
-    email = request.headers.get("X-Email").lower()
-    if not email:
+def buscar_profissional_email():
+    email_destinatario = (request.headers.get("X-Email") or "").lower() # Email do profissional que será buscado
+    if not email_destinatario:
         return jsonify({"sucesso": False, "erro": "Email não informado"}), 400
 
-    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    token = request.headers.get("Authorization", "").replace("Bearer ", "") # Pega o token de quem está querendo buscar o profissional pelo email
+
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
-    try:
-        resultado = (
-            supabase_admin.table("profissionais")
-            .select("*")
-            .eq("email_profissional", email)
-            .execute()
-        )
+    id_remetente = autenticar(token) # Valida o token
 
-        if not resultado.data:
+    if not id_remetente:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    try: # Vai verificar se o remetente é gerente, se nenhuma busca retorna um "None" ou por aí
+        resposta_remetente = supabase_admin.table("profissionais").select("cargo, salao_associado").eq("id_profissional", id_remetente).execute()
+
+        if not resposta_remetente.data:
+            return jsonify({"sucesso": False, "erro": "Remetente não encontrado"}), 404
+
+        remetente = resposta_remetente.data[0]
+
+        if remetente['cargo'] != "Gerente":
+            return jsonify({"sucesso": False, "erro": "Somente gerentes podem fazer busca"}), 403
+
+        resposta_destinatario = supabase_admin.table("profissionais").select("*").eq("email_profissional", email_destinatario).execute()
+
+        if not resposta_destinatario.data:
             return jsonify({"sucesso": False, "erro": "Profissional não encontrado"}), 404
 
-        return jsonify({"sucesso": True, "profissional": resultado.data[0]})
+        destinatario = resposta_destinatario.data[0]
+
+        if remetente['salao_associado'] != destinatario['salao_associado'] and destinatario['salao_associado'] is not None:
+            return jsonify({"sucesso": False, "erro": "O gerente tentou buscar um profissional de outro salão"}), 403
+
+        return jsonify({"sucesso": True, "profissional": destinatario})
 
     except Exception as e:
         return jsonify({"sucesso": False, "erro": str(e)}), 500
     
-def buscar_Todosprofissionais():
+def buscar_Todosprofissionais(): # Busca todos os profissionais, todos
     
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     if not token:
@@ -113,26 +155,6 @@ def buscar_Todosprofissionais():
             return jsonify({"sucesso": False, "erro": "Profissional não encontrado"}), 404
 
         return jsonify({"sucesso": True, "profissional": resultado.data})
-
-    except Exception as e:
-        return jsonify({"sucesso": False, "erro": str(e)}), 500
-
-def vincular_profissional():
-    info = request.get_json()
-
-    if "id_profissional" not in info or "id_salao" not in info:
-        return jsonify({"sucesso": False, "erro": "Campos ausentes: id_profissional e id_salao são obrigatórios"}), 400
-
-    token = request.headers.get("Authorization", "").replace("Bearer ", "")
-    if not token:
-        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
-
-    try:
-        resposta = supabase_admin.table("profissionais").update({
-            "salao_associado": info["id_salao"]
-        }).eq("id_profissional", info["id_profissional"]).execute()
-        
-        return jsonify({"sucesso": True, "resultado": "Profissional vinculado ao salão com sucesso!"})
 
     except Exception as e:
         return jsonify({"sucesso": False, "erro": str(e)}), 500
