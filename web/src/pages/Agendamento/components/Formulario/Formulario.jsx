@@ -4,12 +4,14 @@ import { mandarAgendamento } from '../../services/Agendamento.js'
 
 import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { buscarTodosProfissionais } from "../../../../services/BuscarProfissionais.js"
+import { buscarSaloes } from '../../services/buscarSaloes.js'
 import { useNotificacaoStore } from "@/Notificacao"
 import './Formulario.css'
 
 function Formulario() {
     const navegar = useNavigate()
     const [todosProfissionais, setTodosProfissionais] = useState([])
+    const [todosSaloes, setTodosSaloes] = useState([])
     const [dados, setDados] = useState({
         servicos: [1],
         profissional: "",
@@ -21,27 +23,57 @@ function Formulario() {
 
     useEffect(() => {
         async function buscarDados() {
-            const resposta = await buscarTodosProfissionais()
+            const respostaSaloes = await buscarSaloes()
+
+            if (!respostaSaloes || respostaSaloes.length === 0) {
+                setTodosSaloes([])
+                return
+            }
+
+            setTodosSaloes(respostaSaloes)
+            setDados((dadosAntigos) => ({
+                ...dadosAntigos,
+                endereco: respostaSaloes[0].id_salao
+            }))
+        }
+
+        buscarDados()
+    }, [])
+
+    useEffect(() => {
+        if (!dados.endereco) {
+            setTodosProfissionais([])
+            return
+        }
+
+        async function buscarProfissionais(idSalao) {
+            const resposta = await buscarTodosProfissionais(idSalao)
+
+            if (!resposta || !resposta.sucesso || !resposta.profissional) {
+                setTodosProfissionais([])
+                return
+            }
 
             setTodosProfissionais(resposta.profissional)
 
             if (resposta.profissional.length > 0) {
                 setDados((dadosAntigos) => ({
                     ...dadosAntigos,
-                    profissional: resposta.profissional[0].nome_profissional
+                    profissional: resposta.profissional[0].id_profissional
                 }))
             }
         }
-        buscarDados()
-    }, [])
+
+        buscarProfissionais(dados.endereco)
+    }, [dados.endereco])
 
     function resetarDados() {
         setDados({
             servicos: [1],
-            profissional: "",
+            profissional: dados.profissional,
             dia: "",
             horario: "",
-            endereco: "",
+            endereco: dados.endereco
         })
     }
 
@@ -156,7 +188,7 @@ function Formulario() {
                             {
                                 todosProfissionais.map((profissional) => {
                                     return (
-                                        <option key={profissional.id_profissional} value={profissional.nome_profissional}>{profissional.nome_profissional}</option>
+                                        <option key={profissional.id_profissional} value={profissional.id_profissional}>{profissional.nome_profissional}</option>
                                     )
                                 })
                             }
@@ -181,12 +213,12 @@ function Formulario() {
                     </header>
 
                     <div>
-                        <select name="endereco" className="local" onChange={mudarValorDados}>
-                            <option value="">Local</option>
-                            <option value="Seu Jorge">Seu Jorge</option>
-                            <option value="Unhas Cleide">Unhas Cleide</option>
-                            <option value="Rua dos Bobos">Rua dos Bobos</option>
-                            <option value="Casa Engraçada">Casa Engraçada</option>
+                        <select name="endereco" className="local" value={dados.endereco} onChange={mudarValorDados}>
+                            {todosSaloes.map((salao) => {
+                                return (
+                                    <option key={salao.id_salao} value={salao.id_salao}> {`${salao.nome_salao}. ${salao.endereco_salao}`} </option>
+                                )
+                            })}
                         </select>
                     </div>
 

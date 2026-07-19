@@ -8,7 +8,7 @@ def agendar():
     info = request.get_json()
 
     # Garante que o front mandou tudo que a tabela precisa receber.
-    campos_necessarios = ["servicos", "profissional", "data_hora", "endereco"]
+    campos_necessarios = ["servicos", "id_profissional", "id_salao", "data_hora"]
     for campo in campos_necessarios:
         if campo not in info:
             return jsonify({"sucesso": False, "erro": f"Campo ausente: {campo}"}), 400
@@ -26,16 +26,31 @@ def agendar():
         return jsonify({"sucesso": False, "erro": "Token é invalido"}), 401
 
     try:
-        # Mapeia os nomes usados no JavaScript para os nomes das colunas no banco.
+        id_salao = info["id_salao"]
 
         profissional_escolhido = (
             supabase.table("profissionais")
             .select("id_profissional")
-            .eq("nome_profissional", info["profissional"])
+            .eq("id_profissional", info["id_profissional"])
             .execute()
         )
-        
+
+        if not profissional_escolhido.data:
+            return jsonify({"sucesso": False, "erro": "Profissional não encontrado"}), 404
+
         id_profissional = profissional_escolhido.data[0]["id_profissional"]
+
+        salao_escolhido = (
+            supabase.table("saloes")
+            .select("endereco_salao")
+            .eq("id_salao", id_salao)
+            .execute()
+        )
+
+        if not salao_escolhido.data:
+            return jsonify({"sucesso": False, "erro": "Salão não encontrado"}), 404
+
+        endereco_salao = salao_escolhido.data[0]["endereco_salao"]
 
         checagem_agendamento = (
             supabase.table("agendamentos")
@@ -50,7 +65,7 @@ def agendar():
                 "id_cliente": id_cliente,
                 "id_profissional": id_profissional,
                 "horario": info["data_hora"],
-                "endereco": info["endereco"],
+                "endereco": endereco_salao,
                 "status": "Pendente"
             }
 

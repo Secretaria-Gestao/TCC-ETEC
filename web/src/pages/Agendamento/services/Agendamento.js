@@ -11,9 +11,9 @@ export async function mandarAgendamento(token, servicos, profissional, dia, hora
 
         body: JSON.stringify({
             servicos: servicos,
-            profissional: profissional,
+            id_profissional: profissional,
+            id_salao: endereco,
             data_hora: dataHora,
-            endereco: endereco
         })
 
     })
