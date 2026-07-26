@@ -15,7 +15,7 @@
 
 @theme {
     --color-azulClaro: var(--background-gradient-color-light);
-    --color-amarelo: var(--background-gradient-color-dark);
+    --color-amarelo: var(--border-transparent);
     --color-cinza: var(--background-transparent);
     --color-laranja: var(--background-color-error);
     --color-escuro: var(--font-color-error);
@@ -23,8 +23,6 @@
 }
 
 * {
-    padding: 0%;
-    margin: 0%;
     font-family: "Poppins", sans-serif;
 }
 
@@ -45,7 +43,7 @@ button[disabled] {
 }
 
 .main-principal {
-    @apply w-dvw h-dvh bg-no-repeat bg-fixed bg-center ;
+    @apply w-dvw min-h-dvh bg-no-repeat bg-fixed bg-center ;
     background: repeating-linear-gradient(to top right, var(--background-gradient-color-light) 10% 35%, var(--background-gradient-color-dark) 35% 40%, var(--background-gradient-color-light) 40% 45%);
 }
 

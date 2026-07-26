@@ -4,7 +4,7 @@ from controllers.login_controller import cadastroUserGerente
 from controllers.login_controller import cadastroSalao
 from controllers.agendamento_controller import agendar
 from controllers.admin_controller import cadastrar_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, meu_perfil, agendamentos_profissional, agendamentos_salao
-from controllers.buscar_salao import buscar_salao
+from controllers.buscar_salao import buscar_salao, buscar_servicos_fornecidos, criar_servicos_fornecidos, editar_servicos_fornecidos, deletar_servicos_fornecidos
 from controllers.buscar_saloes import buscar_saloes
 
 rotas_json = Blueprint("rotas_json", __name__)
@@ -50,6 +50,24 @@ def buscarSalao():
 @rotas_json.route("/api/buscar/saloes", methods=["GET", "POST"])
 def buscar_todos_saloes():
     return buscar_saloes()
+
+# Rotas usadas pela página de gerenciamento de serviços. Cada função apenas
+# encaminha a requisição para o controller que contém a regra de negócio.
+@rotas_json.route("/api/buscar/servicos-fornecidos", methods=["GET"])
+def buscar_Servicos_Fornecidos():
+    return buscar_servicos_fornecidos()
+
+@rotas_json.route("/api/criar/servico-fornecido", methods=['POST'])
+def criar_Servicos_Fornecidos():
+    return criar_servicos_fornecidos()
+
+@rotas_json.route("/api/editar/servico-fornecido", methods=['POST'])
+def editar_Servicos_Fornecidos():
+    return editar_servicos_fornecidos()
+
+@rotas_json.route("/api/deletar/servico-fornecido", methods=['POST'])
+def deletar_Servicos_Fornecidos():
+    return deletar_servicos_fornecidos()
 
 @rotas_json.route("/api/perfil/meu-perfil", methods=["GET"])
 def meu_perfil_rota():

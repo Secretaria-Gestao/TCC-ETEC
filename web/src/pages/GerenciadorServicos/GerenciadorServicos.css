@@ -1,0 +1,11 @@
+@reference "../../global.css";
+
+/* Formulário que aparece sobre a página ao editar um serviço. */
+.GerenciadorServicos-editar {
+    @apply rounded-lg bg-marrom p-6 text-white w-96 max-w-[90%] max-h-[80dvh] xl:min-w-140 overflow-y-auto flex flex-col gap-3;
+}
+
+/* Checkboxes conservam o tamanho padrão; somente os campos de texto ocupam a largura. */
+.GerenciadorServicos-editar > label > input:not([type="checkbox"]) {
+    @apply w-full text-amarelo border border-laranja p-1;
+}

@@ -1,0 +1,14 @@
+@reference "../../global.css";
+
+.barraLateral {
+    /* sticky mantém a barra visível durante a rolagem sem retirá-la do layout. */
+    @apply bg-gray-800 text-white
+    flex flex-col
+    w-max px-4 sticky shrink-0 top-0 h-dvh;
+}
+
+
+
+.barraLateral > hr {
+    margin: 24px
+}

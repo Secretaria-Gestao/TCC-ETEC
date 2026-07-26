@@ -1,0 +1,60 @@
+@reference "../../../../global.css";
+
+/* Mantém as colunas com medidas previsíveis mesmo quando o texto é grande. */
+.GerenciadorServicos-TabelaServicos {
+    table-layout: fixed;
+}
+
+.GerenciadorServicos-TabelaServicos th,
+.GerenciadorServicos-TabelaServicos td {
+    border: 3px solid var(--color-laranja);
+    padding: 5px;
+}
+
+/* A primeira coluna contém apenas os checkboxes de seleção. */
+.GerenciadorServicos-TabelaServicos th:first-child,
+.GerenciadorServicos-TabelaServicos td:first-child {
+    width: 40px;
+}
+
+.GerenciadorServicos-TabelaServicos thead th:last-child {
+    height: 1px;
+}
+
+.GerenciadorServicos-TabelaServicos thead th:last-child > button {
+    white-space: nowrap;
+}
+
+.GerenciadorServicos-TabelaServicos input:not([type="checkbox"]) {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Estilos compartilhados somente pela linha temporária de criação. */
+.GerenciadorServicos-adicionar > td:not(:first-child):not(:last-child) {
+    @apply p-0 bg-marrom;
+}
+
+.GerenciadorServicos-adicionar input:not([type="checkbox"]) {
+    @apply bg-marrom p-1.5 w-full h-full text-amarelo;
+}
+
+.GerenciadorServicos-TabelaServicos .overflow-x-auto {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #d97706 black; /* Firefox - cor do thumb / track */
+}
+
+.GerenciadorServicos-TabelaServicos .overflow-x-auto::-webkit-scrollbar-button {
+    display: none;
+}
+
+.GerenciadorServicos-TabelaServicos .overflow-x-auto::-webkit-scrollbar {
+    height: 4px; /* deixa fina */
+}
+
+@media (max-width: 1023px) {
+    /* Em telas menores a tabela conserva uma largura mínima e ganha rolagem. */
+    .GerenciadorServicos-TabelaServicos {
+        min-width: 650px;
+    }
+}
