@@ -5,12 +5,14 @@ import { mandarAgendamento } from '../../services/Agendamento.js'
 import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { buscarTodosProfissionais } from "../../../../services/BuscarProfissionais.js"
 import { buscarSaloes } from '../../services/buscarSaloes.js'
+import { buscarServicos} from "../../services/buscarServicos.js"
 import { useNotificacaoStore } from "@/Notificacao"
 import './Formulario.css'
 
 function Formulario() {
     const navegar = useNavigate()
     const [todosProfissionais, setTodosProfissionais] = useState([])
+    const [todosServicos, setTodosServicos] = useState([])
     const [todosSaloes, setTodosSaloes] = useState([])
     const [dados, setDados] = useState({
         servicos: [1],
@@ -66,6 +68,20 @@ function Formulario() {
 
         buscarProfissionais(dados.endereco)
     }, [dados.endereco])
+
+    useEffect(() => {
+        async function buscarServicoS() {
+            const respostaServicos = await buscarServicos(dados.profissional)
+
+            if (respostaServicos) {
+                console.log(respostaServicos)
+                setTodosServicos()
+            }
+        }
+
+        buscarServicoS()
+
+    }, [dados.profissional])
 
     function resetarDados() {
         setDados({
