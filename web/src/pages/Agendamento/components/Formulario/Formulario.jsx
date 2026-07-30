@@ -5,7 +5,7 @@ import { mandarAgendamento } from '../../services/Agendamento.js'
 import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { buscarTodosProfissionais } from "../../../../services/BuscarProfissionais.js"
 import { buscarSaloes } from '../../services/buscarSaloes.js'
-import { buscarServicos} from "../../services/buscarServicos.js"
+import { buscarServicos } from "../../services/buscarServicos.js"
 import { useNotificacaoStore } from "@/Notificacao"
 import './Formulario.css'
 
@@ -69,14 +69,11 @@ function Formulario() {
         buscarProfissionais(dados.endereco)
     }, [dados.endereco])
 
-    useEffect(() => {
+    useEffect(() => { // Serve somente para pegar os serviços do profissional selecionado
         async function buscarServicoS() {
             const respostaServicos = await buscarServicos(dados.profissional)
 
-            if (respostaServicos) {
-                console.log(respostaServicos)
-                setTodosServicos()
-            }
+            if (respostaServicos) setTodosServicos(respostaServicos)
         }
 
         buscarServicoS()
@@ -171,11 +168,19 @@ function Formulario() {
                                         <label htmlFor="servico">Selecione o serviço:</label>
 
                                         <select name='servico' className="servico" value={servico} onChange={(evento) => mudarValorServico(evento, indice)} key={indice}>
-                                            <option value="1">Barba</option>
-                                            <option value="2">Cabelo</option>
-                                            <option value="3">Hidratação capilar</option>
-                                            <option value="4">Coloração</option>
-                                            <option value="5">Manicure</option>
+
+                                            { // Pega todos os serviços em "todosServicos" e coloca um <option> para cada um
+                                                todosServicos.map((servico) => (
+                                                    servico.servicos && (
+                                                        <option key={servico.id_servico} value={servico.id_servico}>
+                                                            {servico.servicos?.nome_servico}
+                                                        </option>
+                                                    )
+                                                ))
+                                            }
+
+                                            {/* <option value="1">Barba</option> */}
+
                                         </select>
 
                                         {
