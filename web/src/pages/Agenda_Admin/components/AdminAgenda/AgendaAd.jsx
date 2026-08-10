@@ -18,6 +18,9 @@ function AgendaAdmin() {
     // Lista de todos os agendamentos do salão.
     const [agendamentos, setAgendamentos] = useState([])
 
+    // Guarda só os agendamentos do próprio admin, separado da lista geral do salão.
+    const [agendamentosProprios, setAgendamentosProprios] = useState([])
+
     // Controla qual profissional está sendo filtrado na grade.
     // String vazia = mostrar todos.
     const [filtroProfissional, setFiltroProfissional] = useState('')
@@ -66,6 +69,21 @@ function AgendaAdmin() {
                     setMensagem('Erro ao buscar agendamentos: ' + resultado.erro)
                     return
                 }
+
+                setAgendamentos(resultado.agendamentos || [])
+
+               // Busca também só os agendamentos do próprio admin, usando a mesma rota
+              // que o colaborador usa — só que passando o id do admin logado.
+               const respostaPropria = await fetch(`/api/agendamentos/profissional/${perfil.id_profissional}`, {
+                 method: 'GET',
+                 headers: { 'Authorization': `Bearer ${token}` }
+            })
+
+const resultadoProprio = await respostaPropria.json()
+
+if (resultadoProprio.sucesso) {
+    setAgendamentosProprios(resultadoProprio.agendamentos || [])
+}
 
                 setAgendamentos(resultado.agendamentos || [])
 
@@ -126,6 +144,12 @@ function AgendaAdmin() {
                     title="Agenda"
                     onClick={() => setSecaoAtiva('agenda')}
                 >📅</div>
+
+                <div
+                    className={`agenda-admin-nav-icone${secaoAtiva === 'minha-agenda' ? ' ativo' : ''}`}
+                    title="Minha Agenda"
+                    onClick={() => setSecaoAtiva('minha-agenda')}
+                >🗓️</div>
 
                 <div
                     className={`agenda-admin-nav-icone${secaoAtiva === 'financeiro' ? ' ativo' : ''}`}
@@ -287,6 +311,64 @@ function AgendaAdmin() {
         })}
     </div>
 </div>
+
+        {/* Seção MINHA AGENDA: grade semanal só com os atendimentos do próprio admin */}
+{secaoAtiva === 'minha-agenda' && (
+    <>
+        <div className="agenda-admin-navegacao-semana">
+            <button onClick={() => mudarSemana(-1)}>‹</button>
+            <span>{tituloSemana}</span>
+            <button onClick={() => mudarSemana(1)}>›</button>
+        </div>
+
+        <div className="agenda-admin-grade-wrapper">
+            <table className="agenda-admin-grade">
+                <thead>
+                    <tr>
+                        <th className="agenda-admin-coluna-hora"></th>
+                        {DIAS_SEMANA.map((dia) => (
+                            <th key={dia}>{dia}</th>
+                        ))}
+                    </tr>
+                </thead>
+            <tbody>
+              {HORARIOS.map((hora) => (
+                <tr key={hora}>
+                <td className="agenda-admin-coluna-hora">{hora}</td>
+                    {Array.from({ length: 7 }, (_, diaIndex) => {
+                    const dataCelula = new Date(domingo)
+                          dataCelula.setDate(dataCelula.getDate() + diaIndex)
+
+                // Mesma lógica de encaixe, só que buscando dentro
+              // de agendamentosProprios em vez da lista geral.
+                const agendamentoDoSlot = agendamentosProprios.find((ag) => {
+                const dataAg = new Date(ag.horario)
+                const mesmoDia = dataAg.toDateString() === dataCelula.toDateString()
+                const mesmaHora = dataAg.getHours() === parseInt(hora.split(':')[0])
+
+                return mesmoDia && mesmaHora
+            })
+
+                return (
+                  <td key={diaIndex}>
+                    {agendamentoDoSlot && (
+                    // Aqui mostra o cliente, não o profissional —
+                    // já que essa grade é só do admin logado.
+                    <div className="agenda-admin-cartao">
+                    <b>{agendamentoDoSlot.cliente}</b>
+                    <span>{agendamentoDoSlot.status}</span>
+                </div>
+                )}
+            </td>
+        )
+    })}
+</tr>
+))}
+</tbody>
+</table>
+</div>
+    </>
+)}
 
         {/* Filtro de profissional: só aparece na seção agenda */}
         {secaoAtiva === 'agenda' && (
