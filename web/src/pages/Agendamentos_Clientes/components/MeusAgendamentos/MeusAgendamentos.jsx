@@ -31,7 +31,7 @@ function MeusAgendamentos() {
 
     // Tenta renovar o token automaticamente
     const { data: sessaoAtualizada } = await supabase.auth.refreshSession()
-    
+
     if (!sessaoAtualizada.session) {
         setMensagem('Sua sessão expirou. Faça login novamente.')
         return

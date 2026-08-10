@@ -15,8 +15,6 @@ def cadastroSalao():
 
     data = request.get_json()
 
-    print(data)
-
     resposta = supabase.table('saloes').insert(data).execute()
 
     id_salao = resposta.data[0]['id_salao']
@@ -29,9 +27,6 @@ def cadastroUserGerente():
 
     data = request.get_json()
 
-    print(data)
-
     supabase.table('profissionais').insert(data).execute()
 
     return jsonify({'sucesso': True, 'resultado': 'Profissional cadastrado com sucesso!'})
-

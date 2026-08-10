@@ -8,5 +8,3 @@ def autenticar(tokenUser):
         
     except Exception as e:
         return None
-
-

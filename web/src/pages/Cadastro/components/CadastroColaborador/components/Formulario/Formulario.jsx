@@ -33,12 +33,12 @@ function Formulario({dados, setDados}) {
     }
 
     return (
-        <form className="border-amber-950 border-2 w-6/10 h-auto min-h-8/10 p-8! rounded-2xl bg-azulClaro">
-            <div className="grid grid-cols-2 gap-3">
+        <form className="h-160 w-full max-w-[980px] rounded-2xl border-2 border-amber-950 bg-azulClaro p-4! sm:p-5! md:w-9/10 md:p-6! lg:w-8/10 xl:w-6/10 xl:p-8!">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
 
                 <input name="nome" className="cadastroProfInput" type="text" placeholder="Nome" onChange={mudarValor} />
                 <input name="sobrenome" className="cadastroProfInput" type="text" placeholder="Sobrenome" onChange={mudarValor} />
-                <select name="cargo" className="border-1 rounded-md p-2!" onChange={mudarValor}>
+                <select name="cargo" className="border rounded-md p-2!" onChange={mudarValor}>
                     <option value="Cargo"> Cargo </option>
                     <option value="Barbeiro(a)"> Barbeiro(a) </option>
                     <option value="Cabeleireiro(a)"> Cabeleireiro(a) </option>
@@ -53,7 +53,7 @@ function Formulario({dados, setDados}) {
 
             </div>
 
-            <div className="flex items-center gap-2 mt-2!" >
+            <div className="mt-2! flex flex-col gap-2! md:flex-row md:items-center" >
                 <label htmlFor="email"> Email: </label>
                 <input name="email" type="email" placeholder="Email" className="cadastroProfInput" onChange={mudarValor} />
                 <div></div>
@@ -67,13 +67,13 @@ function Formulario({dados, setDados}) {
 
             <h1 className="text-2xl mb-2!"> Nível de acesso </h1>
 
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                     <div>
                         <p> Determina os níveis de acesso no sistema </p>
                     </div>
 
-                    <select name="nivelAcesso" className="cadastroProfInput w-8/12!" onChange={mudarValor}>
+                    <select name="nivelAcesso" className="cadastroProfInput w-full! md:w-8/12!" onChange={mudarValor}>
                         <option value="1"> Administrador </option>
                         <option value="2"> Gerente </option>
                         <option value="3"> Profissional </option>

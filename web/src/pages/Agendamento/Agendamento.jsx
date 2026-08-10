@@ -1,12 +1,13 @@
-import './Agendamento.css'
+import { Link } from "react-router"
+
 import Formulario from './components/Formulario/Formulario.jsx'
-import { Link} from 'react-router'
+import './Agendamento.css'
 
 function Agendamento() {
     return (
         <div className="agendamento-page">
             <Link className='Voltar' to={'/'}>voltar</Link>
-        <Formulario />
+            <Formulario />
         </div>
     )
 }

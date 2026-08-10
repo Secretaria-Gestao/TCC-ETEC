@@ -1,36 +1,19 @@
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { mandarAgendamento } from '../../services/Agendamento.js'
 
-import './Formulario.css'
 import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { buscarTodosProfissionais } from "../../../../services/BuscarProfissionais.js"
-
+import { buscarSaloes } from '../../services/buscarSaloes.js'
+import { buscarServicos } from "../../services/buscarServicos.js"
+import { useNotificacaoStore } from "@/Notificacao"
+import './Formulario.css'
 
 function Formulario() {
     const navegar = useNavigate()
-
     const [todosProfissionais, setTodosProfissionais] = useState([])
-
-    useEffect(() => {
-        async function buscarDados() {
-            const resposta = await buscarTodosProfissionais()
-
-            setTodosProfissionais(resposta.profissional)
-
-            if (resposta.profissional.length > 0) {
-                setDados((dadosAntigos) => ({
-                    ...dadosAntigos,
-                    profissional: resposta.profissional[0].nome_profissional
-                }))
-            }
-
-        }
-
-        buscarDados()
-
-    }, [])
-
+    const [todosServicos, setTodosServicos] = useState([])
+    const [todosSaloes, setTodosSaloes] = useState([])
     const [dados, setDados] = useState({
         servicos: [1],
         profissional: "",
@@ -38,20 +21,77 @@ function Formulario() {
         horario: "",
         endereco: ""
     })
+    const mostrarNotificacao = useNotificacaoStore((state) => state.mostrarNotificacao)
+
+    useEffect(() => {
+        async function buscarDados() {
+            const respostaSaloes = await buscarSaloes()
+
+            if (!respostaSaloes || respostaSaloes.length === 0) {
+                setTodosSaloes([])
+                return
+            }
+
+            setTodosSaloes(respostaSaloes)
+            setDados((dadosAntigos) => ({
+                ...dadosAntigos,
+                endereco: respostaSaloes[0].id_salao
+            }))
+        }
+
+        buscarDados()
+    }, [])
+
+    useEffect(() => {
+        if (!dados.endereco) {
+            setTodosProfissionais([])
+            return
+        }
+
+        async function buscarProfissionais(idSalao) {
+            const resposta = await buscarTodosProfissionais(idSalao)
+
+            if (!resposta || !resposta.sucesso || !resposta.profissional) {
+                setTodosProfissionais([])
+                return
+            }
+
+            setTodosProfissionais(resposta.profissional)
+
+            if (resposta.profissional.length > 0) {
+                setDados((dadosAntigos) => ({
+                    ...dadosAntigos,
+                    profissional: resposta.profissional[0].id_profissional
+                }))
+            }
+        }
+
+        buscarProfissionais(dados.endereco)
+    }, [dados.endereco])
+
+    useEffect(() => { // Serve somente para pegar os serviços do profissional selecionado
+        async function buscarServicoS() {
+            const respostaServicos = await buscarServicos(dados.profissional)
+
+            if (respostaServicos) setTodosServicos(respostaServicos)
+        }
+
+        buscarServicoS()
+
+    }, [dados.profissional])
 
     function resetarDados() {
         setDados({
             servicos: [1],
-            profissional: "",
+            profissional: dados.profissional,
             dia: "",
             horario: "",
-            endereco: "",
+            endereco: dados.endereco
         })
     }
 
     async function enviarDados() {
         const resultadoToken = await pegarSessao()
-        console.log(resultadoToken)
 
         if (resultadoToken) {
             const token = resultadoToken.access_token
@@ -64,19 +104,32 @@ function Formulario() {
                 dados.endereco
             )
 
-            respostaFetch.ok ? navegar("/agendamento/meus-agendamentos") : alert("Deu ruim no agendamento")
+            if (respostaFetch.ok) {
+                mostrarNotificacao({
+                    titulo: "Agendamento Concluído!",
+                    mostrarBotao: true,
+                    lblBotao: "Clique aqui para conferir seus agendamentos",
+                    textoBotao: "Meus agendamentos",
+                    funcaoBotao: () => {
+                        navegar("/agendamento/meus-agendamentos")
+                    }
+                })
+                return
+            }
+
+            mostrarNotificacao({
+                titulo: "Erro no agendamento!",
+                texto: "Confira novamente os dados e tente novamente"
+            })
         }
 
         else {
             alert("Você precisa estar logado!")
             navegar('/')
         }
-
     }
 
     function adicionarServico() {
-        const quantidadeServicos = dados.servicos
-
         setDados({
             ...dados,
             servicos: [...dados.servicos, 1]
@@ -103,28 +156,31 @@ function Formulario() {
         })
     }
 
-    console.log(dados)
-
     return (
         <form className='agendamento-form tudo'>
-
             <main className="agendamento-main">
                 <div className="card_1">
-
                     <div className="lista_servicos" id="lista_servicos">
-
-
                         {
                             dados.servicos.map((servico, indice) => {
                                 return (
                                     <div className="servico_adicionado" key={indice}>
                                         <label htmlFor="servico">Selecione o serviço:</label>
+
                                         <select name='servico' className="servico" value={servico} onChange={(evento) => mudarValorServico(evento, indice)} key={indice}>
-                                            <option value="1">Barba</option>
-                                            <option value="2">Cabelo</option>
-                                            <option value="3">Hidratação capilar</option>
-                                            <option value="4">Coloração</option>
-                                            <option value="5">Manicure</option>
+
+                                            { // Pega todos os serviços em "todosServicos" e coloca um <option> para cada um
+                                                todosServicos.map((servico) => (
+                                                    servico.servicos && (
+                                                        <option key={servico.id_servico} value={servico.id_servico}>
+                                                            {servico.servicos?.nome_servico}
+                                                        </option>
+                                                    )
+                                                ))
+                                            }
+
+                                            {/* <option value="1">Barba</option> */}
+
                                         </select>
 
                                         {
@@ -144,8 +200,6 @@ function Formulario() {
                             })
                         }
 
-
-
                     </div>
 
                     <div className="profissional_selecionado">
@@ -153,13 +207,12 @@ function Formulario() {
 
                         <select name="profissional" onChange={mudarValorDados} value={dados.profissional}>
                             {
-                            todosProfissionais.map((profissional) => {
-                                return (
-                                    <option key={profissional.id_profissional} value={profissional.nome_profissional}>{profissional.nome_profissional}</option>
-                                )
+                                todosProfissionais.map((profissional) => {
+                                    return (
+                                        <option key={profissional.id_profissional} value={profissional.id_profissional}>{profissional.nome_profissional}</option>
+                                    )
+                                })
                             }
-                            )
-                        }
                         </select>
                     </div>
 
@@ -167,6 +220,7 @@ function Formulario() {
                         <label>Dia marcado:</label>
                         <input type="date" name="dia" onChange={mudarValorDados} />
                     </div>
+
                     <div>
                         <label>Horario da sessão:</label>
                         <input type="time" name="horario" onChange={mudarValorDados} />
@@ -178,13 +232,14 @@ function Formulario() {
                         <h1 className="agendamento-title bold">Agendamento</h1>
                         <img className="logo" src="/logo_pequena.png" alt="logo secretária gestão" />
                     </header>
+
                     <div>
-                        <select name="endereco" className="local" onChange={mudarValorDados}>
-                            <option value="">Local</option>
-                            <option value="Seu Jorge">Seu Jorge</option>
-                            <option value="Unhas Cleide">Unhas Cleide</option>
-                            <option value="Rua dos Bobos">Rua dos Bobos</option>
-                            <option value="Casa Engraçada">Casa Engraçada</option>
+                        <select name="endereco" className="local" value={dados.endereco} onChange={mudarValorDados}>
+                            {todosSaloes.map((salao) => {
+                                return (
+                                    <option key={salao.id_salao} value={salao.id_salao}> {`${salao.nome_salao}. ${salao.endereco_salao}`} </option>
+                                )
+                            })}
                         </select>
                     </div>
 
