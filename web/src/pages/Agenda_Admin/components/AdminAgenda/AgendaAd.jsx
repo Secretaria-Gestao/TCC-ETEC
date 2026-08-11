@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { pegarMeuPerfil } from '../../../../services/pegarMeuPerfil.js'
 import { pegarSessao } from '../../../../services/pegarSessao.js'
-import { obterDomingoDaSemana, MESES } from './utils/AgendaHelpers.'
+import { obterDomingoDaSemana, MESES } from './utils/agendaHelpers.js'
 
 import SidebarNavegacao from './components/SidebarNavegacao'
 import NavegacaoSemana from './components/NavegacaoSemana'
