@@ -1,0 +1,36 @@
+Boas práticas do projeto
+
+Este arquivo foi criado para manter alguma consistência durante o
+desenvolvimento do frontend e do backend.
+
+Esses padrões podem mudar conforme o projeto segue. Enquanto estiverem
+documentadas aqui, é interessante que toda a equipe tente segui-las.
+
+- Organizar por funcionalidade
+    Arquivos relacionados ao mesmo assunto ficam próximos, evitando espalhar uma
+    funcionalidade pelo projeto.
+
+- Manter um padrão de nomes
+    Componentes e pastas React em PascalCase, variáveis e funções JavaScript em camelCase,
+    Python em snake_case e URLs em minúsculas com hífen.
+
+- Separar a API da interface quando possível
+    Deixar requisições em arquivos de serviço. Por exemplo, o componente chama buscarServicos(),
+    enquanto o service cuida do fetch, token, tratamento da resposta e possíveis erros.
+
+- Dividir componentes apenas quando ajudar
+    Extrair partes extensas que tenham uma função clara e independente. Por exemplo, um formulário,
+    modal ou .map() grande que verifica vários estados pode virar um componente próprio.
+Não é necessário separar cada botão ou campo.
+
+- Tratar os estados principais
+    Toda tela que busca dados deve considerar carregamento, sucesso, lista vazia e erro.
+    Por exemplo, mostrar “Carregando...” durante a consulta e uma mensagem clara e direta quando nenhum resultado for encontrado.
+
+- Validar dados e permissões no backend
+    Os dados enviados pelo frontend podem ser manipulados de propósito e chegar da forma mais maliciosa
+    possível. Por isso, não se deve confiar diretamente no conteúdo de um POST: a API precisa validar campos, IDs, permissões e se os dados realmente pertencem ao usuário autenticado.
+
+- Fazer commits claros e focados
+    É interessante deixar claro o que cada commit faz, usando um título que resuma a alteração e, quando
+    necessário, uma descrição das principais mudanças realizadas.
