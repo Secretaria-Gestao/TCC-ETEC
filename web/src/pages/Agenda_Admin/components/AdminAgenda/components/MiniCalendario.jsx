@@ -1,4 +1,4 @@
-import { DIAS_SEMANA, MESES } from '../utils/agendaHelpers'
+import { DIAS_SEMANA, MESES } from '../utils/AgendaHelpers.js'
 
 function MiniCalendario({ dataReferenciaMes, mudarMes, setDataReferenciaSemana }) {
     const hoje = new Date()

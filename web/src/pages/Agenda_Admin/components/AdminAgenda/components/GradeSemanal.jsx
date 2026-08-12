@@ -1,4 +1,4 @@
-import { HORARIOS, DIAS_SEMANA } from '../utils/agendaHelpers'
+import { HORARIOS, DIAS_SEMANA } from '../utils/AgendaHelpers.js'
 
 // Grade genérica de horários x dias. Reaproveitada tanto na seção "Agenda"
 // (todos os profissionais) quanto na "Minha Agenda" (só o admin logado).
