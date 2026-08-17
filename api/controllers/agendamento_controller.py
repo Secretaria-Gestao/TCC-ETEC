@@ -64,6 +64,7 @@ def agendar():
             novo_agendamento = {
                 "id_cliente": id_cliente,
                 "id_profissional": id_profissional,
+                "salao_associado": id_salao,
                 "horario": info["data_hora"],
                 "endereco": endereco_salao,
                 "status": "Pendente"

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { pegarMeuPerfil } from '../../../../services/pegarMeuPerfil.js'
 import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { obterDomingoDaSemana, MESES } from './utils/AgendaHelpers.js'
 
@@ -15,7 +14,6 @@ import './AgendaAd.css'
 
 function AgendaAdmin() {
     const [agendamentos, setAgendamentos] = useState([])
-    const [agendamentosProprios, setAgendamentosProprios] = useState([])
     const [filtroProfissional, setFiltroProfissional] = useState('')
     const [dataReferenciaSemana, setDataReferenciaSemana] = useState(new Date())
     const [dataReferenciaMes, setDataReferenciaMes] = useState(new Date())
@@ -24,25 +22,12 @@ function AgendaAdmin() {
 
     useEffect(() => {
         async function carregarAgendamentos() {
-            const perfil = await pegarMeuPerfil()
-
-            if (!perfil) {
-                setMensagem('Você precisa estar logado para ver os agendamentos.')
-                return
-            }
-
-            const id_salao = perfil.salao_associado
-
-            if (!id_salao) {
-                setMensagem('Seu perfil não está vinculado a nenhum salão.')
-                return
-            }
 
             const sessao = await pegarSessao()
             const token = sessao.access_token
 
             try {
-                const resposta = await fetch(`/api/agendamentos/salao/${id_salao}`, {
+                const resposta = await fetch(`/api/agendamentos/salao`, {
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
@@ -50,24 +35,17 @@ function AgendaAdmin() {
                 const resultado = await resposta.json()
 
                 if (!resultado.sucesso) {
+                    console.log(resultado.erro)
                     setMensagem('Erro ao buscar agendamentos: ' + resultado.erro)
                     return
                 }
+
+                console.log(resultado)
 
                 setAgendamentos(resultado.agendamentos || [])
 
                 // Busca também só os agendamentos do próprio admin, usando a
                 // mesma rota que o colaborador usa — passando o id do admin logado.
-                const respostaPropria = await fetch(`/api/agendamentos/profissional/${perfil.id_profissional}`, {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                })
-
-                const resultadoProprio = await respostaPropria.json()
-
-                if (resultadoProprio.sucesso) {
-                    setAgendamentosProprios(resultadoProprio.agendamentos || [])
-                }
 
             } catch (erro) {
                 console.error('Erro na requisição:', erro)
@@ -76,8 +54,10 @@ function AgendaAdmin() {
         }
 
         carregarAgendamentos()
-    }, [])
 
+    }, [])
+    
+    console.log(agendamentos)
     const nomesUnicos = [...new Set(agendamentos.map((ag) => ag.profissional).filter(Boolean))]
 
     const domingo = obterDomingoDaSemana(dataReferenciaSemana)
@@ -133,7 +113,7 @@ function AgendaAdmin() {
                         <NavegacaoSemana tituloSemana={tituloSemana} mudarSemana={mudarSemana} />
                         <GradeSemanal
                             domingo={domingo}
-                            agendamentos={agendamentosProprios}
+                            agendamentos={agendamentos}
                             campoPrincipal="cliente"
                             campoSecundario="status"
                         />

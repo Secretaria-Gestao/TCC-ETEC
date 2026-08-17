@@ -256,45 +256,40 @@ def agendamentos_profissional(id_profissional):
     except Exception as e:
         return jsonify({"sucesso": False, "erro": str(e)}), 500
 
-def agendamentos_salao(id_salao):
+def agendamentos_salao():
     # Busca todos os agendamentos de todos os profissionais do salão.
     # Usado na página do admin para enxergar a agenda inteira do salão.
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
-    if not autenticar(token):
+    id_remetente = autenticar(token)
+
+    if not id_remetente:
         return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
 
     try:
+        # Usado só para para pegar o salao do admin, confiando apenas no supabase
+        resposta_remetente = supabase_admin.table("profissionais").select("salao_associado").eq("id_profissional", id_remetente).execute()
+
+        if not resposta_remetente.data:
+            return jsonify({"sucesso": False, "erro": "Salão do remetente não encontrado"}), 404
+
+        salao_associado = resposta_remetente.data[0]["salao_associado"]
+
         # Traz dados do cliente e do profissional, pois o admin precisa ver
         # "quem marcou" e "com quem marcou".
         resultado = (
             supabase_admin.table("agendamentos")
-            .select("horario, status, preco, clientes(nome_cliente), profissionais(nome_profissional, cargo, salao_associado)")
+            .select("horario, status, preco, clientes(nome_cliente), profissionais(id_profissional, nome_profissional, cargo)")
+            .eq("salao_associado", salao_associado)
             .execute()
         )
 
-        agendamentos = []
-        for ag in resultado.data:
-            prof = ag.get("profissionais") or {}
-            cliente = ag.get("clientes") or {}
+        if not resultado.data:
+            return jsonify({"sucesso": False, "erro": "Falha ao agendar o horário"})
 
-            # Filtra apenas agendamentos do salão correto,
-            # pois o Supabase não permite filtrar diretamente por coluna de tabela relacionada.
-            if prof.get("salao_associado") != id_salao:
-                continue
-
-            agendamentos.append({
-                "horario": ag["horario"],
-                "status": ag["status"],
-                "preco": ag.get("preco"),
-                "cliente": cliente.get("nome_cliente"),
-                "profissional": prof.get("nome_profissional"),
-                "cargo": prof.get("cargo"),
-            })
-
-        return jsonify({"sucesso": True, "agendamentos": agendamentos})
+        return jsonify({"sucesso": True, "agendamentos": resultado.data})
 
     except Exception as e:
         return jsonify({"sucesso": False, "erro": str(e)}), 500

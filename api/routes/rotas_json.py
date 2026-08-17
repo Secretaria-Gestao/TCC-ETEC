@@ -84,7 +84,7 @@ def buscar_agendamentos_profissional(id_profissional):
     # Rota usada pela página do profissional para carregar a própria agenda.
     return agendamentos_profissional(id_profissional)
 
-@rotas_json.route("/api/agendamentos/salao/<id_salao>", methods=["GET"])
-def buscar_agendamentos_salao(id_salao):
+@rotas_json.route("/api/agendamentos/salao", methods=["GET"])
+def buscar_agendamentos_salao():
     # Rota usada pela página do admin para ver todos os agendamentos do salão.
-    return agendamentos_salao(id_salao)
+    return agendamentos_salao()
