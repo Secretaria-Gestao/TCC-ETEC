@@ -1,9 +1,9 @@
 
 
 .agenda-profissional-janela {
-    width: 92vw;
-    max-width: 1180px;
-    height: 88vh;
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
     border-radius: 25px;
     border: 2px solid var(--border-transparent);
     background-color: var(--background-transparent);

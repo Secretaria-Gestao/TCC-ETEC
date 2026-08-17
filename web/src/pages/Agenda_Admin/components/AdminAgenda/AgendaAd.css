@@ -1,7 +1,7 @@
 .agenda-admin-janela {
-    width: 130vw;
+    width: 100vw;
     max-width: none;
-    height: 130vh;
+    height: 100vh;
     border-radius: 25px;
     border: 2px solid var(--border-transparent);
     background-color: var(--background-transparent);
