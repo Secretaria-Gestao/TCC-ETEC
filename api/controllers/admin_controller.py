@@ -188,6 +188,58 @@ def buscar_Todosprofissionais(): # Busca todos os profissionais, todos
         return jsonify({"sucesso": False, "erro": "Falha ao encontrar o usuário remetente no banco de dados"}), 500
 
 
+def mostrarMembros():
+    # Busca os profissionais do mesmo salão do administrador ou gerente logado.
+    # O salão vem do token, e não do front-end, para impedir a consulta de
+    # profissionais pertencentes a outro estabelecimento.
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+
+    id_remetente = autenticar(token)
+
+    if not id_remetente:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    try:
+        resposta_remetente = (
+            supabase_admin.table("profissionais")
+            .select("nivel_acesso, salao_associado")
+            .eq("id_profissional", id_remetente)
+            .execute()
+        )
+
+        if not resposta_remetente.data:
+            return jsonify({"sucesso": False, "erro": "Remetente não encontrado"}), 404
+
+        remetente = resposta_remetente.data[0]
+
+        if int(remetente["nivel_acesso"]) >= 3:
+            return jsonify({"sucesso": False, "erro": "Somente administradores e gerentes podem visualizar os membros"}), 403
+
+        if remetente["salao_associado"] is None:
+            return jsonify({"sucesso": False, "erro": "O remetente não está associado a um salão"}), 404
+
+        resposta_membros = (
+            supabase_admin.table("profissionais")
+            .select(
+                "id_profissional, nome_profissional, email_profissional, "
+                "telefone_profissional, cargo, nivel_acesso, status"
+            )
+            .eq("salao_associado", remetente["salao_associado"])
+            .execute()
+        )
+
+        if resposta_membros.data is None:
+            return jsonify({"sucesso": False, "erro": "Falha ao buscar os membros"}), 500
+
+        return jsonify({"sucesso": True, "membros": resposta_membros.data})
+
+    except Exception as erro:
+        print("Erro ao buscar membros:", erro)
+        return jsonify({"sucesso": False, "erro": "Falha ao buscar os membros"}), 500
+
 def meu_perfil():
     # Busca os dados do profissional/admin logado usando o token.
     # Necessário para o admin descobrir o id_salao sem precisar informar manualmente.
