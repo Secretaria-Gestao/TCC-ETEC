@@ -1,4 +1,4 @@
-// import InfoResumidas from "./components/InfoResumidas/InfoResumidas.jsx"
+import InfoResumidas from "./components/InfoResumidas/InfoResumidas.jsx"
 // import TabelaMembros from "./components/TabelaMembros/TabelaMembros.jsx"
 
 import BarraLateral from "@/BarraLateral/BarraLateral"
@@ -33,8 +33,6 @@ export default function GerenciadorProfissionais() {
 
             const membros = await mostrarMembros()
 
-            console.log(membros)
-            
             setProfissionais(membros[0])
             setAgendamentos(membros[1])
         }
@@ -53,6 +51,12 @@ export default function GerenciadorProfissionais() {
                 <Header titulo="Membros do salão" subtitulo={nomeSalao} />
 
                 <hr className="w-10/12 place-self-center mt-[-36px]" />
+
+
+                <section className="w-8/10 place-self-center bg-green-600 mt-15 p-5">
+
+                    <InfoResumidas profissionais={profissionais} agendamentos={agendamentos}/>
+                </section>
             </main>
         </div>
     )

@@ -20,7 +20,7 @@ export async function mostrarMembros() {
         const resultadoMembros = await respostaMembros.json()
 
         if (!respostaMembros.ok || !resultadoMembros.sucesso) {
-            console.error("Erro ao buscar membros:", resultado.erro)
+            console.error("Erro ao buscar membros:", resultadoMembros.erro)
             return null
         }
 
@@ -35,7 +35,7 @@ export async function mostrarMembros() {
         const resultadoAgendamentos = await respostaAgendamentos.json()
 
         if (!respostaAgendamentos.ok || !resultadoAgendamentos.sucesso) {
-            console.error("Erro ao buscar membros:", resultado.erro)
+            console.error("Erro ao buscar membros:", resultadoAgendamentos.erro)
             return null
         }
 
