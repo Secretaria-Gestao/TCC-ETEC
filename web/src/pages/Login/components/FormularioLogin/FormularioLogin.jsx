@@ -48,13 +48,18 @@ function FormularioLogin() {
                         <label htmlFor="email">Email</label>
                         <input type="email" name="email" id="email" placeholder="seu@email.com" onChange={mudarValor} />
 
-                        <div className="error" id="email-required-error">
-                            Email é obrigatório
-                        </div>
+                        {formulario.email ? (
+                            <div className="error" id="email-required-error">
+                                Email é obrigatório
+                            </div>
+                        ): <div></div>}
 
-                        <div className="error" id="email-invalid-error">
-                            Email é inválido
-                        </div>
+                        {!/\S+@\S+\.\S+/.test(formulario.email) && (
+                            <div className="error" id="email-invalid-error">
+                                Email é inválido
+                            </div>
+                        )}	
+                        
                     </div>
 
                     <div className="campo">
