@@ -225,7 +225,7 @@ def mostrarMembros():
             supabase_admin.table("profissionais")
             .select(
                 "id_profissional, nome_profissional, email_profissional, "
-                "telefone_profissional, cargo, nivel_acesso, status"
+                "telefone_profissional, cargo, nivel_acesso, status, criado_em"
             )
             .eq("salao_associado", remetente["salao_associado"])
             .execute()
