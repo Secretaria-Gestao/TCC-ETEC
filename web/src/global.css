@@ -85,3 +85,53 @@ button[disabled] {
     color: white;
     padding: 5px
 }
+
+/* Estrutura visual compartilhada pelas tabelas administrativas. */
+.tabela-padrao {
+    table-layout: fixed;
+}
+
+
+.tabela-padrao th,
+.tabela-padrao td {
+    border-bottom: 1px solid black;
+    padding: 15px;
+    text-align: left;
+}
+
+.tabela-padrao th:first-child,
+.tabela-padrao td:first-child {
+    width: 40px;
+}
+
+.tabela-padrao thead th:last-child {
+    height: 1px;
+}
+
+.tabela-padrao thead th:last-child > button {
+    white-space: nowrap;
+}
+
+.tabela-padrao input:not([type="checkbox"]) {
+    width: 100%;
+    min-width: 0;
+}
+
+.tabela-padrao .overflow-x-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #d97706 rgb(190, 219, 255);
+}
+
+.tabela-padrao .overflow-x-auto::-webkit-scrollbar-button {
+    display: none;
+}
+
+.tabela-padrao .overflow-x-auto::-webkit-scrollbar {
+    height: 4px;
+}
+
+@media (max-width: 1023px) {
+    .tabela-padrao {
+        min-width: 650px;
+    }
+}

@@ -86,7 +86,7 @@ export default function GerenciadorServicos() {
         <div className="w-full h-full flex ">
             <BarraLateral />
 
-            <main className="relative w-full min-h-dvh h-max bg-amber-300 flex flex-col flex-1 min-w-0">
+            <main className="relative w-full min-h-dvh h-max bg-blue-200 flex flex-col flex-1 min-w-0">
                 {estaEditando && servicoEditando && (
                     <div className="absolute inset-0 backdrop-blur-md text-white z-10 flex justify-center items-center">
                         <form
