@@ -90,7 +90,7 @@ export default function GerenciadorProfissionais() {
     async function removerProfissional(idProfissional) {
         // A mesma proteção existe no backend, mas este bloqueio evita uma chamada desnecessária.
         if (idProfissional === idRemetente) {
-            return
+            return false
         }
 
         const respostaRemocao = await removerProfissionalApi(idProfissional)
@@ -99,6 +99,8 @@ export default function GerenciadorProfissionais() {
             setEstaEditando(false)
             setAtualizacaoProfissionais((valorAtual) => valorAtual + 1)
         }
+
+        return Boolean(respostaRemocao)
     }
 
     return (
@@ -122,7 +124,12 @@ export default function GerenciadorProfissionais() {
                     </p>
 
                     {/* Resumos calculados a partir dos dados carregados para o salão atual. */}
-                    <InfoResumidas profissionais={profissionais} agendamentos={agendamentos} todosCargos={todosCargos} />
+                    <InfoResumidas
+                        profissionais={profissionais}
+                        agendamentos={agendamentos}
+                        todosCargos={todosCargos}
+                        abrirEdicaoProfissional={abrirEdicaoProfissional}
+                    />
 
                 </section>
 
@@ -132,6 +139,7 @@ export default function GerenciadorProfissionais() {
                             {/* A tabela concentra busca, filtros, seleção e abertura da edição. */}
                             <TabelaMembros profissionais={profissionais} todosCargos={todosCargos}
                                 abrirEdicaoProfissional={abrirEdicaoProfissional}
+                                onRemover={removerProfissional}
                                 estaEditando={estaEditando} setEstaEditando={setEstaEditando}
                             />
                         </div>

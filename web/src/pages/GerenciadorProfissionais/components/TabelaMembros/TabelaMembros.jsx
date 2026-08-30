@@ -4,7 +4,7 @@ import { buscarServicos } from "../../../GerenciadorServicos/services/buscarServ
 
 const FOTO_PADRAO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVWGYKJzBSw8qBRXBMcHBdY1XK_aywT9ZX_gMa5Wj8jA8QyX6DHP-O0Al-&s=10"
 
-export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoProfissional }) {
+export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoProfissional, onRemover }) {
 
     // Estados locais controlam apenas a interação da tabela; a lista original vem do componente pai.
     const [busca, setBusca] = useState("")
@@ -15,6 +15,8 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
     })
 
     const [profissionaisSelecionados, setProfissionaisSelecionados] = useState([])
+    const [estaRemovendo, setEstaRemovendo] = useState(false)
+    const [confirmacaoRemocaoAberta, setConfirmacaoRemocaoAberta] = useState(false)
     const [servicosFornecidos, setServicosFornecidos] = useState([])
     const [associacoesServicos, setAssociacoesServicos] = useState([])
 
@@ -73,6 +75,30 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
     const selecionouTudo = profissionaisFiltrados.length > 0 && profissionaisFiltrados.every((profissional) => (
         profissionaisSelecionados.includes(profissional.id_profissional)
     ))
+
+    async function removerProfissionaisSelecionados() {
+        setEstaRemovendo(true)
+
+        try {
+            const resultados = await Promise.all(
+                profissionaisSelecionados.map(async (idProfissional) => ({
+                    idProfissional,
+                    removeu: await onRemover(idProfissional)
+                }))
+            )
+
+            const idsRemovidos = resultados
+                .filter((resultado) => resultado.removeu)
+                .map((resultado) => resultado.idProfissional)
+
+            setProfissionaisSelecionados((atuais) => (
+                atuais.filter((idProfissional) => !idsRemovidos.includes(idProfissional))
+            ))
+        } finally {
+            setEstaRemovendo(false)
+            setConfirmacaoRemocaoAberta(false)
+        }
+    }
 
     console.log("profissionais filtrados: ", profissionaisFiltrados)
     console.log("filtros: ", filtros)
@@ -180,7 +206,45 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
                         <th>Serviços</th>
                         <th>Nível de acesso</th>
                         <th>Status</th>
-                        <th>Ações</th>
+                        <th className="p-0! relative">
+                            {confirmacaoRemocaoAberta && (
+                                <div className="absolute top-full left-0 z-10 w-full bg-marrom text-white p-2 border-t border-black">
+                                    <p className="text-center text-sm  border-black">Certeza?</p>
+                                    <div className="flex justify-center gap-5 pb-1">
+                                        <button
+                                            type="button"
+                                            disabled={estaRemovendo}
+                                            className="hover:text-green-500 disabled:cursor-wait disabled:opacity-60"
+                                            onClick={removerProfissionaisSelecionados}
+                                        >
+                                            {estaRemovendo ? "..." : "Sim"}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            disabled={estaRemovendo}
+                                            className="hover:text-red-500 disabled:cursor-wait disabled:opacity-60"
+                                            onClick={() => {
+                                                setConfirmacaoRemocaoAberta(false)
+                                                setProfissionaisSelecionados([])
+                                            }}
+                                        >
+                                            Não
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {profissionaisSelecionados.length > 0 ? (
+                                <button
+                                    type="button"
+                                    disabled={estaRemovendo}
+                                    className="h-full w-full bg-marrom px-2 py-3 text-laranja transition-colors hover:bg-red-900 hover:text-white disabled:cursor-wait disabled:opacity-60"
+                                    onClick={() => setConfirmacaoRemocaoAberta(true)}
+                                >
+                                    {estaRemovendo ? "Removendo..." : "Remover"}
+                                </button>
+                            ) : "Ações"}
+                        </th>
                     </tr>
                 </thead>
                 <tbody>

@@ -2,7 +2,7 @@ import estilos from "./InfoResumidas.module.css"
 
 const FOTO_PADRAO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVWGYKJzBSw8qBRXBMcHBdY1XK_aywT9ZX_gMa5Wj8jA8QyX6DHP-O0Al-&s=10"
 
-export default function InfoResumidas({ profissionais, agendamentos, todosCargos }) {
+export default function InfoResumidas({ profissionais, agendamentos, todosCargos, abrirEdicaoProfissional }) {
 
     // A lista original não é alterada: as cópias permitem ordenar sem mudar o estado do React.
     const ordemRecente = [...profissionais].sort((a, b) => {
@@ -71,7 +71,12 @@ export default function InfoResumidas({ profissionais, agendamentos, todosCargos
                                         </div>
 
                                         {ordemRecente.length > 0 && (
-                                            <button className="self-stretch flex items-center" type="button" aria-label="Opções do profissional">
+                                            <button
+                                                className="self-stretch flex items-center"
+                                                type="button"
+                                                aria-label="Editar profissional adicionado recentemente"
+                                                onClick={() => abrirEdicaoProfissional?.(ordemRecente[0])}
+                                            >
                                                 <svg className="h-4/5 w-auto shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                                     <circle cx="12" cy="5" r="2" />
                                                     <circle cx="12" cy="12" r="2" />
