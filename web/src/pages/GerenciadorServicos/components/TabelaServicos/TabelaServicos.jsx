@@ -115,12 +115,12 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
 
         <>
 
-            <table className="GerenciadorServicos-TabelaServicos border-collapse w-full">
+            <table className="tabela-padrao border-collapse w-full">
 
 
                 <thead>
                     <tr className="">
-                        <th >
+                        <th className="text-center!">
                             {/* Marca ou desmarca todos os serviços de uma vez. */}
                             <input type="checkbox" checked={selecionouTudo} onChange={() => {
                                 const deveSelecionarTudo = servicosSelecionados.length !== servicos.length
@@ -130,7 +130,9 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
                                         ? servicos.map((servico) => servico.id_servico)
                                         : []
                                 )
-                            }} />
+                            }}
+                            />
+
                         </th>
                         <th> Nome </th>
                         <th> Preço </th>
@@ -156,7 +158,7 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
                                     : "bg-marrom text-green-400 hover:bg-green-900 hover:text-white"} transition-colors py-3 w-full flex}`}
                                 onClick={() => estaSelecionando ? setDropUpAberto(true) : setEstaAdicionando(!estaAdicionando)}
                             >
-                                {estaSelecionando ? <p className="ml-3">- Remover</p> : <p className="ml-3">{estaAdicionando ? "X Cancelar" : "+ Adicionar"}</p>}
+                                {estaSelecionando ? <p className="ml-3">- Remover</p> : <p className="ml-3">{estaAdicionando ? "X Todas as estruturasCancelar" : "+ Adicionar"}</p>}
                             </button>
                         </th>
                     </tr>
@@ -214,8 +216,15 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
                         </tr>
                     )}
 
-                    {servicos && (
-                        servicos.map((servico) => (
+                    {servicos.length === 0 && !estaAdicionando && (
+                        <tr>
+                            <td colSpan="6" className="py-8 text-center">
+                                Nenhum serviço cadastrado ainda.
+                            </td>
+                        </tr>
+                    )}
+
+                    {servicos.map((servico) => (
                             <tr key={servico.id_servico}>
                                 <td>
                                     <input type="checkbox"
@@ -265,8 +274,7 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
                                     )}
                                 </td>
                             </tr>
-                        ))
-                    )}
+                        ))}
                 </tbody>
             </table >
         </>

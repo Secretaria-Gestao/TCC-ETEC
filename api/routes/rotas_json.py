@@ -3,7 +3,7 @@ from controllers.login_controller import cadastroUserCliente
 from controllers.login_controller import cadastroUserGerente
 from controllers.login_controller import cadastroSalao
 from controllers.agendamento_controller import agendar
-from controllers.admin_controller import cadastrar_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao
+from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao
 from controllers.buscar_salao import buscar_salao, buscar_servicos_fornecidos, criar_servicos_fornecidos, editar_servicos_fornecidos, deletar_servicos_fornecidos
 from controllers.buscar_saloes import buscar_saloes
 from controllers.buscar_servicos import buscar_servicos_agendamento
@@ -47,6 +47,14 @@ def buscar_Todosprof():
 @rotas_json.route("/api/mostrar/membros", methods=["GET"])
 def mostrar_membros():
     return mostrarMembros()
+
+@rotas_json.route("/api/editar/profissional", methods=["POST"])
+def editar_prof():
+    return editar_profissional()
+
+@rotas_json.route("/api/deletar/profissional", methods=["POST"])
+def deletar_prof():
+    return remover_profissional()
 
 @rotas_json.route("/api/buscar/salao", methods=["POST"])
 def buscarSalao():
