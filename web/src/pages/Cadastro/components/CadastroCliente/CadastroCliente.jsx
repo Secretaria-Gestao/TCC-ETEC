@@ -53,12 +53,11 @@ function CadastroCliente() {
 
                         {
                             mandou > 0 && (
-                                !formulario.nome ? (
+                                !formulario.nome ?? (
                                     <div className="error" id="password-required-error">
                                         Nome é obrigatório
                                     </div>
                                 )
-                                : <div></div>
                             )
                         }
                     </div>
@@ -69,12 +68,11 @@ function CadastroCliente() {
 
                         {
                             mandou > 0 && (
-                                !formulario.email ? (
+                                !formulario.email ?? (
                                     <div className="error" id="password-required-error">
                                         Email é obrigatório
                                     </div>
                                 )
-                                : <div></div>
                             )
                         }
 
@@ -97,12 +95,11 @@ function CadastroCliente() {
 
                         {
                             mandou > 0 && (
-                                !formulario.senha ? (
+                                !formulario.senha ?? (
                                     <div className="error" id="password-required-error">
                                         Senha é obrigatória
                                     </div>
                                 )
-                                : <div></div>
                             )
                         }
                     </div>
