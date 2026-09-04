@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import { cadastrarGerente } from "../../services/CadastroGerente.js"
-import { cadastrarSalao } from "../../services/CadastroSalao.js"
 import '../Formulario.css'
 
 function CadastroGerente() {
@@ -30,35 +29,21 @@ function CadastroGerente() {
         })
     }
 
-    const [mudarForm, setMudarForm] = useState({
+    const [mudarForm] = useState({
         msgForm: "Cadastrar-se",
         btnEnviar: "Entrar",
         classeOculto: "oculto",
     })
 
-    function mudarMsgForm() {
-        setMudarForm({
-            msgForm: mudarForm.msgForm == "Cadastrar-se" ? "Entrar na conta" : "Cadastrar-se",
-            btnEnviar: mudarForm.btnEnviar == "Entrar" ? "Cadastrar-se" : "Entrar",
-            classeOculto: mudarForm.classeOculto == "oculto" ? "" : "oculto",
-        })
-    }
 
-    async function enviarFormulario(event) {
-        const respostaSalao = await cadastrarSalao(formulario.nome_salao, formulario.categoria, formulario.endereco)
-        let respostaCadastro = false
+    async function enviarFormulario() {
+        const resposta = await cadastrarGerente(
+            formulario.email, formulario.senha,
+            formulario.nome_profissional, formulario.telefone,
+            formulario.nome_salao, formulario.categoria, formulario.endereco
+        )
 
-        if (respostaSalao) {
-            respostaCadastro = await cadastrarGerente(
-                formulario.email,
-                formulario.senha,
-                formulario.nome_profissional,
-                formulario.telefone,
-                respostaSalao
-            )
-        }
-
-        if (respostaCadastro) {
+        if (resposta) {
             navegar("/cadastro/colaborador")
         }
     }

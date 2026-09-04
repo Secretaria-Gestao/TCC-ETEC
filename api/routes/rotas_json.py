@@ -1,7 +1,6 @@
 from flask import Flask, Blueprint
 from controllers.login_controller import cadastroUserCliente
 from controllers.login_controller import cadastroUserGerente
-from controllers.login_controller import cadastroSalao
 from controllers.agendamento_controller import agendar
 from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao
 from controllers.buscar_salao import buscar_salao, buscar_servicos_fornecidos, criar_servicos_fornecidos, editar_servicos_fornecidos, deletar_servicos_fornecidos
@@ -19,10 +18,6 @@ def validandoCliente():
 @rotas_json.route("/api/cadastro/gerente", methods=["POST"])
 def validandoGerente():
     return cadastroUserGerente()
-
-@rotas_json.route("/api/cadastro/salao", methods=["POST"])
-def validandoSalao():
-    return cadastroSalao()
 
 @rotas_json.route("/api/agendando", methods=["POST"])
 def agendamento():
