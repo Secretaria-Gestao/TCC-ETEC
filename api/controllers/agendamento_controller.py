@@ -32,6 +32,9 @@ def agendar():
             supabase.table("profissionais")
             .select("id_profissional")
             .eq("id_profissional", info["id_profissional"])
+            .eq("salao_associado", id_salao)
+            .eq("status", True)
+            .eq("removido", False)
             .execute()
         )
 

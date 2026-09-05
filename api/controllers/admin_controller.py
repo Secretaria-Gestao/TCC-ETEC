@@ -176,6 +176,7 @@ def buscar_Todosprofissionais(): # Busca todos os profissionais, todos
                     .select("id_profissional, nome_profissional, email_profissional, cargo, telefone_profissional, foto_url")
                     .eq("salao_associado", remetente["salao_associado"])
                     .eq("removido", False)
+                    .eq("status", True)
                     .execute()
                 )
 
@@ -191,6 +192,7 @@ def buscar_Todosprofissionais(): # Busca todos os profissionais, todos
                         .select("id_profissional, nome_profissional")
                         .eq("salao_associado", int(info['id_salao']))
                         .eq("removido", False)
+                        .eq("status", True)
                         .execute()
                     )
 
@@ -199,6 +201,7 @@ def buscar_Todosprofissionais(): # Busca todos os profissionais, todos
                         supabase_admin.table("profissionais")
                         .select("id_profissional, nome_profissional")
                         .eq("removido", False)
+                        .eq("status", True)
                         .execute()
                     )
 
