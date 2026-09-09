@@ -9,6 +9,7 @@ import { useNotificacaoStore } from "@/Notificacao/notificacaoStore.js"
 import { buscarSalao } from '../../../../services/BuscarSalao.js'
 import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { cadastrarColaborador } from '../../services/CadastroColaborador'
+import { menuAdmin } from '@/BarraLateral/listaMenus'
 
 
 function CadastroColaborador() {
@@ -61,7 +62,7 @@ function CadastroColaborador() {
         <main className='main-principal flex'>
             <div className='w-full h-full flex backdrop-blur-md'>
                 <div className='flex'>
-                    <BarraLateral />
+                    <BarraLateral menu={menuAdmin}/>
                 </div>
                 <div className='w-full'>
                     <Header titulo="Novo profissional" subtitulo={nomeSalao}>

@@ -9,7 +9,6 @@ import PageAgendaAdmin from './pages/Agenda_Admin/pageAgendaAdmin.jsx'
 import GerenciadorServicos from './pages/GerenciadorServicos/GerenciadorServicos.jsx'
 import GerenciadorProfissionais from './pages/GerenciadorProfissionais/GerenciadorProfissionais.jsx'
 import Login from './pages/Login/Login.jsx'
-import Fim from './pages/Fim/Fim.jsx'
 
 import { NotificacaoContainer } from '@/Notificacao'
 
@@ -32,7 +31,6 @@ function App() {
       <Route path="/admin/agenda" element={ <PageAgendaAdmin /> } />
       <Route path="/admin/gerenciador-servicos" element={<GerenciadorServicos />} />
       <Route path="/admin/gerenciador-profissionais" element={<GerenciadorProfissionais />} />
-      <Route path="/fim" element={ <Fim /> } />
   </Routes>
      </>
   )
