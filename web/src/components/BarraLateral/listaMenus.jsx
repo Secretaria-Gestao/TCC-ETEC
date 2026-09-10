@@ -64,3 +64,53 @@ export const menuAdmin = [
         )
     },
 ]
+
+export const menuCliente = [
+    {
+        "to": "/agendamento",
+        "titulo": "Novo horário",
+        "icone": () => (
+            <svg
+                className="w-[23px] h-[23px] ml-0.5 -mr-0.5 shrink-0"
+                viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="1.75"
+                strokeLinecap="round" strokeLinejoin="round"
+            >
+                <rect x="2" y="4" width="17" height="17" rx="2" />
+                <line x1="14.5" y1="2" x2="14.5" y2="6" />
+                <line x1="6.5" y1="2" x2="6.5" y2="6" />
+                <line x1="2" y1="9.5" x2="19" y2="9.5" />
+                <circle cx="18" cy="18" r="4.5" fill="#1e293b" stroke="currentColor" strokeWidth="1.5" />
+                <line x1="18" y1="16.3" x2="18" y2="19.7" />
+                <line x1="16.3" y1="18" x2="19.7" y2="18" />
+            </svg>
+        )
+    },
+    {
+        "to": "/agendamento/meus-agendamentos",
+        "titulo": "Agenda",
+        "icone": () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-event ml-0.5" viewBox="0 0 16 16">
+                <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
+                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+            </svg>
+        )
+    },
+    {
+        "to": "/historico",
+        "titulo": "Histórico",
+        "icone": () => (
+            <svg
+                className="w-5.5 h-5.5 shrink-0"
+                viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="1.75"
+                strokeLinecap="round" strokeLinejoin="round"
+            >
+                <path d="M3 12a9 9 0 1 0 3-6.7" />
+                <polyline points="3 3 3 8 8 8" />
+                <line x1="12" y1="7" x2="12" y2="12" />
+                <line x1="12" y1="12" x2="15.5" y2="14" />
+            </svg>
+        )
+    },
+]

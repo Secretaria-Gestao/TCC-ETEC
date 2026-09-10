@@ -157,8 +157,7 @@ function Formulario() {
     }
 
     return (
-        <form className='agendamento-form tudo'>
-            <main className="agendamento-main">
+        <form className='agendamento-form md:w-full'>
                 <div className="card_1">
                     <div className="lista_servicos" id="lista_servicos">
                         {
@@ -249,7 +248,6 @@ function Formulario() {
                     </div>
 
                 </div>
-            </main>
         </form>
     )
 }
