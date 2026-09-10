@@ -12,3 +12,7 @@
 .barraLateral > hr {
     margin: 24px
 }
+
+.barraLateral svg {
+    color: var(--color-laranja);
+}

@@ -4,7 +4,7 @@ export const menuAdmin = [
         "titulo": "Página principal",
         "icone": () => (
             <svg xmlns="http://w3.org" viewBox="0 0 100 100" width="24" height="24" className='shrink-0 ml-[-2.5px]'>
-                <g fill="none" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                <g fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="50,15 15,45 85,45" />
                     <rect x="23" y="45" width="54" height="40" />
                     <rect x="42" y="60" width="16" height="25" />
@@ -67,11 +67,25 @@ export const menuAdmin = [
 
 export const menuCliente = [
     {
+        "to": "/",
+        "titulo": "Página principal",
+        "icone": () => (
+            <svg xmlns="http://w3.org" viewBox="0 0 100 100" width="24" height="24" className='shrink-0 ml-[-2.5px]'>
+                <g fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="50,15 15,45 85,45" />
+                    <rect x="23" y="45" width="54" height="40" />
+                    <rect x="42" y="60" width="16" height="25" />
+                </g>
+            </svg>
+        )
+    },
+    
+    {
         "to": "/agendamento",
         "titulo": "Novo horário",
         "icone": () => (
             <svg
-                className="w-[23px] h-[23px] ml-0.5 -mr-0.5 shrink-0"
+                className="w-5 h-5 shrink-0"
                 viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="1.75"
                 strokeLinecap="round" strokeLinejoin="round"
@@ -90,7 +104,7 @@ export const menuCliente = [
         "to": "/agendamento/meus-agendamentos",
         "titulo": "Agenda",
         "icone": () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-event ml-0.5" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-5 h-5 shrink-0" viewBox="-2 -2 20 20">
                 <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
                 <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
             </svg>
@@ -101,7 +115,7 @@ export const menuCliente = [
         "titulo": "Histórico",
         "icone": () => (
             <svg
-                className="w-5.5 h-5.5 shrink-0"
+                className="w-5 h-5 shrink-0"
                 viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="1.75"
                 strokeLinecap="round" strokeLinejoin="round"
