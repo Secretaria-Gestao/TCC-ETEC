@@ -24,7 +24,7 @@ def agendar():
 
     if id_cliente is None:
         return jsonify({"sucesso": False, "erro": "Token é invalido"}), 401
-
+    
     try:
         id_salao = info["id_salao"]
 
@@ -54,7 +54,7 @@ def agendar():
             return jsonify({"sucesso": False, "erro": "Salão não encontrado"}), 404
 
         endereco_salao = salao_escolhido.data[0]["endereco_salao"]
-
+        
         checagem_agendamento = (
             supabase.table("agendamentos")
             .select("id_agendamento")
@@ -64,18 +64,35 @@ def agendar():
         )
 
         if not checagem_agendamento.data:
+            
+            ids_servicos = []
+
+            for servico in info["servicos"]:
+                ids_servicos.append(servico)
+
+            resposta_servicos = supabase.table("servicos").select("preco_servico").in_("id_servico", ids_servicos).execute()
+
+            servicos = resposta_servicos.data
+            
+            valor_total = 0
+            
+            for servico in servicos:
+                valor_total += float(servico["preco_servico"])
+                
             novo_agendamento = {
                 "id_cliente": id_cliente,
                 "id_profissional": id_profissional,
                 "salao_associado": id_salao,
                 "horario": info["data_hora"],
                 "endereco": endereco_salao,
+                "preco": valor_total,
                 "status": "Pendente"
             }
 
             resultado = supabase.table("agendamentos").insert(novo_agendamento).execute()
 
             id_agendamento = resultado.data[0]["id_agendamento"]
+            
 
             for servico in info["servicos"]:
                 agendamento_servicos = {
