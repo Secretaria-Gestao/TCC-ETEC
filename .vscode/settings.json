@@ -5,6 +5,6 @@
     "**/package.json": true,
     "**/vite.config.js": true,
     "**/eslint.config.js": true,
-    "**/README.md": true
+    // "**/README.md": true
   }
 }
