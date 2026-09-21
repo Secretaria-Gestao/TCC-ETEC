@@ -14,7 +14,7 @@ def buscar_salao():
 
         resultado = (
             supabase_admin.table("profissionais")
-            .select("salao_associado, saloes(*)")
+            .select("salao_associado, saloes!salao_associado(*)")
             .eq("email_profissional", email)
             .execute()
         )

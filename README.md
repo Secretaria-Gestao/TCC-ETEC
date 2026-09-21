@@ -43,7 +43,7 @@
 | 6    | Alta       | Como colaborador, quero gerenciar os meus serviços para me organizar antes do atendimento                                                                                                                    | 5          | 3 | Em andamento |
 | 7    | Alta       | Como administrador, quero gerenciar os meus serviços para me organizar antes do atendimento                                                                                                                  | 5          | 3 | Em andamento |
 | 8    | Alta       | Como administrador, quero cadastrar colaboradores e selecionar, um ou mais serviços que eles realizam para definir com o que trabalham no salão                                                              | 8          | 2 | Concluído |
-| 9    | Alta       | Como administrador, quero editar os dados pessoais, o cargo e o nível de acesso dos colaboradores para manter as informações da equipe atualizadas                                                           | 5          | 4 | Concluído — ver observação 1 |
+| 9    | Alta       | Como administrador, quero editar os dados pessoais, o cargo e o nível de acesso dos colaboradores para manter as informações da equipe atualizadas                                                           | 5          | 4 | Concluído |
 | 10   | Alta       | Como colaborador, quero definir meus horários de trabalho, pausas e indisponibilidades para receber agendamentos apenas quando puder atender                                                                 | 8          | 3 | Não implementado |
 | 11   | Alta       | Como colaborador, quero visualizar minha agenda e os dados dos próximos atendimentos para organizar meu trabalho diário                                                                                      | 5          | 3 | Concluído |
 | 12   | Alta       | Como colaborador, quero que meu cliente agende um ou mais serviços comigo em um horário disponível para garantir o atendimento                                                                               | 8          | 1 | Concluído |
@@ -51,7 +51,7 @@
 | 14   | Alta       | Como colaborador, quero que meus clientes visualizem seus próprios agendamentos para não perderem os horários marcados                                                                                       | 3          | 2 | Concluído |
 | 15   | Alta       | Como colaborador, quero que meus clientes possam cancelar seus próprios agendamentos para liberar os horários que não serão utilizados                                                                       | 3          | 5 | Não implementado |
 | 16   | Alta       | Como colaborador, quero confirmar, concluir, cancelar ou registrar a ausência em um atendimento para manter a agenda e os relatórios atualizados                                                             | 3          | 4 | Não implementado |
-| 17   | Alta       | Como administrador, quero desativar o cadastro de um colaborador que não trabalha mais no salão e reativá-lo caso retorne, para impedir novos agendamentos enquanto estiver inativo sem apagar seu histórico | 3          | 4 | Concluído — ver observação 2 |
+| 17   | Alta       | Como administrador, quero desativar o cadastro de um colaborador que não trabalha mais no salão e reativá-lo caso retorne, para impedir novos agendamentos enquanto estiver inativo sem apagar seu histórico | 3          | 4 | Concluído |
 | 18   | Alta       | Como administrador, quero que o preço aplicado a cada serviço seja preservado no agendamento para que alterações futuras no catálogo não modifiquem os valores do histórico                                  | 3          | | Concluído |
 | 19   | Alta       | Como administrador, quero definir para cada colaborador se o salão deve pagar a ele ou se ele deve pagar ao salão, para representar o acordo financeiro estabelecido                                         | 5          | | Não implementado |
 | 20   | Alta       | Como administrador, quero visualizar um relatório com os valores que devo pagar ou receber de cada colaborador para agilizar o acerto de contas                                                              | 8          | | Não implementado |
@@ -72,8 +72,4 @@
 
 ### Observações
 
-1. **US 9** — hoje qualquer nível de acesso 1 (Administrador) ou 2 (Gerente) pode alterar o `nivel_acesso` de qualquer profissional, inclusive promovendo a si mesmo. Refinamento necessário: só o Administrador pode alterar `nivel_acesso`.
-
-2. **US 17** — desativar/reativar deve continuar disponível para Administrador e Gerente, mas o Gerente só pode agir sobre profissionais de nível 3 (nunca sobre outro Gerente ou o Administrador). A remoção definitiva (`remover_profissional`) continua exclusiva do Administrador.
-
-3. Níveis de acesso do sistema: 1 = Administrador (acesso total), 2 = Gerente (dia a dia do salão, sem configurações críticas), 3 = Profissional (própria agenda e perfil).
+1. Níveis de acesso do sistema: 1 = Administrador (acesso total), 2 = Gerente (dia a dia do salão, sem configurações críticas), 3 = Profissional (própria agenda e perfil).
