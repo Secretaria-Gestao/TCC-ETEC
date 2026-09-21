@@ -81,7 +81,7 @@ def agendamentos_cliente(id_cliente):
 
         resultado = (
             supabase_admin.table("agendamentos")
-            .select("horario, status, profissionais(nome_profissional, salao_associado, saloes(nome_salao, endereco_salao))")
+            .select("horario, status, profissionais(nome_profissional, salao_associado, saloes!salao_associado(nome_salao, endereco_salao))")
             .eq("id_cliente", id_cliente)
             .execute()
         )
@@ -305,12 +305,12 @@ def remover_profissional():
 
         remetente = resposta_remetente.data[0]
 
-        if int(remetente["nivel_acesso"]) >= 3:
-            return jsonify({"sucesso": False, "erro": "Somente administradores e gerentes podem remover um profissional"}), 403
-
+        if int(remetente["nivel_acesso"]) != 1:
+            return jsonify({"sucesso": False, "erro": "Somente administradores podem remover um profissional"}), 403
+        
         resposta_profissional = (
             supabase_admin.table("profissionais")
-            .select("id_profissional, salao_associado")
+            .select("id_profissional, salao_associado, nivel_acesso")
             .eq("id_profissional", id_profissional)
             .eq("removido", False)
             .execute()
@@ -323,6 +323,9 @@ def remover_profissional():
 
         if profissional["salao_associado"] != remetente["salao_associado"]:
             return jsonify({"sucesso": False, "erro": "O profissional não pertence a este salão"}), 403
+        
+        if int(profissional["nivel_acesso"]) == 1:
+            return jsonify({"sucesso": False, "erro": "Não se pode apagar um administrador"}), 403
 
         resposta_remover = (
             supabase_admin.table("profissionais")
@@ -386,7 +389,7 @@ def editar_profissional():
 
         resposta_profissional = (
             supabase_admin.table("profissionais")
-            .select("id_profissional, email_profissional, salao_associado")
+            .select("id_profissional, email_profissional, salao_associado, status, nivel_acesso")
             .eq("id_profissional", info["id_profissional"])
             .execute()
         )
@@ -414,6 +417,8 @@ def editar_profissional():
         nome_profissional = str(info["nome_profissional"]).strip()
         email_profissional = str(info["email_profissional"]).strip().lower()
         cargo = str(info["cargo"]).strip()
+        status = bool(info['status'])
+        nivel_acesso = int(info["nivel_acesso"])
 
         if not nome_profissional or not email_profissional or not cargo:
             return jsonify({"sucesso": False, "erro": "Nome, e-mail e cargo não podem ficar vazios"}), 400
@@ -424,7 +429,21 @@ def editar_profissional():
                 info["id_profissional"],
                 {"email": email_profissional, "email_confirm": True},
             )
-
+            
+        if status != profissional["status"]:
+            if remetente["nivel_acesso"] >= profissional["nivel_acesso"]:
+                return jsonify({"sucesso": False, "erro": "O remetente tentou mudar o status de um profissional do mesmo nível ou inferior."}), 403
+            
+        if profissional['nivel_acesso'] != nivel_acesso:
+            if remetente["nivel_acesso"] != 1:
+                return jsonify({"sucesso": False, "erro": "Somente administradores podem alterar o nível de acesso"}), 403
+            
+            resposta_salao = supabase_admin.table("saloes").select("id_dono").eq("id_dono", profissional["id_profissional"]).execute()
+            
+            if resposta_salao.data:
+                return jsonify({"sucesso": False, "erro": "Você não pode alterar o nível de acesso do dono do salão."}), 403
+                
+            
         dados_atualizados = {
             "nome_profissional": nome_profissional,
             "email_profissional": email_profissional,
