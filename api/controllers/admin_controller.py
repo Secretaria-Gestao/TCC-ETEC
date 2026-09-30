@@ -517,7 +517,7 @@ def agendamentos_profissional(id_profissional):
         # Traz os dados do cliente porque o profissional precisa saber quem vai atender.
         resultado = (
             supabase_admin.table("agendamentos")
-            .select("horario, status, clientes(nome_cliente, email_cliente)")
+            .select("id_agendamento, horario, status, clientes(nome_cliente, email_cliente)")
             .eq("id_profissional", id_profissional)
             .execute()
         )
@@ -526,6 +526,7 @@ def agendamentos_profissional(id_profissional):
         for ag in resultado.data:
             cliente = ag.get("clientes") or {}
             agendamentos.append({
+                "id_agendamento": ag["id_agendamento"],
                 "horario": ag["horario"],
                 "status": ag["status"],
                 "cliente": cliente.get("nome_cliente"),
@@ -592,3 +593,60 @@ def agendamentos_salao():
 
     except Exception as e:
         return jsonify({"sucesso": False, "erro": str(e)}), 500
+
+def atualizar_status_agendamento():
+    STATUS_PERMITIDOS = {"confirmado", "concluido", "cancelado", "ausente"}
+    # Usado pelo profissional para confirmar, concluir, cancelar ou marcar
+    # ausência em um dos próprios atendimentos.
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+
+    id_profissional = autenticar(token)
+    if not id_profissional:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    info = request.get_json(silent=True) or {}
+    id_agendamento = info.get("id_agendamento")
+    novo_status = info.get("novo_status")
+
+    if not id_agendamento or not novo_status:
+        return jsonify({"sucesso": False, "erro": "Campos ausentes: id_agendamento, novo_status"}), 400
+
+    if novo_status not in STATUS_PERMITIDOS:
+        return jsonify({"sucesso": False, "erro": f"Status inválido: {novo_status}"}), 400
+
+    try:
+        # Confere se o agendamento realmente pertence a este profissional,
+        # pra impedir que ele altere o atendimento de outra pessoa.
+        resultado_agendamento = (
+            supabase_admin.table("agendamentos")
+            .select("id_agendamento, id_profissional, status")
+            .eq("id_agendamento", id_agendamento)
+            .execute()
+        )
+
+        if not resultado_agendamento.data:
+            return jsonify({"sucesso": False, "erro": "Agendamento não encontrado"}), 404
+
+        agendamento = resultado_agendamento.data[0]
+
+        if agendamento["id_profissional"] != id_profissional:
+            return jsonify({"sucesso": False, "erro": "Este agendamento não pertence a este profissional"}), 403
+
+        resposta = (
+            supabase_admin.table("agendamentos")
+            .update({"status": novo_status})
+            .eq("id_agendamento", id_agendamento)
+            .select("id_agendamento, status")
+            .execute()
+        )
+
+        if not resposta.data:
+            return jsonify({"sucesso": False, "erro": "Falha ao atualizar o status"}), 500
+
+        return jsonify({"sucesso": True, "agendamento": resposta.data[0]})
+
+    except Exception as erro:
+        print("Erro ao atualizar status do agendamento:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao atualizar o status"}), 500

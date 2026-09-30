@@ -14,6 +14,7 @@ import './AgendaAd.css'
 
 function AgendaAdmin() {
     const [agendamentos, setAgendamentos] = useState([])
+    const [idAdmin, setIdAdmin] = useState('')
     const [filtroProfissional, setFiltroProfissional] = useState('')
     const [dataReferenciaSemana, setDataReferenciaSemana] = useState(new Date())
     const [dataReferenciaMes, setDataReferenciaMes] = useState(new Date())
@@ -25,6 +26,8 @@ function AgendaAdmin() {
 
             const sessao = await pegarSessao()
             const token = sessao.access_token
+
+            setIdAdmin(sessao.user.id)
 
             try {
                 const resposta = await fetch(`/api/agendamentos/salao`, {
@@ -113,7 +116,7 @@ function AgendaAdmin() {
                         <NavegacaoSemana tituloSemana={tituloSemana} mudarSemana={mudarSemana} />
                         <GradeSemanal
                             domingo={domingo}
-                            agendamentos={agendamentos}
+                            agendamentos={agendamentos.filter((ag) => ag.idAdmin === idAdmin)}
                             campoPrincipal="cliente"
                             campoSecundario="status"
                         />
