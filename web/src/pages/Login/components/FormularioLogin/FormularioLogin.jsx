@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate, useLocation, Link } from "react-router"
 
 import { logar } from "../../services/login.js"
+import { logarComGoogle } from "../../services/login.js"
 import './FormularioLogin.css'
 
 function FormularioLogin() {
@@ -82,7 +83,7 @@ function FormularioLogin() {
 
                     <p className="txtgoogle">Sem tempo para perder? Entre com o Google</p>
 
-                    <button type="button" name="google" className="solid google">
+                    <button type="button" name="google" className="solid google" onClick={logarComGoogle}>
                         <img
                             src="https://cdn-icons-png.flaticon.com/256/2504/2504739.png"
                             alt="Imagem Google"

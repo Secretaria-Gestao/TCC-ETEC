@@ -18,3 +18,12 @@ export async function logar(email, senha) { // Login direto no Supabase Auth
     }
     return true
 }
+
+export async function logarComGoogle() { // Login com Google no Supabase Auth
+    await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: `${window.location.origin}/agendamento` // Manda pra pagina de agendamento apos o login com google
+        }
+    });
+}
