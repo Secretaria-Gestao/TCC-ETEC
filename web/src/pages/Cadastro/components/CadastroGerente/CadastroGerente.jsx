@@ -162,12 +162,34 @@ function CadastroGerente() {
 
                         <label htmlFor="userName">Nome de usuário</label>
                         <input id="userName" name="nome_profissional" placeholder="Como deseja ser chamado" onChange={mudarValor} />
+                        
+                        {
+                            mandou > 0 && (
+                                !formulario.nome_profissional ?? (
+                                    <div className="error" id="password-required-error">
+                                        Nome de usuário é obrigatório
+                                    </div>
+                                )
+                            )
+                        }
+
                     </div>
 
 
                     <div className={etapas.etapa2}>
                         <label htmlFor="telefone">telefone</label>
                         <input id="telefone" name="telefone" placeholder="Seu telefone" onChange={mudarValor} />
+
+                        {
+                            mandou > 0 && (
+                                !formulario.telefone ?? (
+                                    <div className="error" id="password-required-error">
+                                        Telefone é obrigatório
+                                    </div>
+                                )
+                            )
+                        }
+
                     </div>
 
                     {/* Etapa 3 */}
@@ -175,11 +197,32 @@ function CadastroGerente() {
                     <div className={etapas.etapa3}>
                         <label htmlFor="nomeSalao">Nome do salão</label>
                         <input id="nomeSalao" name="nome_salao" placeholder="Nome do seu salão" onChange={mudarValor} />
+
+                        {
+                            mandou > 0 && (
+                                !formulario.nome_salao ?? (
+                                    <div className="error" id="password-required-error">
+                                        Nome do salão é obrigatório
+                                    </div>
+                                )
+                            )
+                        }
+
                     </div>
 
                     <div className={etapas.etapa3}>
                         <label htmlFor="endereco">Endereço do salão</label>
                         <input id="endereco" name="endereco" placeholder="Endereço do salão" onChange={mudarValor} />
+
+                        {
+                            mandou > 0 && (
+                                !formulario.endereco ?? (
+                                    <div className="error" id="password-required-error">
+                                        Endereço é obrigatório
+                                    </div>
+                                )
+                            )
+                        }
                     </div>
 
                     <p className={etapas.etapa3}> Categoria do salão </p>
@@ -193,6 +236,16 @@ function CadastroGerente() {
                             <option value="depilacao"> Depilação </option>
                             <option value="estetica"> Estética </option>
                         </select>
+
+                        {
+                            mandou > 0 && (
+                                !formulario.categoria ?? (
+                                    <div className="error" id="password-required-error">
+                                        Selecionar a categoria é obrigatório
+                                    </div>
+                                )
+                            )
+                        }
 
                     </div>
 
