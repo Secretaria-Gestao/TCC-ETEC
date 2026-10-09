@@ -20,6 +20,10 @@
     margin-bottom: 0px;
 }
 
+.campo{
+    margin-top: 10px;
+}
+
 .login-form input,
 .login-form button,
 .login-form .button-link {

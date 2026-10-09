@@ -13,6 +13,8 @@ function CadastroCliente() {
         email: "",
         senha: ""
     })
+    
+    const [mandou, setMandou] = useState(0)
 
     function mudarValor(evento) {
         const nomeCampo = evento.target.name
@@ -26,7 +28,7 @@ function CadastroCliente() {
 
     async function enviarFormulario(event) {
         event.preventDefault()
-
+        setMandou(1)
         const resultado = await cadastrarCliente(formulario.nome, formulario.email, formulario.senha)
 
         if (resultado) {
@@ -48,28 +50,58 @@ function CadastroCliente() {
                             <label htmlFor="userName">Nome</label><br />
                             <input id="userName" name="nome" placeholder="Seu nome" onChange={mudarValor} />
                         </div>
+
+                        {
+                            mandou > 0 && (
+                                !formulario.nome ?? (
+                                    <div className="error" id="password-required-error">
+                                        Nome é obrigatório
+                                    </div>
+                                )
+                            )
+                        }
                     </div>
 
                     <div className="campo">
                         <label htmlFor="email">Email</label>
                         <input type="email" name="email" id="email" placeholder="seu@email.com" onChange={mudarValor} />
 
-                        <div className="error" id="email-required-error">
-                            Email é obrigatório
-                        </div>
+                        {
+                            mandou > 0 && (
+                                !formulario.email ?? (
+                                    <div className="error" id="password-required-error">
+                                        Email é obrigatório
+                                    </div>
+                                )
+                            )
+                        }
 
-                        <div className="error" id="email-invalid-error">
-                            Email é inválido
-                        </div>
+                        {
+                            formulario.email.length > 0 && (
+                                
+                                !/\S+@\S+\.\S+/.test(formulario.email) && (
+                                    <div className="error" id="email-invalid-error">
+                                    Email é inválido
+                                </div>
+                                )
+                            )
+                        }	
+                        
                     </div>
 
                     <div className="campo">
                         <label htmlFor="senha">Senha</label>
                         <input type="password" name="senha" id="password" placeholder="sua senha" onChange={mudarValor} />
 
-                        <div className="error" id="password-required-error">
-                            Senha é obrigatória
-                        </div>
+                        {
+                            mandou > 0 && (
+                                !formulario.senha ?? (
+                                    <div className="error" id="password-required-error">
+                                        Senha é obrigatória
+                                    </div>
+                                )
+                            )
+                        }
                     </div>
 
                     <button type="submit" className="solid" id="login-button">
