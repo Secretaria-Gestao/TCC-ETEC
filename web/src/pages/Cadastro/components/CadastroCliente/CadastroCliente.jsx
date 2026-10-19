@@ -80,18 +80,6 @@ function CadastroCliente() {
                         Entrar na conta
                     </Link>
 
-                    <p className="ou"> Ou </p>
-
-                    <p className="txtgoogle">Sem tempo para perder? Entre com o Google</p>
-
-                    <button type="button" name="google" className="solid google">
-                        <img
-                            src="https://cdn-icons-png.flaticon.com/256/2504/2504739.png"
-                            alt="Imagem Google"
-                            className="img_google"
-                        />
-                        Entrar com o google
-                    </button>
                 </form>
             </main>
         </>
