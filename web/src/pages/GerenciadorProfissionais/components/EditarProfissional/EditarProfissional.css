@@ -1,0 +1,15 @@
+.editar-profissional {
+    animation: editar-profissional-entrar 180ms ease-out both;
+}
+
+@keyframes editar-profissional-entrar {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

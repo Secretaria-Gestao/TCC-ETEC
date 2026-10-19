@@ -1,0 +1,4 @@
+.campoPesquisa::placeholder {
+    color: var(--background-color-error);
+    opacity: 1;
+}

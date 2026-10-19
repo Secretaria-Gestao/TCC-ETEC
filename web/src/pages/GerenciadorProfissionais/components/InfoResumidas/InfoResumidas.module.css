@@ -1,0 +1,15 @@
+.destaqueProfissional {
+    position: relative;
+    padding-left: 2.5rem;
+    /* background-color: aqua; */
+}
+
+.destaqueProfissional::before {
+    content: "★";
+    position: absolute;
+    top: 14%;
+    left: 0;
+    color: #f45b0b;
+    font-size: 1.5rem;
+    line-height: 1;
+}

@@ -8,8 +8,6 @@ export async function buscarServicos(profissionalSelecionado) {
         return false
     }
 
-    console.log("profissional selecionado: "+ profissionalSelecionado)
-
     const resposta = await fetch("/api/buscar/servicos-agendamento",{
         method: "POST",
         headers: {
@@ -24,7 +22,7 @@ export async function buscarServicos(profissionalSelecionado) {
     const resultado = await resposta.json()
 
     if (!resultado.sucesso) {
-        console.log(resultado.erro)
+        return []
     }
 
     return resultado.servicos
