@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import { cadastrarGerente } from "../../services/CadastroGerente.js"
 import { cadastrarSalao } from "../../services/CadastroSalao.js"
@@ -45,10 +45,10 @@ function CadastroGerente() {
             classeOculto: mudarForm.classeOculto == "oculto" ? "" : "oculto",
         })
     }
-
+    
     async function enviarFormulario(event) {
+        setMandou(1) 
         const respostaSalao = await cadastrarSalao(formulario.nome_salao, formulario.categoria, formulario.endereco)
-        setMandou(1)
         let respostaCadastro = false
 
         if (respostaSalao) {
@@ -66,7 +66,7 @@ function CadastroGerente() {
         }
     }
 
-    const [etapaAtual, setEtapaAtual] = useState(1)
+    const [etapaAtual, setEtapaAtual] = useState(0)
 
     const [etapas, setEtapas] = useState({
         etapa1: "campo",
@@ -76,12 +76,22 @@ function CadastroGerente() {
 
     function proximaEtapa() {
         setEtapaAtual(etapaAtual + 1)
+        
+    }
+
+    function voltarEtapa() {
+        setEtapaAtual(atual => atual - 1)
+    }
+
+    useEffect(() => {
         setEtapas({
             etapa1: etapaAtual == 0 ? "campo" : "oculto",
             etapa2: etapaAtual == 1 ? "campo" : "oculto",
             etapa3: etapaAtual == 2 ? "campo" : "oculto",
         })
-    }
+    }, [etapaAtual])
+
+    console.log(mandou)
 
     return (
         <>
@@ -120,7 +130,7 @@ function CadastroGerente() {
 
                         {
                             mandou > 0 && (
-                                !formulario.email ?? (
+                                !formulario.email && (
                                     <div className="error" id="password-required-error">
                                         Email é obrigatório
                                     </div>
@@ -147,7 +157,7 @@ function CadastroGerente() {
 
                         {
                             mandou > 0 && (
-                                !formulario.senha ?? (
+                                !formulario.senha && (
                                     <div className="error" id="password-required-error">
                                         Senha é obrigatória
                                     </div>
@@ -165,7 +175,7 @@ function CadastroGerente() {
                         
                         {
                             mandou > 0 && (
-                                !formulario.nome_profissional ?? (
+                                !formulario.nome_profissional && (
                                     <div className="error" id="password-required-error">
                                         Nome de usuário é obrigatório
                                     </div>
@@ -182,7 +192,7 @@ function CadastroGerente() {
 
                         {
                             mandou > 0 && (
-                                !formulario.telefone ?? (
+                                !formulario.telefone && (
                                     <div className="error" id="password-required-error">
                                         Telefone é obrigatório
                                     </div>
@@ -200,7 +210,7 @@ function CadastroGerente() {
 
                         {
                             mandou > 0 && (
-                                !formulario.nome_salao ?? (
+                                !formulario.nome_salao && (
                                     <div className="error" id="password-required-error">
                                         Nome do salão é obrigatório
                                     </div>
@@ -216,7 +226,7 @@ function CadastroGerente() {
 
                         {
                             mandou > 0 && (
-                                !formulario.endereco ?? (
+                                !formulario.endereco && (
                                     <div className="error" id="password-required-error">
                                         Endereço é obrigatório
                                     </div>
@@ -239,7 +249,7 @@ function CadastroGerente() {
 
                         {
                             mandou > 0 && (
-                                !formulario.categoria ?? (
+                                !formulario.categoria && (
                                     <div className="error" id="password-required-error">
                                         Selecionar a categoria é obrigatório
                                     </div>
@@ -251,9 +261,17 @@ function CadastroGerente() {
 
                     {/* Botão Continuar */}
 
-                    <button type="button" className="solid" id="login-button" onClick={etapaAtual >= 3 ? enviarFormulario : proximaEtapa}>
-                        {etapaAtual >= 3 ? "Finalizar" : "Continuar"}
+                    <button type="button" className="solid" id="login-button" onClick={etapaAtual >= 2 ? enviarFormulario : proximaEtapa}>
+                        {etapaAtual >= 2 ? "Finalizar" : "Continuar"}
                     </button>
+                    
+                    {
+                        etapaAtual >= 1 && (
+                            <button type="button" className="solid"  onClick={voltarEtapa}>
+                                Voltar
+                            </button>
+                        )
+                    }
 
                 </form>
             </main>
