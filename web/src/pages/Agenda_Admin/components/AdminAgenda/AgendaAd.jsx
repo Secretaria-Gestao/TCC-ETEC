@@ -45,18 +45,19 @@ function AgendaAdmin() {
 
                 console.log(resultado)
 
-                setAgendamentos(resultado.agendamentos || [])
+            const agendamentosTratados = (resultado.agendamentos || []).map((ag) => ({
+                ...ag,
+                profissional: ag.profissionais?.nome_profissional,
+                id_profissional: ag.profissionais?.id_profissional,
+                cliente: ag.clientes?.nome_cliente,
+            }))   
 
-                // Busca também só os agendamentos do próprio admin, usando a
-                // mesma rota que o colaborador usa — passando o id do admin logado.
-
+            setAgendamentos(agendamentosTratados)
             } catch (erro) {
-                console.error('Erro na requisição:', erro)
-                setMensagem('Erro de conexão. Tente novamente.')
+                console.log(erro)
+                setMensagem('Erro ao buscar agendamentos: ' + erro.message)
             }
         }
-
-        carregarAgendamentos()
 
     }, [])
     

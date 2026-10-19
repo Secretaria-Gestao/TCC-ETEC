@@ -3,7 +3,7 @@ from controllers.login_controller import cadastroUserCliente
 from controllers.login_controller import cadastroUserGerente
 from controllers.login_controller import cadastroSalao
 from controllers.agendamento_controller import agendar
-from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento
+from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento, historico_cliente
 from controllers.buscar_salao import buscar_salao, buscar_servicos_fornecidos, criar_servicos_fornecidos, editar_servicos_fornecidos, deletar_servicos_fornecidos
 from controllers.buscar_saloes import buscar_saloes
 from controllers.buscar_servicos import buscar_servicos_agendamento
@@ -105,3 +105,8 @@ def buscar_agendamentos_salao():
 def atualizar_status():
     # Rota usada pelo profissional para atualizar o status de um agendamento.
     return atualizar_status_agendamento()
+
+@rotas_json.route("/api/agendamentos/historico/<id_cliente>", methods=["GET"])
+def historico_cliente(id_cliente):
+    # Rota usada pelo cliente para ver o histórico de agendamentos.
+    return historico_cliente(id_cliente)

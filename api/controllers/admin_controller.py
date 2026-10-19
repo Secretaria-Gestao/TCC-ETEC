@@ -650,3 +650,42 @@ def atualizar_status_agendamento():
     except Exception as erro:
         print("Erro ao atualizar status do agendamento:", erro)
         return jsonify({"sucesso": False, "erro": "Erro ao atualizar o status"}), 500
+
+def historico_cliente(id_cliente):
+    # Busca o histórico de agendamentos de um cliente específico.
+    # Usado na página do cliente para ele ver seus próprios atendimentos.
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+
+    id_usuario= autenticar(token) # Serve para verificar depois se o id que a pessoa está mandando, realmente é dela
+
+    if not id_usuario:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    try:
+        if id_usuario != id_cliente: # Verificação do id_cliente
+            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"})
+
+        resultado = (
+            supabase_admin.table("agendamentos")
+            .select("horario, status, preco, profissionais(nome_profissional, cargo)")
+            .eq("id_cliente", id_cliente)
+            .execute()
+        )
+
+        historico = []
+        for ag in resultado.data:
+            prof = ag.get("profissionais", {})
+            historico.append({
+                "horario": ag["horario"],
+                "status": ag["status"],
+                "preco": ag["preco"],
+                "profissional": prof.get("nome_profissional"),
+                "cargo": prof.get("cargo")
+            })
+
+        return jsonify({"sucesso": True, "historico": historico})
+
+    except Exception as e:
+        return jsonify({"sucesso": False, "erro": str(e)}), 500

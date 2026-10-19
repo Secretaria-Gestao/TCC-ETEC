@@ -1,6 +1,10 @@
 export async function mandarAgendamento(token, servicos, id_profissional, dia, horario, id_salao, preco) {
 
-    const data_hora = `${dia}T${horario}`;
+    if (!dia || !horario) {
+        return {ok: false, erro: "Dia e horário são obrigatórios."}
+    }
+
+    const data_hora = new Date(`${dia}T${horario}`).toISOString();
 
     const resposta = await fetch('/api/agendando', {
         method: 'POST',

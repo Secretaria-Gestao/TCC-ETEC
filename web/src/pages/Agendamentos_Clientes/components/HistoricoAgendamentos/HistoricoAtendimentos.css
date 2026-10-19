@@ -1,0 +1,114 @@
+.historico-atendimentos-janela {
+    width: 92vw;
+    max-width: 1180px;
+    height: 88vh;
+    border-radius: 25px;
+    border: 2px solid var(--border-transparent);
+    background-color: var(--background-transparent);
+    backdrop-filter: blur(10px);
+    display: flex;
+    overflow: hidden;
+}
+
+.historico-atendimentos-sidebar {
+    width: 84px;
+    border-right: 2px solid var(--border-transparent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 0;
+}
+
+.historico-atendimentos-logo {
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 36px;
+    color: var(--font-color);
+    letter-spacing: 0.03em;
+    text-align: center;
+}
+
+.historico-atendimentos-nav-icone {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    color: var(--font-color);
+    opacity: 0.55;
+    cursor: pointer;
+    transition: opacity 0.15s, background 0.15s;
+    font-size: 1.15rem;
+}
+
+.historico-atendimentos-nav-icone:hover {
+    opacity: 1;
+    background: var(--background-transparent);
+}
+
+.historico-atendimentos-nav-icone.ativo {
+    opacity: 1;
+    background: var(--background-gradient-color-dark);
+}
+
+.historico-atendimentos-sidebar-rodape { margin-top: auto; }
+
+.historico-atendimentos-btn-sair {
+    background: var(--background-button);
+    color: var(--font-color-transparent);
+    border: none;
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.historico-atendimentos-btn-sair:active { opacity: 0.3; }
+
+/* Área da lista (rola por dentro, sem estourar a janela) */
+.historico-atendimentos-conteudo {
+    flex: 1;
+    padding: 26px 22px;
+    overflow-y: auto;
+    min-width: 0;
+}
+
+.historico-atendimentos-titulo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--font-color);
+    margin-bottom: 18px;
+}
+
+.historico-atendimentos-aviso {
+    text-align: center;
+    color: var(--font-color);
+    opacity: 0.7;
+    font-size: 0.85rem;
+    padding: 40px 12px;
+}
+
+.historico-atendimentos-lista {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+}
+
+.historico-atendimentos-card {
+    display: grid;
+    gap: 4px;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.4);
+    border: 2px solid var(--border-transparent);
+    border-radius: 12px;
+    color: var(--font-color);
+    font-size: 0.85rem;
+}
+
+.historico-atendimentos-preco {
+    font-weight: 700;
+    color: var(--background-button);
+}

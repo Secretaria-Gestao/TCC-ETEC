@@ -6,5 +6,6 @@
     "**/vite.config.js": true,
     "**/eslint.config.js": true,
     // "**/README.md": true
-  }
+  },
+  "python-envs.defaultEnvManager": "ms-python.python:system"
 }
