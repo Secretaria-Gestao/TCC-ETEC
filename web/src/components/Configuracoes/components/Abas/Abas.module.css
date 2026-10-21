@@ -1,0 +1,8 @@
+.cliente-perfil-grid {
+    display: grid;
+    grid-template-columns: 28px 84px minmax(0, 1fr) 72px;
+    gap: 0 12px;
+    align-items: center;
+    
+}
+
