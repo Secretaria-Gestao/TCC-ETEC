@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { pegarSessao } from './pegarSessao.js'
 // Essa função busca os dados do profissional ou admin que está logado.
 // Ela usa o token da sessão ativa para o back-end identificar quem está pedindo
@@ -29,4 +31,8 @@ export async function pegarMeuPerfil() {
         console.error('Erro na requisição do perfil:', erro)
         return null
     }
+}
+
+export function useMeuPerfil() {
+    return useQuery({ queryKey: ["perfil"], queryFn: pegarMeuPerfil, staleTime: 5 * 60 * 1000 })
 }

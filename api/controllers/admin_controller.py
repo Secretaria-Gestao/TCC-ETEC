@@ -470,7 +470,7 @@ def editar_profissional():
         return jsonify({"sucesso": False, "erro": "Erro ao editar o profissional"}), 500
 
 def meu_perfil():
-    # Busca os dados do profissional/admin logado usando o token.
+    # Busca os dados do  cliente ou profissional logado usando o token.
     # Necessário para o admin descobrir o id_salao sem precisar informar manualmente.
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     if not token:
@@ -490,7 +490,15 @@ def meu_perfil():
         )
 
         if not resultado.data:
-            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404
+            resultado = (
+                supabase_admin.table("clientes")
+                .select("*")
+                .eq("id_cliente", id_usuario)
+                .execute()
+            )
+
+        if not resultado.data:
+            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404            
 
         return jsonify({"sucesso": True, "perfil": resultado.data[0]})
 
