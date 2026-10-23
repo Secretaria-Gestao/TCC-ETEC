@@ -9,6 +9,7 @@ import PageAgendaAdmin from './pages/Agenda_Admin/pageAgendaAdmin.jsx'
 import GerenciadorServicos from './pages/GerenciadorServicos/GerenciadorServicos.jsx'
 import GerenciadorProfissionais from './pages/GerenciadorProfissionais/GerenciadorProfissionais.jsx'
 import Login from './pages/Login/Login.jsx'
+import PageHistoricoAtendimentos from './pages/Agendamentos_Clientes/PageHistoricoAtendimentos.jsx'
 
 import { NotificacaoContainer } from '@/Notificacao'
 
@@ -27,6 +28,7 @@ function App() {
   {/* Rota do cliente para ver os próprios agendamentos */}
       <Route path="/agendamento/meus-agendamentos" element={ <PageMeusAgendamentos /> } />
   {/* Rota do admin/dono para ver todos os agendamentos do salão */}
+        <Route path="/agendamento/historico" element={ <PageHistoricoAtendimentos /> } />
   
       <Route path="/admin/agenda" element={ <PageAgendaAdmin /> } />
       <Route path="/admin/gerenciador-servicos" element={<GerenciadorServicos />} />
