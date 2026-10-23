@@ -12,39 +12,53 @@ def editar_email():
     id_usuario = autenticar(token)
     if not id_usuario:
         return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    tabela_certa = ""
+    email_novo = info["novoEmail"]
     
     try:
         resposta_busca = supabase_admin.table("profissionais").select("email_profissional").eq("id_profissional", id_usuario).execute()
         
         if not resposta_busca.data:
             resposta_busca = supabase_admin.table("clientes").select("email_cliente").eq("id_cliente", id_usuario).execute()
-            
-        if not resposta_busca.data:
-            return jsonify({"sucesso": False, "erro": "Falha ao encontrar o usuário"}), 404
-        
-        print(info)
 
-        print(resposta_busca.data)
+            if not resposta_busca.data:
+                return jsonify({"sucesso": False, "erro": "Falha ao encontrar o usuário"}), 404
+            else:
+                tabela_certa = "clientes"
+                tipo_email = "email_cliente"
+
+        else:
+            tabela_certa = "profissionais"
+            tipo_email = "email_profissional"
+
+        email_antigo = resposta_busca.data[0][tipo_email]
+            
         
-        emailNovo = info["novoEmail"]
-        
-        resposta_edicao = supabase_admin.auth.admin.update_user_by_id(
+        resposta_auth = supabase_admin.auth.admin.update_user_by_id(
             uid=id_usuario,
             attributes={
-                "email": emailNovo,
+                "email": email_novo,
                 "email_confirm": True
             }
         )
         
-        print("Aqui")
-        
-        print(resposta_edicao)
+        resposta_tabela = supabase_admin.table(tabela_certa).update({ tipo_email: email_novo}).eq(tipo_email, email_antigo).execute()
+
+        if not resposta_tabela.data:
+            resposta_auth = supabase_admin.auth.admin.update_user_by_id(
+                uid=id_usuario,
+                attributes={
+                    "email": email_antigo,
+                    "email_confirm": True
+                }
+            )
         
         return jsonify({"sucesso": True})
         
     except Exception:
         print("deu ruim")
-        return jsonify({"sucesso": False, "erro": "gigante"})
+        return jsonify({"sucesso": False, "erro": "Falha ao atualizar o Email"}), 404
         
         
 def editar_senha():
