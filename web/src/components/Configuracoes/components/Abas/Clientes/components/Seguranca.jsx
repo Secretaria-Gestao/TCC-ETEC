@@ -2,9 +2,10 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 
 import { useMeuPerfil } from "../../../../../../services/pegarMeuPerfil"
+import estilos from "../../Abas.module.css"
 import { mudarSenha, mudarEmail } from "../services/atualizarDados"
 
-export default function Seguranca({ estilos }) {
+export default function Seguranca() {
   const { data: perfil, isLoading } = useMeuPerfil()
 
   const [mudandoSenha, setMudandoSenha] = useState(false)
@@ -14,7 +15,7 @@ export default function Seguranca({ estilos }) {
 
   const onSubmit = async () => {
 
-    if (mudandoEmail) {
+    if (mudandoEmail) { 
       console.log("email")
     }
 

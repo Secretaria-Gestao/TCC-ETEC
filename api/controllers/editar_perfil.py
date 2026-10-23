@@ -66,3 +66,32 @@ def editar_email():
         print("deu ruim")
         return jsonify({"sucesso": False, "erro": "Falha ao atualizar o Email."}), 404
         
+def editar_nome():
+    info = request.get_json()
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    
+    # autenticar() devolve o id do usuário dono do token, ou None se inválido.
+    id_usuario = autenticar(token)
+    if not id_usuario:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    try:
+
+        novoNome = info["novoNome"]
+
+        resposta_tabela = supabase_admin.table("profissionais").update({"nome_profissional": novoNome}).eq("id_profissional", id_usuario).execute()
+
+        if not resposta_tabela.data:
+            resposta_tabela = supabase_admin.table("clientes").update({"nome_cliente": novoNome}).eq("id_cliente", id_usuario).execute()
+
+            if not resposta_tabela.data:
+                return jsonify({"sucesso": False, "erro": "Erro ao encontrar o usuário"}), 404
+
+        return jsonify({"sucesso": True})
+
+    except Exception:
+        return jsonify({"sucesso": False, "erro": "Tente novamente"}),404
+    
