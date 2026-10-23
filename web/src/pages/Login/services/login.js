@@ -27,3 +27,7 @@ export async function logarComGoogle() { // Login com Google no Supabase Auth
         }
     });
 }
+
+export async function trocarSenha(){
+    
+}

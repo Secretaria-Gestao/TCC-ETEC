@@ -93,15 +93,15 @@ function FormularioLogin() {
                         
                     </div>
 
-                    <button type="button" className="clear" id="recover-password-button">
+                    <Link to="/trocarSenha/" className="clear" id="recover-password-button">
                         Recuperar senha
-                    </button>
+                    </Link>
 
                     <button type="submit" className="solid" id="login-button">
                         Entrar
                     </button>
 
-                    <Link to="/cadastro/cliente" id="btn_cadastrar" className="outline button-link">
+                    <Link to="/cadastro/cliente" className="outline button-link" id="btn_cadastrar">
                         Cadastrar-se
                     </Link>
 
