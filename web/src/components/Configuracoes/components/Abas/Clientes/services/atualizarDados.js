@@ -18,7 +18,7 @@ export async function mudarSenha(senhaAtual, novaSenha) {
         return null
     }
 
-    const resposta = await fetch("/api/editar/senha-atual", {
+    const resposta = await fetch("/api/editar/senha", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export async function mudarEmail(novoEmail) {
         return null
     }
 
-    const resposta = await fetch("/api/editar/email-atual", {
+    const resposta = await fetch("/api/editar/email", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -76,10 +76,12 @@ export async function mudarEmail(novoEmail) {
             titulo: "Falha na atualização do email",
             texto: "Cheque os campos e tente novamente"
         })
-        return
+        return false
     }
 
     mostrarNotificacao({
         titulo: "Email atualizado"
     })
+
+    return true
 }

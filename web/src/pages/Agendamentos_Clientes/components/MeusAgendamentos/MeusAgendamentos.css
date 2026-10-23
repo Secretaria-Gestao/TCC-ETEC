@@ -1,8 +1,9 @@
 .meus-agendamentos-agenda-janela {
     --quadrado-claro: rgba(255,255,255,0.7);
     width: 92vw;
-    max-width: 1180px;
-    height: 88vh;
+    max-width: 80%;
+    height: 95vh;
+    margin: 0 auto;
     border-radius: 25px;
     border: 2px solid var(--border-transparent);
     background-color: var(--background-transparent);

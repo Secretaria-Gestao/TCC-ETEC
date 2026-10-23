@@ -7,6 +7,7 @@ from controllers.admin_controller import cadastrar_profissional, editar_profissi
 from controllers.buscar_salao import buscar_salao, buscar_servicos_fornecidos, criar_servicos_fornecidos, editar_servicos_fornecidos, deletar_servicos_fornecidos
 from controllers.buscar_saloes import buscar_saloes
 from controllers.buscar_servicos import buscar_servicos_agendamento
+from controllers.editar_perfil import editar_email, editar_senha
 
 rotas_json = Blueprint("rotas_json", __name__)
 
@@ -81,6 +82,14 @@ def criar_Servicos_Fornecidos():
 @rotas_json.route("/api/editar/servico-fornecido", methods=['POST'])
 def editar_Servicos_Fornecidos():
     return editar_servicos_fornecidos()
+
+@rotas_json.route("/api/editar/email", methods=['POST'])
+def editar_Email():
+    return editar_email()
+
+@rotas_json.route("/api/editar/senha", methods=['POST'])
+def editar_Senha():
+    return editar_senha()
 
 @rotas_json.route("/api/deletar/servico-fornecido", methods=['POST'])
 def deletar_Servicos_Fornecidos():

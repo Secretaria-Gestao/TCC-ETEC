@@ -2,7 +2,7 @@ import MeusAgendamentosComponente from './components/MeusAgendamentos/MeusAgenda
 
 function PageMeusAgendamentos() {
     return (
-        <div className="main-principal">
+        <div className="main-principal pt-5">
             <MeusAgendamentosComponente />
         </div>
     )

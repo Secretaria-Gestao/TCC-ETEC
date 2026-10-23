@@ -1,9 +1,8 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 
-import { useNotificacaoStore } from "@/Notificacao"
 import { useMeuPerfil } from "../../../../../../services/pegarMeuPerfil"
-import { mudarSenha } from "../services/atualizarDados"
+import { mudarSenha, mudarEmail } from "../services/atualizarDados"
 
 export default function Seguranca({ estilos }) {
   const { data: perfil, isLoading } = useMeuPerfil()
@@ -13,7 +12,7 @@ export default function Seguranca({ estilos }) {
 
   const { register, handleSubmit, watch, reset } = useForm({ values: perfil && { email: perfil.email_cliente } })
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
 
     if (mudandoEmail) {
       console.log("email")
@@ -27,6 +26,12 @@ export default function Seguranca({ estilos }) {
       if (!/[^a-zA-Z0-9\s]/.test(watch("novaSenha"))) return
 
       mudarSenha(watch("senhaAtual"), watch("novaSenha"))
+    }
+
+    if (mudandoEmail) {
+      const resposta = await mudarEmail(watch("email"))
+
+      if (resposta) setMudandoEmail(false)
     }
   }
 
@@ -45,7 +50,7 @@ export default function Seguranca({ estilos }) {
 
           <p> ************** </p>
 
-          <button type="button" className="py-1 px-3 rounded-lg bg-amarelo text-black text-sm" onClick={() => setMudandoSenha(true)}>
+          <button type="button" className="py-1 px-3 rounded-lg bg-amarelo text-black hover:bg-amarelo/80 transition-colors text-sm" onClick={() => setMudandoSenha(true)}>
             Editar
           </button>
 
@@ -113,15 +118,34 @@ export default function Seguranca({ estilos }) {
 
           <p>Email</p>
 
-          <input type="text" name="email"
-            className="p-2 rounded-lg flex-1 bg-white/10"
+          <input type="text" name="email" disabled={!mudandoEmail}
+            className="p-2 rounded-lg flex-1 bg-white/10 disabled:opacity-70"
             {...register("email")}
           />
 
-          <button type="button" className="py-1 px-3 rounded-lg bg-amarelo text-black text-sm" onClick={() => setMudandoEmail(true)}>
-            Editar
-          </button>
+          {!mudandoEmail && (
+            <button type="button" className="py-1 px-3 rounded-lg bg-amarelo text-black hover:bg-amarelo/80 transition-colors text-sm" onClick={() => setMudandoEmail(true)}>
+              Editar
+            </button>
+          )}
 
+          {mudandoEmail && (
+            <div className={estilos["cliente-perfil-email"]}>
+
+              <button type="submit"
+                className="p-1.5 flex-1 rounded-lg bg-amarelo/80 hover:bg-amarelo/70 transition-colors text-black "
+                onClick={() => console.log("a")}>
+
+                Atualizar
+              </button>
+
+              <button type="button" className="p-1.5 rounded-lg bg-laranja/80 hover:bg-laranja/70 transition-colors text-black "
+                onClick={() => { reset(); setMudandoEmail(false); }}>
+
+                Cancelar
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </form>
