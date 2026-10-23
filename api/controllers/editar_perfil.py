@@ -1,4 +1,9 @@
 from flask import request, jsonify
+from supabase import create_client
+from dotenv import load_dotenv
+import os
+
+
 from database import supabase, supabase_admin
 from controllers.autenticacao import autenticar
 
@@ -14,7 +19,7 @@ def editar_email():
         return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
 
     tabela_certa = ""
-    email_novo = info["novoEmail"]
+    email_novo = info["novoEmail"].strip().lower()
     
     try:
         resposta_busca = supabase_admin.table("profissionais").select("email_profissional").eq("id_profissional", id_usuario).execute()
@@ -53,31 +58,11 @@ def editar_email():
                     "email_confirm": True
                 }
             )
+            return jsonify({"sucesso": False, "erro": "Falha ao atualizar o Email."}), 404
         
         return jsonify({"sucesso": True})
         
     except Exception:
         print("deu ruim")
-        return jsonify({"sucesso": False, "erro": "Falha ao atualizar o Email"}), 404
+        return jsonify({"sucesso": False, "erro": "Falha ao atualizar o Email."}), 404
         
-        
-def editar_senha():
-    info = request.get_json()
-    token = request.headers.get("Authorization", "").replace("Bearer ", "")
-    if not token:
-        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
-
-    # autenticar() devolve o id do usuário dono do token, ou None se inválido.
-    id_usuario = autenticar(token)
-    if not id_usuario:
-        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
-    
-    try:
-        resultado = supabase_admin.table("profissionais").select("email_profissional").eq("id_profissional", id_usuario).execute()
-        
-        print(info)
-    
-        print(resultado.data)
-        
-    except Exception:
-        print("deu ruim")

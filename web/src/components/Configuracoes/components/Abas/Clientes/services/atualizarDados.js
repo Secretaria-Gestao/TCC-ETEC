@@ -18,29 +18,32 @@ export async function mudarSenha(senhaAtual, novaSenha) {
         return null
     }
 
-    const resposta = await fetch("/api/editar/senha", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${sessao.access_token}`
-        },
-
-        body: JSON.stringify({ senhaAtual, novaSenha })
+    const { error: erroLogin } = await supabase.auth.signInWithPassword({
+        email: sessao.user.email,
+        password: senhaAtual
     })
 
-    const resultado = await resposta.json()
+    const { error } = await supabase.auth.updateUser({ password: novaSenha })
 
-    if (!resultado.sucesso) {
+    if (erroLogin || error) {
+
+        console.log(erroLogin)
+        console.log(error)
+
+
         mostrarNotificacao({
-            titulo: "Falha na atualização da senha",
-            texto: "Cheque os campos e tente novamente"
+            titulo: "Falha ao atualizar a senha",
+            texto: "Verifique os campos e tente novamente"
         })
-        return
+
+        return false
     }
 
     mostrarNotificacao({
         titulo: "Senha Atualizada"
     })
+
+    return true
 
 }
 
@@ -79,9 +82,15 @@ export async function mudarEmail(novoEmail) {
         return false
     }
 
-    mostrarNotificacao({
-        titulo: "Email atualizado"
-    })
+    const { error } = await supabase.auth.refreshSession({ refresh_token: sessao.refresh_token })
 
-    return true
+    console.log(error)
+
+    if (!error) {
+        mostrarNotificacao({
+            titulo: "Email atualizado"
+        })
+
+        return true
+    }
 }
