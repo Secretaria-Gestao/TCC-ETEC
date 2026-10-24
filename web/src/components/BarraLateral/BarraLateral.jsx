@@ -3,10 +3,15 @@ import { NavLink } from 'react-router'
 import './BarraLateral.css'
 import Configuracoes from '@/Configuracoes/Configuracoes'
 import { useState } from 'react'
+import { useMeuPerfil } from '../../services/pegarMeuPerfil'
 
 function BarraLateral({ menu = [] }) {
 
     const [configAberto, setConfigAberto] = useState(false)
+
+    // Só profissionais têm id_profissional; quem não tem sessão ou é cliente cai em "cliente".
+    const { data: perfilLogado } = useMeuPerfil()
+    const tipoPerfil = perfilLogado?.id_profissional ? "profissional" : "cliente"
 
     return (
         <aside className='barraLateral z-40' >
@@ -44,7 +49,7 @@ function BarraLateral({ menu = [] }) {
             </button>
 
             {configAberto && (
-                <Configuracoes perfil="cliente" setConfigAberto={setConfigAberto}/>
+                <Configuracoes perfil={tipoPerfil} setConfigAberto={setConfigAberto}/>
             )}
 
         </aside>

@@ -1,3 +1,4 @@
+import time
 from flask import request, jsonify
 from supabase_auth.errors import AuthApiError
 
@@ -76,7 +77,7 @@ def editar_email():
         return jsonify({"sucesso": False, "erro": "Falha ao atualizar o Email."}), 400
 
     except Exception as erro:
-        print("Erro ao editar email:", erro)
+        print("Erro ao editar o email:", erro)
         return jsonify({"sucesso": False, "erro": "Falha ao atualizar o Email."}), 500
 
 def editar_nome():
@@ -107,7 +108,87 @@ def editar_nome():
         return jsonify({"sucesso": True})
 
     except Exception as erro:
-        print("Erro ao editar nome:", erro)
+        print("Erro ao editar o nome:", erro)
+        return jsonify({"sucesso": False, "erro": "Tente novamente"}), 500
+
+def editar_telefone():
+    info = request.get_json(silent=True) or {}
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+
+    # autenticar() devolve o id do usuário dono do token, ou None se inválido.
+    id_usuario = autenticar(token)
+    if not id_usuario:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    novo_telefone = str(info.get("novoTelefone") or "").strip()
+    digitos = "".join(letra for letra in novo_telefone if letra.isdigit())
+
+    if len(digitos) not in (10, 11):
+        return jsonify({"sucesso": False, "erro": "Informe um telefone com DDD"}), 400
+
+    try:
+        resposta_tabela = supabase_admin.table("profissionais").update({"telefone_profissional": novo_telefone}).eq("id_profissional", id_usuario).execute()
+
+        if not resposta_tabela.data:
+            return jsonify({"sucesso": False, "erro": "Erro ao encontrar o usuário"}), 404
+
+        return jsonify({"sucesso": True})
+
+    except Exception as erro:
+        print("Erro ao editar o telefone:", erro)
+        return jsonify({"sucesso": False, "erro": "Tente novamente"}), 500
+
+def editar_foto():
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+
+    # autenticar() devolve o id do usuário dono do token, ou None se inválido.
+    id_usuario = autenticar(token)
+    if not id_usuario:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    arquivo = request.files.get("foto")
+
+    if not arquivo:
+        return jsonify({"sucesso": False, "erro": "Arquivo não enviado"}), 400
+
+    foto = arquivo.read()
+    nome_arquivo = f"{int(time.time())}.jpg"
+    caminho = f"{id_usuario}/{nome_arquivo}"
+    bucket = supabase_admin.storage.from_("fotos-perfil")
+
+    try:
+        bucket.upload(caminho, foto, {"content-type": arquivo.mimetype })
+        
+        foto_url = bucket.get_public_url(caminho)
+        
+        if not foto_url:
+            print(foto_url)
+            return jsonify({"sucesso": False, "erro": "falha no servidor, tente novamente mais tarde"}),500
+    
+        resposta_tabela = supabase_admin.table("profissionais").update({"foto_url": foto_url}).eq("id_profissional", id_usuario).execute()
+        
+        if not resposta_tabela.data:
+            return jsonify({"sucesso": False, "erro": "Erro ao encontrar o usuário, tente novamente mais tarde"}),500
+
+        try:
+            antigas = [f"{id_usuario}/{item['name']}" for item in bucket.list(id_usuario) if item["name"] != nome_arquivo]
+
+            if antigas:
+                bucket.remove(antigas)
+
+        except Exception as erro:
+            print("Erro ao apagar fotos antigas")
+
+        return jsonify({"sucesso": True})
+
+    except Exception as erro:
+        print("Erro ao editar a foto:", erro)
         return jsonify({"sucesso": False, "erro": "Tente novamente"}), 500
 
 def excluir_conta():
@@ -160,5 +241,5 @@ def excluir_conta():
         return jsonify({"sucesso": False, "erro": "Falha ao excluir a conta"}), 400
 
     except Exception as erro:
-        print("Erro ao excluir conta:", erro)
+        print("Erro ao excluir a conta:", erro)
         return jsonify({"sucesso": False, "erro": "Falha ao excluir a conta"}), 500

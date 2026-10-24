@@ -152,6 +152,93 @@ export async function mudarNome(novoNome) {
 
 }
 
+export async function mudarTelefone(novoTelefone) {
+    const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
+    const sessao = await pegarSessao()
+
+    if (!sessao || !sessao.access_token) {
+        mostrarNotificacao({
+            titulo: "Erro ao continuar na página",
+            texto: "Sua sessão expirou, faça login novamente",
+            mostrarBotao: true,
+            textoBotao: "Voltar",
+            funcaoBotao: () => (window.location.href = "/")
+        })
+        return null
+    }
+
+    const resposta = await fetch("/api/editar/telefone", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${sessao.access_token}`
+        },
+
+        body: JSON.stringify({ novoTelefone })
+    })
+
+    const resultado = await resposta.json()
+
+    if (!resultado.sucesso) {
+        mostrarNotificacao({
+            titulo: "Falha na atualização do telefone",
+            texto: resultado.erro ?? "Tente novamente"
+        })
+        return false
+    }
+
+    mostrarNotificacao({
+        titulo: "Telefone atualizado"
+    })
+
+    return true
+}
+
+export async function mudarFoto(novaFoto) {
+    const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
+    const sessao = await pegarSessao()
+
+    if (!sessao || !sessao.access_token) {
+        mostrarNotificacao({
+            titulo: "Erro ao continuar na página",
+            texto: "Sua sessão expirou, faça login novamente",
+            mostrarBotao: true,
+            textoBotao: "Voltar",
+            funcaoBotao: () => (window.location.href = "/")
+        })
+        return null
+    }
+
+    const form = new FormData()
+
+    form.append("foto", novaFoto)
+
+    const resposta = await fetch("/api/editar/foto", {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${sessao.access_token}`
+        },
+
+        body: form
+    })
+
+    const resultado = await resposta.json()
+
+    if (!resultado.sucesso) {
+        mostrarNotificacao({
+            titulo: "Falha na atualização da foto",
+            texto: resultado.erro ?? "Tente novamente"
+        })
+        return false
+    }
+
+    mostrarNotificacao({
+        titulo: "Foto atualizada"
+    })
+
+    return true
+}
+
 export async function excluirConta() {
     const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
     const sessao = await pegarSessao()

@@ -17,7 +17,7 @@ export default function HeaderAbas({abaAtual, setAbaAtual, setConfigAberto, perf
                 Segurança
             </button>
 
-            {perfil != "cliente" && (
+            {perfil == "admin" && (
                 <button type="button"
                     className={`border-b ${abaAtual == "salao" ? "border-amarelo" : "border-transparent"} -mb-px px-1 pb-2`}
                     onClick={() => setAbaAtual("salao")}

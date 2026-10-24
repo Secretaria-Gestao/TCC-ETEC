@@ -7,7 +7,7 @@ from controllers.admin_controller import cadastrar_profissional, editar_profissi
 from controllers.buscar_salao import buscar_salao, buscar_servicos_fornecidos, criar_servicos_fornecidos, editar_servicos_fornecidos, deletar_servicos_fornecidos
 from controllers.buscar_saloes import buscar_saloes
 from controllers.buscar_servicos import buscar_servicos_agendamento
-from controllers.editar_perfil import editar_email, editar_nome, excluir_conta
+from controllers.editar_perfil import editar_email, editar_nome, editar_telefone, editar_foto, excluir_conta
 
 rotas_json = Blueprint("rotas_json", __name__)
 
@@ -90,6 +90,14 @@ def editar_Email():
 @rotas_json.route("/api/editar/nome", methods=['POST'])
 def editar_Nome():
     return editar_nome()
+
+@rotas_json.route("/api/editar/telefone", methods=['POST'])
+def editar_Telefone():
+    return editar_telefone()
+
+@rotas_json.route("/api/editar/foto", methods=['POST'])
+def editar_Foto():
+    return editar_foto()
 
 @rotas_json.route("/api/deletar/conta", methods=['POST'])
 def deletar_Conta():

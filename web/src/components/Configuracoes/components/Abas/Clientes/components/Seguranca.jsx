@@ -9,7 +9,7 @@ import { mudarSenha, mudarEmail, excluirConta } from "../services/atualizarDados
 
 import estilos from "../../Abas.module.css"
 
-export default function Seguranca() {
+export default function Seguranca({ profissional }) {
   const { data: perfil, isLoading } = useMeuPerfil()
 
   const [mudandoSenha, setMudandoSenha] = useState(false)
@@ -25,7 +25,7 @@ export default function Seguranca() {
     })
   }, [])
 
-  const { register, handleSubmit, watch, reset } = useForm({ values: perfil && { email: perfil.email_cliente } })
+  const { register, handleSubmit, watch, reset } = useForm({ values: perfil && { email: profissional ? perfil.email_profissional : perfil.email_cliente } })
 
   const onSubmit = async () => {
 
@@ -54,7 +54,7 @@ export default function Seguranca() {
   async function sair() {
     if (!window.confirm("Tem certeza que deseja sair da sua conta?")) return
     await supabase.auth.signOut()
-    window.location.replace('/login/cliente')
+    window.location.replace(profissional ? '/login/colaborador' : '/login/cliente')
   }
 
   async function excluir() {
@@ -193,13 +193,19 @@ export default function Seguranca() {
             Sair da conta
           </button>
 
-          <button type="button"
-            className="p-2 rounded-lg bg-marrom/40 hover:bg-marrom/70 transition-colors text-white "
-            onClick={() => excluir()}
-          >
+          {profissional ? (
+            <p className="text-sm opacity-70 self-center">
+              Para encerrar seu acesso, <br /> fale com o administrador
+            </p>
+          ) : (
+            <button type="button"
+              className="p-2 rounded-lg bg-marrom/40 hover:bg-marrom/70 transition-colors text-white "
+              onClick={() => excluir()}
+            >
 
-            Excluir conta
-          </button>
+              Excluir conta
+            </button>
+          )}
 
         </div>
       )}

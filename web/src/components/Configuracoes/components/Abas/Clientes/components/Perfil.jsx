@@ -21,7 +21,7 @@ export default function Perfil({ setAbaAtual }) {
     if (!watch("nome")) return
 
     const resposta = await mudarNome(watch("nome"))
-    if (resposta) mudandoNome(false)
+    if (resposta) setMudandoNome(false)
 
   }
 
@@ -66,7 +66,7 @@ export default function Perfil({ setAbaAtual }) {
 
         <p className="flex gap-1 -mt-3.5 text-xs">
           Deseja mudar de email? Clique na aba de segurança acima, ou aperte
-          <button className="text-laranja" onClick={() => setAbaAtual("seguranca")}>
+          <button type="button" className="text-laranja" onClick={() => setAbaAtual("seguranca")}>
             Aqui.
           </button>
         </p>
