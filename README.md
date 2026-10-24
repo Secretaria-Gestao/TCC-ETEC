@@ -40,8 +40,8 @@
 | 3    | Alta       | Como administrador, quero me autenticar com e-mail e senha para acessar o painel administrativo                                                                                                              | 3          | 2 | Concluído |
 | 4    | Alta       | Como colaborador, quero me autenticar com e-mail e senha para acessar e gerenciar meus atendimentos                                                                                                          | 3          | 4 | Parcial: o login funciona, mas leva ao destino errado e o colaborador não tem menu (KAN-32, KAN-57) |
 | 5    | Alta       | Como administrador, quero cadastrar, editar e desativar os serviços do meu salão, informando nome, preço e duração, para manter o catálogo oferecido pelo estabelecimento                                    | 8          | 3 | Concluído |
-| 6    | Alta       | Como colaborador, quero gerenciar os meus serviços para me organizar antes do atendimento                                                                                                                    | 5          | 3 | Em andamento |
-| 7    | Alta       | Como administrador, quero gerenciar os meus serviços para me organizar antes do atendimento                                                                                                                  | 5          | 3 | Em andamento |
+| 6    | Alta       | Como colaborador, quero gerenciar os meus serviços para me organizar antes do atendimento                                                                                                                    | 5          | 5 | Não implementado: o colaborador não tem tela para ver os próprios serviços (a rota de agendamento já devolve os serviços de um profissional; KAN-62) |
+| 7    | Alta       | Como administrador, quero gerenciar os meus serviços para me organizar antes do atendimento                                                                                                                  | 5          | 3 | Concluído: o administrador cria serviços e se associa a eles na tela Serviços fornecidos (KAN-63, KAN-70, KAN-75) |
 | 8    | Alta       | Como administrador, quero cadastrar colaboradores e selecionar, um ou mais serviços que eles realizam para definir com o que trabalham no salão                                                              | 8          | 4 | Parcial: a tela abre e cadastra (tela branca corrigida), mas o nível padrão ainda é Administrador e a seleção de serviços só existe depois, na tela de Serviços (KAN-149) |
 | 9    | Alta       | Como administrador, quero editar os dados pessoais, o cargo e o nível de acesso dos colaboradores para manter as informações da equipe atualizadas                                                           | 5          | 4 | Concluído |
 | 10   | Alta       | Como colaborador, quero definir meus horários de trabalho, pausas e indisponibilidades para receber agendamentos apenas quando puder atender                                                                 | 8          | 5 | Não implementado (tabelas `horarios_trabalho` e `indisponibilidades_profissional` já existem no banco; KAN-138) |
@@ -90,6 +90,12 @@ Revisão do código e do banco de dados feita para planejar a Sprint 4. Vários 
 | KAN-153 | A lista de salões do cliente mostra salões excluídos e salões sem nenhum profissional | US 30 |
 
 Tabelas que já existem no banco, mas ainda não têm código: `horarios_trabalho`, `indisponibilidades_profissional`, `horario_funcionamento_salao`, `portfolio_profissional` e `visualizacoes_salao`. As colunas `tipo_pagamento` e `valor_comissao` de `profissionais` também já existem. O diagrama em `doc/diagramas` precisa ser atualizado.
+
+### Escopo para a apresentação (proposta, a confirmar com o grupo)
+
+- **Necessário para a demonstração:** US 1 a 5, 7 a 9, 11 a 18, 21 (horários de funcionamento), 29 a 34 e o que a Sprint 4 corrige (KAN-146 a KAN-153).
+- **Entra se houver tempo (Sprint 5):** US 10 (horários de trabalho), US 19 (acordo financeiro), US 6 (colaborador vê os próprios serviços) e US 23 (faturamento mensal).
+- **Proposta de ficar fora do TCC, registrando como trabalho futuro no capítulo 4.1:** US 20 (relatório a pagar/receber), US 24 e 25 (renda mensal), US 26 (acessos ao site) e US 27 e 28 (portfólio). As tabelas de portfólio e de visualizações já existem no banco.
 
 ### Planejamento até a apresentação (26/11/2026)
 
