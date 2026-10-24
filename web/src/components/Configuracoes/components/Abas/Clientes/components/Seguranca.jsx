@@ -5,15 +5,20 @@ import { supabase } from "../../../../../../services/SupabaseConfig"
 import { pegarSessao } from "../../../../../../services/pegarSessao"
 
 import { useMeuPerfil } from "../../../../../../services/pegarMeuPerfil"
-import { mudarSenha, mudarEmail, excluirConta } from "../services/atualizarDados"
+import { mudarSenha, mudarEmail, excluirConta, excluirSalao } from "../services/atualizarDados"
 
 import estilos from "../../Abas.module.css"
 
-export default function Seguranca({ profissional }) {
+export default function Seguranca({ profissional, admin }) {
   const { data: perfil, isLoading } = useMeuPerfil()
 
   const [mudandoSenha, setMudandoSenha] = useState(false)
   const [mudandoEmail, setMudandoEmail] = useState(false)
+
+  // Modal de exclusão do salão (só o administrador vê o botão que o abre).
+  const [confirmandoExclusao, setConfirmandoExclusao] = useState(false)
+  const [confirmacao, setConfirmacao] = useState("")
+  const [excluindo, setExcluindo] = useState(false)
 
   // Contas que entram só pelo Google não têm senha nem email próprio para editar.
   const [temSenha, setTemSenha] = useState(true)
@@ -63,6 +68,26 @@ export default function Seguranca({ profissional }) {
     const resposta = await excluirConta()
 
     if (resposta) await sair()
+  }
+
+  function fecharExclusao() {
+    setConfirmandoExclusao(false)
+    setConfirmacao("")
+  }
+
+  async function excluirSalaoEConta() {
+    setExcluindo(true)
+
+    // Quem tem senha confirma com a senha; quem entra só pelo Google, com o nome do salão.
+    const resposta = await excluirSalao(temSenha ? confirmacao : "", temSenha ? "" : confirmacao)
+
+    setExcluindo(false)
+
+    if (!resposta) return
+
+    // Sai direto, sem o confirm do sair(): a conta já foi bloqueada.
+    await supabase.auth.signOut()
+    window.location.replace('/')
   }
 
   return (
@@ -193,7 +218,15 @@ export default function Seguranca({ profissional }) {
             Sair da conta
           </button>
 
-          {profissional ? (
+          {admin ? (
+            <button type="button"
+              className="p-2 rounded-lg bg-marrom/40 hover:bg-marrom/70 transition-colors text-white "
+              onClick={() => setConfirmandoExclusao(true)}
+            >
+
+              Excluir conta
+            </button>
+          ) : profissional ? (
             <p className="text-sm opacity-70 self-center">
               Para encerrar seu acesso, <br /> fale com o administrador
             </p>
@@ -207,6 +240,43 @@ export default function Seguranca({ profissional }) {
             </button>
           )}
 
+        </div>
+      )}
+
+      {confirmandoExclusao && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70">
+          <div className="w-96 p-5 rounded-2xl bg-[#4B3639] border-2 border-amarelo flex flex-col items-center gap-4 text-center">
+            <p className="text-lg">Tem certeza?</p>
+
+            <p className="text-xs">Esta ação causará a exclusão da sua conta e a do salão.</p>
+
+            <input type={temSenha ? "password" : "text"}
+              placeholder={temSenha ? "Digite sua senha" : "Digite o nome do salão"}
+              value={confirmacao}
+              onChange={(e) => setConfirmacao(e.target.value)}
+              className="p-2 rounded-lg w-full bg-white/10"
+            />
+
+            <p className="text-xs">Não haverá reversão caso confirme.</p>
+
+            <div className="flex gap-5">
+              <button type="button" disabled={!confirmacao || excluindo}
+                className="p-2 rounded-lg bg-red-500 hover:bg-red-500/70 transition-colors text-white disabled:opacity-50"
+                onClick={() => excluirSalaoEConta()}
+              >
+
+                Excluir
+              </button>
+
+              <button type="button" disabled={excluindo}
+                className="p-2 rounded-lg bg-laranja/80 hover:bg-laranja/70 transition-colors text-black disabled:opacity-50"
+                onClick={() => fecharExclusao()}
+              >
+
+                Cancelar
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

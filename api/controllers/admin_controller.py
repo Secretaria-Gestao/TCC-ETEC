@@ -484,7 +484,7 @@ def meu_perfil():
     try:
         resultado = (
             supabase_admin.table("profissionais")
-            .select("*")
+            .select("*, saloes!salao_associado(nome_salao, endereco_salao)")
             .eq("id_profissional", id_usuario)
             .execute()
         )

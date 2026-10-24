@@ -10,8 +10,11 @@ function BarraLateral({ menu = [] }) {
     const [configAberto, setConfigAberto] = useState(false)
 
     // Só profissionais têm id_profissional; quem não tem sessão ou é cliente cai em "cliente".
+    // O nível 1 é o administrador, dono do salão.
     const { data: perfilLogado } = useMeuPerfil()
-    const tipoPerfil = perfilLogado?.id_profissional ? "profissional" : "cliente"
+    const tipoPerfil = !perfilLogado?.id_profissional
+        ? "cliente"
+        : Number(perfilLogado.nivel_acesso) === 1 ? "admin" : "profissional"
 
     return (
         <aside className='barraLateral z-40' >

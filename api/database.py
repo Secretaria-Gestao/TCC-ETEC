@@ -18,3 +18,8 @@ supabase = create_client(url, key)
 service_key = os.getenv("SUPABASE_SERVICE_KEY")
 
 supabase_admin = create_client(url, service_key)
+
+def novo_cliente_anonimo():
+    # Cliente descartável, usado só para conferir uma senha: o login guarda a sessão dentro dele,
+    # então ele nunca deve ser reaproveitado entre requisições.
+    return create_client(url, key)

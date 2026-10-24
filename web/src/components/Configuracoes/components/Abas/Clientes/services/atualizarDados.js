@@ -239,6 +239,86 @@ export async function mudarFoto(novaFoto) {
     return true
 }
 
+export async function mudarSalao(nomeSalao, enderecoSalao) {
+    const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
+    const sessao = await pegarSessao()
+
+    if (!sessao || !sessao.access_token) {
+        mostrarNotificacao({
+            titulo: "Erro ao continuar na página",
+            texto: "Sua sessão expirou, faça login novamente",
+            mostrarBotao: true,
+            textoBotao: "Voltar",
+            funcaoBotao: () => (window.location.href = "/")
+        })
+        return null
+    }
+
+    const resposta = await fetch("/api/editar/salao", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${sessao.access_token}`
+        },
+
+        body: JSON.stringify({ nomeSalao, enderecoSalao })
+    })
+
+    const resultado = await resposta.json()
+
+    if (!resultado.sucesso) {
+        mostrarNotificacao({
+            titulo: "Falha na atualização do salão",
+            texto: resultado.erro ?? "Tente novamente"
+        })
+        return false
+    }
+
+    mostrarNotificacao({
+        titulo: "Salão atualizado"
+    })
+
+    return true
+}
+
+export async function excluirSalao(senha, nomeSalao) {
+    const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
+    const sessao = await pegarSessao()
+
+    if (!sessao || !sessao.access_token) {
+        mostrarNotificacao({
+            titulo: "Erro ao continuar na página",
+            texto: "Sua sessão expirou, faça login novamente",
+            mostrarBotao: true,
+            textoBotao: "Voltar",
+            funcaoBotao: () => (window.location.href = "/")
+        })
+        return null
+    }
+
+    const resposta = await fetch("/api/deletar/salao", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${sessao.access_token}`
+        },
+
+        body: JSON.stringify({ senha, nomeSalao })
+    })
+
+    const resultado = await resposta.json()
+
+    if (!resultado.sucesso) {
+        mostrarNotificacao({
+            titulo: "Falha ao excluir o salão",
+            texto: resultado.erro ?? "Tente novamente"
+        })
+        return false
+    }
+
+    return true
+}
+
 export async function excluirConta() {
     const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
     const sessao = await pegarSessao()

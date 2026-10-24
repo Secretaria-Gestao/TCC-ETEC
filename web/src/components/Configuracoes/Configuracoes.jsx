@@ -25,8 +25,8 @@ export default function Configuracoes({ perfil, setConfigAberto }) {
                     <Cliente abaAtual={abaAtual} setAbaAtual={setAbaAtual}/>
                 )}
 
-                {perfil == "profissional" && (
-                    <Profissional abaAtual={abaAtual} setAbaAtual={setAbaAtual} />
+                {(perfil == "profissional" || perfil == "admin") && (
+                    <Profissional abaAtual={abaAtual} setAbaAtual={setAbaAtual} admin={perfil == "admin"} />
                 )}
 
             </div>
