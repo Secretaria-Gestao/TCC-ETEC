@@ -73,7 +73,7 @@ export default function Perfil({ setAbaAtual }) {
 
         <div className="flex gap-5 mt-auto">
           <button type="submit" disabled={!mudandoNome}
-            className="p-1 rounded-lg bg-amarelo/80 hover:bg-amarelo/70 transition-colors text-black w-2/10"
+            className="p-2 rounded-lg bg-amarelo/80 hover:bg-amarelo/70 transition-colors text-black "
 
           >
 
@@ -81,7 +81,7 @@ export default function Perfil({ setAbaAtual }) {
           </button>
 
           <button type="button" disabled={!mudandoNome}
-            className="p-1 rounded-lg bg-laranja/80 hover:bg-laranja/70 transition-colors text-black w-2/10"
+            className="p-2 rounded-lg bg-laranja/80 hover:bg-laranja/70 transition-colors text-black "
             onClick={() => { reset(); setMudandoNome(false); }}>
 
             Cancelar

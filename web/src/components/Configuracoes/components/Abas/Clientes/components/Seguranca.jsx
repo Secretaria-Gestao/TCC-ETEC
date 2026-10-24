@@ -1,9 +1,13 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 
+import { supabase } from "../../../../../../services/SupabaseConfig"
+import { pegarSessao } from "../../../../../../services/pegarSessao"
+
 import { useMeuPerfil } from "../../../../../../services/pegarMeuPerfil"
+import { mudarSenha, mudarEmail, excluirConta } from "../services/atualizarDados"
+
 import estilos from "../../Abas.module.css"
-import { mudarSenha, mudarEmail } from "../services/atualizarDados"
 
 export default function Seguranca() {
   const { data: perfil, isLoading } = useMeuPerfil()
@@ -11,13 +15,19 @@ export default function Seguranca() {
   const [mudandoSenha, setMudandoSenha] = useState(false)
   const [mudandoEmail, setMudandoEmail] = useState(false)
 
+  // Contas que entram só pelo Google não têm senha nem email próprio para editar.
+  const [temSenha, setTemSenha] = useState(true)
+
+  useEffect(() => {
+    pegarSessao().then((sessao) => {
+      const provedores = sessao?.user?.app_metadata?.providers ?? []
+      setTemSenha(provedores.includes("email"))
+    })
+  }, [])
+
   const { register, handleSubmit, watch, reset } = useForm({ values: perfil && { email: perfil.email_cliente } })
 
   const onSubmit = async () => {
-
-    if (mudandoEmail) { 
-      console.log("email")
-    }
 
     if (mudandoSenha) {
       if (watch("novaSenha") != watch("novaSenhaRepetida")) return
@@ -26,7 +36,12 @@ export default function Seguranca() {
       if (!/[0-9]/.test(watch("novaSenha"))) return
       if (!/[^a-zA-Z0-9\s]/.test(watch("novaSenha"))) return
 
-      mudarSenha(watch("senhaAtual"), watch("novaSenha"))
+      const resposta = await mudarSenha(watch("senhaAtual"), watch("novaSenha"))
+
+      if (resposta) {
+        reset()
+        setMudandoSenha(false)
+      }
     }
 
     if (mudandoEmail) {
@@ -36,9 +51,23 @@ export default function Seguranca() {
     }
   }
 
+  async function sair() {
+    if (!window.confirm("Tem certeza que deseja sair da sua conta?")) return
+    await supabase.auth.signOut()
+    window.location.replace('/login/cliente')
+  }
+
+  async function excluir() {
+    if (!window.confirm("Tem certeza que deseja excluir sua conta? Essa ação não pode ser desfeita.")) return
+
+    const resposta = await excluirConta()
+
+    if (resposta) await sair()
+  }
+
   return (
 
-    <form className="py-5 px-3 h-full flex-1 flex flex-col mt-auto" onSubmit={handleSubmit(onSubmit)}>
+    <form className="py-5 px-3 h-full flex-1 flex flex-col mt-auto " onSubmit={handleSubmit(onSubmit)}>
 
       <div className="gap-5 flex flex-col flex-1 h-full">
         <div className={estilos["cliente-perfil-grid"]}>
@@ -51,9 +80,13 @@ export default function Seguranca() {
 
           <p> ************** </p>
 
-          <button type="button" className="py-1 px-3 rounded-lg bg-amarelo text-black hover:bg-amarelo/80 transition-colors text-sm" onClick={() => setMudandoSenha(true)}>
-            Editar
-          </button>
+          {temSenha ? (
+            <button type="button" className="py-1 px-3 rounded-lg bg-amarelo text-black hover:bg-amarelo/80 transition-colors text-sm" onClick={() => setMudandoSenha(true)}>
+              Editar
+            </button>
+          ) : (
+            <p className="text-sm opacity-70">Conta Google</p>
+          )}
 
         </div>
 
@@ -124,7 +157,7 @@ export default function Seguranca() {
             {...register("email")}
           />
 
-          {!mudandoEmail && (
+          {!mudandoEmail && temSenha && (
             <button type="button" className="py-1 px-3 rounded-lg bg-amarelo text-black hover:bg-amarelo/80 transition-colors text-sm" onClick={() => setMudandoEmail(true)}>
               Editar
             </button>
@@ -149,6 +182,28 @@ export default function Seguranca() {
           )}
         </div>
       </div>
+
+      {mudandoEmail || !mudandoSenha && (
+        <div className="flex gap-5 mt-auto">
+          <button type="submit"
+            className="p-2 rounded-lg bg-red-500 hover:bg-red-500/70 transition-colors text-white "
+            onClick={() => sair()}
+          >
+
+            Sair da conta
+          </button>
+
+          <button type="button"
+            className="p-2 rounded-lg bg-marrom/40 hover:bg-marrom/70 transition-colors text-white "
+            onClick={() => excluir()}
+          >
+
+            Excluir conta
+          </button>
+
+        </div>
+      )}
+
     </form>
   )
 }

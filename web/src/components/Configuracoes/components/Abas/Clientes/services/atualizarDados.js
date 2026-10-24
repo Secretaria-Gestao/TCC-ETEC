@@ -23,17 +23,25 @@ export async function mudarSenha(senhaAtual, novaSenha) {
         password: senhaAtual
     })
 
+    if (erroLogin) {
+        mostrarNotificacao({
+            titulo: "Senha atual incorreta",
+            texto: "Verifique a senha atual e tente novamente"
+        })
+
+        return false
+    }
+
     const { error } = await supabase.auth.updateUser({ password: novaSenha })
 
-    if (erroLogin || error) {
-
-        console.log(erroLogin)
-        console.log(error)
-
+    if (error) {
+        console.log(error.code, error.message)
 
         mostrarNotificacao({
             titulo: "Falha ao atualizar a senha",
-            texto: "Verifique os campos e tente novamente"
+            texto: error.code === "same_password"
+                ? "A nova senha deve ser diferente da atual"
+                : "Verifique os campos e tente novamente"
         })
 
         return false
@@ -82,15 +90,22 @@ export async function mudarEmail(novoEmail) {
         return false
     }
 
-    const { error } = await supabase.auth.refreshSession({ refresh_token: sessao.refresh_token })
+    const { error } = await supabase.auth.refreshSession()
 
-    if (!error) {
+    if (error) {
         mostrarNotificacao({
-            titulo: "Email atualizado"
+            titulo: "Email atualizado",
+            texto: "Faça login novamente para ver a mudança"
         })
 
         return true
     }
+
+    mostrarNotificacao({
+        titulo: "Email atualizado"
+    })
+
+    return true
 }
 
 export async function mudarNome(novoNome) {
@@ -135,4 +150,39 @@ export async function mudarNome(novoNome) {
 
     return true
 
+}
+
+export async function excluirConta() {
+    const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
+    const sessao = await pegarSessao()
+
+    if (!sessao || !sessao.access_token) {
+        mostrarNotificacao({
+            titulo: "Erro ao continuar na página",
+            texto: "Sua sessão expirou, faça login novamente",
+            mostrarBotao: true,
+            textoBotao: "Voltar",
+            funcaoBotao: () => (window.location.href = "/")
+        })
+        return null
+    }
+
+    const resposta = await fetch("/api/deletar/conta", {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${sessao.access_token}`
+        }
+    })
+
+    const resultado = await resposta.json()
+
+    if (!resultado.sucesso) {
+        mostrarNotificacao({
+            titulo: "Falha ao excluir a conta",
+            texto: "Tente novamente"
+        })
+        return false
+    }
+
+    return true
 }
