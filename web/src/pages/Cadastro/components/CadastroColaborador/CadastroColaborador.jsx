@@ -72,7 +72,7 @@ function CadastroColaborador() {
                     </Header>
                     <hr className='w-10/12 place-self-center mt-[-36px]' />
                     <div className='flex justify-center h-160 my-[2%]!'>
-                        <Formulario formulario={formulario} setFormulario={setFormulario} />
+                        <Formulario dados={formulario} setDados={setFormulario} />
                     </div>
                 </div>
             </div>
