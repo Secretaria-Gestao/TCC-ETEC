@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../../../services/SupabaseConfig.js'
 import './MeusAgendamentos.css'
+import {useNavigate} from 'react-router'
 
 const HORARIOS = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00']
 const DIAS_SEMANA = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
@@ -19,6 +20,8 @@ function MeusAgendamentos() {
     const [dataReferenciaMes, setDataReferenciaMes] = useState(new Date())
     const [filtroProfissional, setFiltroProfissional] = useState('')
     const [mensagem, setMensagem] = useState('')
+
+    const navegar = useNavigate()
 
     useEffect(() => {
         async function carregarAgendamentos() {
@@ -104,7 +107,7 @@ function MeusAgendamentos() {
                 <div className="meus-agendamentos-nav-icone ativo" title="Agenda">📅</div>
                 <div className="meus-agendamentos-nav-icone" title="Equipe">👥</div>
                 <div className="meus-agendamentos-nav-icone" title="Galeria">🖼️</div>
-                <div className="meus-agendamentos-nav-icone" title="Relatórios">📊</div>
+                <div className="meus-agendamentos-nav-icone" title="Histórico" onClick={() => navegar ('/agendamento/historico')}>🕘</div>
 
                 <div className="meus-agendamentos-sidebar-rodape">
                     <button className="meus-agendamentos-btn-sair" onClick={sair}>Sair</button>

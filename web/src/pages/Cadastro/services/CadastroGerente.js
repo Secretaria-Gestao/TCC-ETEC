@@ -55,7 +55,8 @@ export async function cadastrarGerente(
         })
 
         if (!resposta.ok) {
-            notificarErro()
+            const resultado = await resposta.json().catch(() => ({}))
+            notificarErro(resultado.erro)
             return false
         }
 

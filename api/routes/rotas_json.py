@@ -2,10 +2,11 @@ from flask import Flask, Blueprint
 from controllers.login_controller import cadastroUserCliente
 from controllers.login_controller import cadastroUserGerente
 from controllers.agendamento_controller import agendar
-from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao
+from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento, historico_cliente
 from controllers.buscar_salao import buscar_salao, buscar_servicos_fornecidos, criar_servicos_fornecidos, editar_servicos_fornecidos, deletar_servicos_fornecidos
 from controllers.buscar_saloes import buscar_saloes
 from controllers.buscar_servicos import buscar_servicos_agendamento
+from controllers.editar_perfil import editar_email, editar_nome, editar_telefone, editar_foto, editar_salao, excluir_conta, excluir_salao
 
 rotas_json = Blueprint("rotas_json", __name__)
 
@@ -77,6 +78,34 @@ def criar_Servicos_Fornecidos():
 def editar_Servicos_Fornecidos():
     return editar_servicos_fornecidos()
 
+@rotas_json.route("/api/editar/email", methods=['POST'])
+def editar_Email():
+    return editar_email()
+
+@rotas_json.route("/api/editar/nome", methods=['POST'])
+def editar_Nome():
+    return editar_nome()
+
+@rotas_json.route("/api/editar/telefone", methods=['POST'])
+def editar_Telefone():
+    return editar_telefone()
+
+@rotas_json.route("/api/editar/foto", methods=['POST'])
+def editar_Foto():
+    return editar_foto()
+
+@rotas_json.route("/api/editar/salao", methods=['POST'])
+def editar_Salao():
+    return editar_salao()
+
+@rotas_json.route("/api/deletar/salao", methods=['POST'])
+def deletar_Salao():
+    return excluir_salao()
+
+@rotas_json.route("/api/deletar/conta", methods=['POST'])
+def deletar_Conta():
+    return excluir_conta()
+
 @rotas_json.route("/api/deletar/servico-fornecido", methods=['POST'])
 def deletar_Servicos_Fornecidos():
     return deletar_servicos_fornecidos()
@@ -95,3 +124,13 @@ def buscar_agendamentos_profissional(id_profissional):
 def buscar_agendamentos_salao():
     # Rota usada pela página do admin para ver todos os agendamentos do salão.
     return agendamentos_salao()
+
+@rotas_json.route("/api/agendamentos/status", methods=["POST"])
+def atualizar_status():
+    # Rota usada pelo profissional para atualizar o status de um agendamento.
+    return atualizar_status_agendamento()
+
+@rotas_json.route("/api/agendamentos/historico/<id_cliente>", methods=["GET"])
+def historico_cliente(id_cliente):
+    # Rota usada pelo cliente para ver o histórico de agendamentos.
+    return historico_cliente(id_cliente)

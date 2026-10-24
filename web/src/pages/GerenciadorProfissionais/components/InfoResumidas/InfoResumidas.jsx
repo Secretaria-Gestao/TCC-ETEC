@@ -1,4 +1,5 @@
 import estilos from "./InfoResumidas.module.css"
+import { contaNoMes } from "../../../Agenda_Admin/components/AdminAgenda/utils/contarAtendimentos.js"
 
 const FOTO_PADRAO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVWGYKJzBSw8qBRXBMcHBdY1XK_aywT9ZX_gMa5Wj8jA8QyX6DHP-O0Al-&s=10"
 
@@ -13,25 +14,20 @@ export default function InfoResumidas({ profissionais, agendamentos, todosCargos
     const profissionaisQntd = profissionais.map(profissional => {
         const totalAgendamentos = agendamentos.filter((agendamento) => {
             return (
-                agendamento.profissionais.id_profissional == profissional.id_profissional
+                agendamento.profissionais?.id_profissional == profissional.id_profissional && contaNoMes(agendamento)
             )
 
         }).length
 
-        return {
-            ...profissional,
-            totalAgendamentos
-        }
+        return {...profissional, totalAgendamentos }
     })
 
     // O destaque é o profissional com mais atendimentos; em empate, mantém a ordem recebida.
-    const profissionalDestacado = [...profissionaisQntd].sort((a, b) => {
+    const maisOcupado = [...profissionaisQntd].sort((a, b) => {
         return (b.totalAgendamentos - a.totalAgendamentos)
     })[0]
 
-
-
-    console.log(todosCargos)
+    const profissionalDestacado = maisOcupado?.totalAgendamentos > 0 ? maisOcupado : null
 
     return (
         <div className=" w-8/12 flex min-w-max gap-10 ">

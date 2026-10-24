@@ -9,12 +9,13 @@ import { useNotificacaoStore } from "@/Notificacao/notificacaoStore.js"
 import { buscarSalao } from '../../../../services/BuscarSalao.js'
 import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { cadastrarColaborador } from '../../services/CadastroColaborador'
+import { menuAdmin } from '@/BarraLateral/listaMenus'
 
 
 function CadastroColaborador() {
     const mostrarNotificacao = useNotificacaoStore((state) => state.mostrarNotificacao)
 
-    const [dados, setDados] = useState({
+    const [formulario, setFormulario] = useState({
         nome: "",
         sobrenome: "",
 
@@ -26,12 +27,12 @@ function CadastroColaborador() {
         nivelAcesso: "1"
     })
 
-    const nomeUsuario = `${dados.nome} ${dados.sobrenome}`;
+    const nomeUsuario = `${formulario.nome} ${formulario.sobrenome}`;
 
     const [nomeSalao, setNomeSalao] = useState("")
 
     async function mandarFormulario() {
-        const resposta = await cadastrarColaborador(dados.email, dados.senha, nomeUsuario, dados.cargo, dados.telefone, dados.nivelAcesso);
+        const resposta = await cadastrarColaborador(formulario.email, formulario.senha, nomeUsuario, formulario.cargo, formulario.telefone, formulario.nivelAcesso);
 
         if (resposta) {
             mostrarNotificacao({
@@ -61,7 +62,7 @@ function CadastroColaborador() {
         <main className='main-principal flex'>
             <div className='w-full h-full flex backdrop-blur-md'>
                 <div className='flex'>
-                    <BarraLateral />
+                    <BarraLateral menu={menuAdmin}/>
                 </div>
                 <div className='w-full'>
                     <Header titulo="Novo profissional" subtitulo={nomeSalao}>
@@ -71,7 +72,7 @@ function CadastroColaborador() {
                     </Header>
                     <hr className='w-10/12 place-self-center mt-[-36px]' />
                     <div className='flex justify-center h-160 my-[2%]!'>
-                        <Formulario dados={dados} setDados={setDados} />
+                        <Formulario formulario={formulario} setFormulario={setFormulario} />
                     </div>
                 </div>
             </div>

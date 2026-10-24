@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate, useLocation, Link } from "react-router"
 
 import { logar } from "../../services/login.js"
+import { logarComGoogle } from "../../services/login.js"
 import './FormularioLogin.css'
 
 function FormularioLogin() {
@@ -13,6 +14,8 @@ function FormularioLogin() {
         email: "",
         senha: ""
     })
+
+    const [mandou, setMandou] = useState(0)
 
     function mudarValor(evento) {
         const nomeCampo = evento.target.name
@@ -27,6 +30,7 @@ function FormularioLogin() {
     async function enviarFormulario(event) {
         event.preventDefault()
 
+        setMandou(1)
         const resultado = await logar(formulario.email, formulario.senha)
 
         if (resultado) {
@@ -48,22 +52,45 @@ function FormularioLogin() {
                         <label htmlFor="email">Email</label>
                         <input type="email" name="email" id="email" placeholder="seu@email.com" onChange={mudarValor} />
 
-                        <div className="error" id="email-required-error">
-                            Email é obrigatório
-                        </div>
+                        {
+                            mandou > 0 && (
+                                !formulario.email ? (
+                                    <div className="error" id="password-required-error">
+                                        Email é obrigatório
+                                    </div>
+                                )
+                                : <div></div>
+                            )
+                        }
 
-                        <div className="error" id="email-invalid-error">
-                            Email é inválido
-                        </div>
+                        {
+                            formulario.email.length > 0 && (
+                                
+                                !/\S+@\S+\.\S+/.test(formulario.email) && (
+                                    <div className="error" id="email-invalid-error">
+                                    Email é inválido
+                                </div>
+                                )
+                            )
+                        }	
+                        
                     </div>
 
                     <div className="campo">
                         <label htmlFor="senha">Senha</label>
                         <input type="password" name="senha" id="password" placeholder="sua senha" onChange={mudarValor} />
 
-                        <div className="error" id="password-required-error">
-                            Senha é obrigatória
-                        </div>
+                        {
+                            mandou > 0 && (
+                                !formulario.senha ? (
+                                    <div className="error" id="password-required-error">
+                                        Senha é obrigatória
+                                    </div>
+                                )
+                                : <div></div>
+                            )
+                        }
+                        
                     </div>
 
                     <button type="button" className="clear" id="recover-password-button">
@@ -82,7 +109,7 @@ function FormularioLogin() {
 
                     <p className="txtgoogle">Sem tempo para perder? Entre com o Google</p>
 
-                    <button type="button" name="google" className="solid google">
+                    <button type="button" name="google" className="solid google" onClick={logarComGoogle}>
                         <img
                             src="https://cdn-icons-png.flaticon.com/256/2504/2504739.png"
                             alt="Imagem Google"

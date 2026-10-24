@@ -10,6 +10,7 @@ import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 
 import "./GerenciadorServicos.css"
+import { menuAdmin } from "@/BarraLateral/listaMenus"
 
 export default function GerenciadorServicos() {
 
@@ -84,7 +85,7 @@ export default function GerenciadorServicos() {
 
     return (
         <div className="w-full h-full flex ">
-            <BarraLateral />
+            <BarraLateral menu={menuAdmin}/>
 
             <main className="relative w-full min-h-dvh h-max bg-blue-200 flex flex-col flex-1 min-w-0">
                 {estaEditando && servicoEditando && (

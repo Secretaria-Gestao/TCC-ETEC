@@ -10,7 +10,7 @@ import { buscarSalao } from "../../services/BuscarSalao"
 import { mostrarMembros } from "./services/mostrarMembros"
 import { editarProfissional, removerProfissional as removerProfissionalApi } from "./services/gerenciarProfissionais"
 
-
+import { menuAdmin } from "@/BarraLateral/listaMenus"
 
 import { useEffect, useState } from "react"
 
@@ -105,7 +105,7 @@ export default function GerenciadorProfissionais() {
 
     return (
         <div className="w-full h-full flex">
-            <BarraLateral />
+            <BarraLateral menu={menuAdmin}/>
 
             <main className="relative w-full min-h-dvh h-max bg-blue-600/40 flex flex-col flex-1 min-w-0">
                 <Header titulo="Membros do salão" subtitulo={nomeSalao} />

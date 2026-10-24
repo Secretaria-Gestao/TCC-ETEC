@@ -29,6 +29,9 @@ function AgendaColaborador() {
     // Mensagem de erro ou aviso exibida abaixo da grade.
     const [mensagem, setMensagem] = useState('')
 
+    // Controla qual cartão está com o menu de ações aberto (guarda o id_agendamento, ou null).
+    const [agendamentoSelecionado, setAgendamentoSelecionado] = useState('')
+
     // useEffect com [] roda apenas uma vez, quando o componente aparece na tela.
     // É aqui que fazemos a chamada à API para buscar os agendamentos do profissional.
     useEffect(() => {
@@ -67,7 +70,43 @@ function AgendaColaborador() {
         }
 
         carregarAgendamentos()
-    }, [])
+    },
+
+    // Envia a mudança de status pro backend e, se der certo, atualiza
+// só o item alterado na lista local — sem precisar recarregar tudo.
+async function atualizarStatus(idAgendamento, novoStatus) {
+    const sessao = await pegarSessao()
+    const token = sessao.access_token
+
+    try {
+        const resposta = await fetch(`/api/agendamentos/status`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_agendamento: idAgendamento, novo_status: novoStatus })
+        })
+
+        const resultado = await resposta.json()
+
+        if (!resultado.sucesso) {
+            setMensagem('Erro ao atualizar status: ' + resultado.erro)
+            return
+        }
+
+        setAgendamentos((atuais) =>
+            atuais.map((ag) =>
+                ag.id_agendamento === idAgendamento ? { ...ag, status: novoStatus } : ag
+            )
+        )
+        setAgendamentoSelecionado(null)
+
+    } catch (erro) {
+        console.error('Erro na requisição:', erro)
+        setMensagem('Erro de conexão. Tente novamente.')
+    }
+}, [])
 
     // Domingo e sábado da semana exibida — usados no título e na montagem das células.
     const domingo = obterDomingoDaSemana(dataReferenciaSemana)
@@ -146,24 +185,45 @@ function AgendaColaborador() {
                                             return mesmoDia && mesmaHora
                                         })
 
-                                        return (
-                                            <td key={diaIndex}>
-                                                {agendamentoDoSlot && (
-                                                    // Cartão exibido dentro da célula quando há agendamento.
-                                                    // Mostra o nome do cliente e o status do agendamento.
-                                                    <div className="agenda-profissional-cartao">
-                                                        <b>{agendamentoDoSlot.cliente || 'Cliente'}</b>
-                                                        <span>{agendamentoDoSlot.status}</span>
+                            return (
+                                <td key={diaIndex}>
+                                    {agendamentoDoSlot && (
+                                    // Cartão exibido dentro da célula quando há agendamento.
+                                    // Mostra o nome do cliente e o status do agendamento.
+                                    <div
+                                        className="agenda-profissional-cartao"
+                                        onClick={() => setAgendamentoSelecionado(
+                                        agendamentoSelecionado === agendamentoDoSlot.id_agendamento
+                                        ? null
+                                        : agendamentoDoSlot.id_agendamento
+                                        )}
+                                    >
+                                        <b>{agendamentoDoSlot.cliente || 'Cliente'}</b>
+                                        <span>{agendamentoDoSlot.status}</span>
+
+                                    {agendamentoSelecionado === agendamentoDoSlot.id_agendamento && (
+                                        // stopPropagation evita que o clique num botão também
+                                        // dispare o onClick do cartão e feche o menu antes da hora.
+                                        <div
+                                            className="agenda-profissional-menu-acoes"
+                                            onClick={(e) => e.stopPropagation()}
+                                                                                 >
+                                            <button onClick={() => atualizarStatus(agendamentoDoSlot.id_agendamento, 'confirmado')}>Confirmar</button>
+                                            <button onClick={() => atualizarStatus(agendamentoDoSlot.id_agendamento, 'concluido')}>Concluir</button>
+                                            <button onClick={() => atualizarStatus(agendamentoDoSlot.id_agendamento, 'cancelado')}>Cancelar</button>
+                                            <button onClick={() => atualizarStatus(agendamentoDoSlot.id_agendamento, 'ausente')}>Registrar ausência</button>
                                                     </div>
                                                 )}
-                                            </td>
-                                        )
-                                    })}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                                            </div>
+                                        )}
+                                    </td>
+                                )
+                            })}
+                        </tr>
+                     ))}
+                </tbody>
+            </table>
+        </div>
 
                 {mensagem && <p className="agenda-profissional-mensagem">{mensagem}</p>}
             </div>

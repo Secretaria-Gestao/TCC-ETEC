@@ -23,15 +23,15 @@ export async function cadastrarCliente(nome, email, senha) {
                 'Authorization': `Bearer ${data.session?.access_token || ''}`
             },
 
+            // O id e o e-mail do cliente vêm do token no back-end; aqui só vai o nome.
             body: JSON.stringify({
-                id_cliente: data.user.id,
-                nome_cliente: nome,
-                email_cliente: email
+                nome_cliente: nome
             })
         })
 
         if (!resposta.ok) {
-            notificarErro()
+            const resultado = await resposta.json().catch(() => ({}))
+            notificarErro(resultado.erro)
             return false
         }
 

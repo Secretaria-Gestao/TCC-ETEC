@@ -1,10 +1,23 @@
 import { NavLink } from 'react-router'
 
 import './BarraLateral.css'
+import Configuracoes from '@/Configuracoes/Configuracoes'
+import { useState } from 'react'
+import { useMeuPerfil } from '../../services/pegarMeuPerfil'
 
-function BarraLateral() {
+function BarraLateral({ menu = [] }) {
+
+    const [configAberto, setConfigAberto] = useState(false)
+
+    // Só profissionais têm id_profissional; quem não tem sessão ou é cliente cai em "cliente".
+    // O nível 1 é o administrador, dono do salão.
+    const { data: perfilLogado } = useMeuPerfil()
+    const tipoPerfil = !perfilLogado?.id_profissional
+        ? "cliente"
+        : Number(perfilLogado.nivel_acesso) === 1 ? "admin" : "profissional"
+
     return (
-        <aside className='barraLateral' >
+        <aside className='barraLateral z-40' >
             <div className="flex  gap-3 px-2 mt-5!">
                 <img className="w-20 " src="/logo_pequena.png" />
                 <p className="mt-10 font-semibold">Secretária Gestão</p>
@@ -12,82 +25,36 @@ function BarraLateral() {
 
             <hr className='w-[94.5%] mx-2! mt-1.5!' />
 
-            <NavLink
-                to="/"
-                className={({ isActive }) => `flex gap-3 p-2 rounded-md my-1 transition-colors ${isActive ? 'bg-[#2f3d50]' : 'hover:bg-[#2f3d50]'}`}
-            >
+            {menu.map(linha => (
+                <NavLink
+                    to={linha.to}
+                    key={linha.to}
+                    className={({ isActive }) => `flex gap-3 p-2 rounded-md my-1 items-center transition-colors ${isActive ? 'bg-[#33435a]' : 'hover:bg-[#2f3d50]'}`}
+                >
 
-                <svg xmlns="http://w3.org" viewBox="0 0 100 100" width="24" height="24" className='shrink-0 ml-[-2.5px]'>
-                    <g fill="none" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
-                        <polygon points="50,15 15,45 85,45" />
-                        <rect x="23" y="45" width="54" height="40" />
-                        <rect x="42" y="60" width="16" height="25" />
-                    </g>
-                </svg>
+                    <linha.icone />
 
-                <p className='text-[14px] w-max'> Página principal</p>
-            </NavLink>
+                    <p className='text-[14px] w-max'> {linha.titulo} </p>
+                </NavLink>
+            ))}
 
-            <NavLink
-                to="/cadastro/colaborador"
-                className={({ isActive }) => `flex gap-3 p-2 rounded-md my-1 transition-colors ${isActive ? 'bg-[#2f3d50]' : 'hover:bg-[#2f3d50]'}`}
-            >
-
+            <button type="button" className='flex bg-[#1a2431] mt-auto mb-5 p-3 rounded-md gap-2 items-center justify-center' onClick={() => setConfigAberto(!configAberto)}>
                 <svg
                     className="w-5 h-5 shrink-0"
                     viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" strokeWidth="1.75"
                     strokeLinecap="round" strokeLinejoin="round"
                 >
-
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
                 </svg>
+                Configurações
+            </button>
 
-                <p className='text-[14px] w-max'> Cadastro de profissionais</p>
-            </NavLink>
+            {configAberto && (
+                <Configuracoes perfil={tipoPerfil} setConfigAberto={setConfigAberto}/>
+            )}
 
-            <NavLink
-                to="/admin/gerenciador-servicos"
-                className={({ isActive }) => `flex gap-3 items-center p-2 rounded-md my-1 transition-colors ${isActive ? 'bg-[#2f3d50]' : 'hover:bg-[#2f3d50]'}`}
-            >
-
-                <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="6" cy="6" r="3" />
-                    <circle cx="6" cy="18" r="3" />
-                    <line x1="20" y1="4" x2="8.12" y2="15.88" />
-                    <line x1="14.47" y1="14.48" x2="20" y2="20" />
-                    <line x1="8.12" y1="8.12" x2="12" y2="12" />
-                </svg>
-
-                <p className="text-[14px]">Serviços fornecidos</p>
-
-            </NavLink>
-
-            <NavLink
-                to="/admin/gerenciador-profissionais"
-                className={({ isActive }) => `flex gap-3 items-center p-2 rounded-md my-1 transition-colors ${isActive ? 'bg-[#2f3d50]' : 'hover:bg-[#2f3d50]'}`}
-            >
-                <svg
-                    className="w-5 h-5 shrink-0"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.75"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-
-                <p className="text-[14px]">Profissionais cadastrados</p>
-            </NavLink>
         </aside>
     )
 }

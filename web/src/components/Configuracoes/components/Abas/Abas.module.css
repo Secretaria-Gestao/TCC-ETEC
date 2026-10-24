@@ -1,0 +1,15 @@
+@reference "../../../../global.css";
+
+.cliente-perfil-grid {
+    display: grid;
+    position: relative;
+    grid-template-columns: 28px 84px minmax(0, 1fr) 72px;
+    gap: 0 12px;
+    align-items: center;
+    
+}
+
+.cliente-perfil-email {
+    grid-column: 1/4;
+    @apply place-self-end pt-5 flex gap-2 ;
+}
