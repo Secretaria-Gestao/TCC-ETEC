@@ -470,8 +470,9 @@ def editar_profissional():
         return jsonify({"sucesso": False, "erro": "Erro ao editar o profissional"}), 500
 
 def meu_perfil():
-    # Busca os dados do  cliente ou profissional logado usando o token.
+    # Busca os dados do cliente ou profissional logado usando o token.
     # Necessário para o admin descobrir o id_salao sem precisar informar manualmente.
+    # O front sabe se quem veio é cliente ou profissional pela presença do campo id_profissional.
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
@@ -482,6 +483,8 @@ def meu_perfil():
         return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
 
     try:
+        # "saloes!salao_associado(...)" traz o salão junto, usando a coluna salao_associado como ligação.
+        # Ele chega no front como perfil.saloes (usado na aba Salão das configurações).
         resultado = (
             supabase_admin.table("profissionais")
             .select("*, saloes!salao_associado(nome_salao, endereco_salao)")
@@ -489,6 +492,7 @@ def meu_perfil():
             .execute()
         )
 
+        # Não é profissional: tenta como cliente.
         if not resultado.data:
             resultado = (
                 supabase_admin.table("clientes")
@@ -498,7 +502,7 @@ def meu_perfil():
             )
 
         if not resultado.data:
-            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404            
+            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404
 
         return jsonify({"sucesso": True, "perfil": resultado.data[0]})
 

@@ -15,6 +15,8 @@ key = os.getenv("SUPABASE_KEY")  # Pegando a senha do Supabase
 supabase = create_client(url, key)
 
 # Client com permissão de admin, usado para criar usuários pelo painel do ADM.
+# Ele usa a service key, que ignora as regras de acesso (RLS) do banco e pode mexer em qualquer usuário
+# do Auth. Por isso só existe no back-end: essa chave nunca pode ir para o front.
 service_key = os.getenv("SUPABASE_SERVICE_KEY")
 
 supabase_admin = create_client(url, service_key)

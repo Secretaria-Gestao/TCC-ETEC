@@ -51,6 +51,8 @@ function BarraLateral({ menu = [] }) {
                 Configurações
             </button>
 
+            {/* O painel é filho da barra (por isso ele se posiciona a partir dela). O z-40 da barra é o que mantém
+                tudo isso, painel incluso, por cima do conteúdo da página. */}
             {configAberto && (
                 <Configuracoes perfil={tipoPerfil} setConfigAberto={setConfigAberto}/>
             )}

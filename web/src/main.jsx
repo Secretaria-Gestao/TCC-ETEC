@@ -6,6 +6,8 @@ import './global.css'
 import './fonts.css'
 import App from './App.jsx'
 
+// Cache das consultas do React Query. É compartilhado pelo app inteiro: por exemplo, o perfil do
+// usuário (useMeuPerfil) é buscado uma vez e reaproveitado pela barra lateral e pelas configurações.
 const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')).render(

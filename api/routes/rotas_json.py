@@ -78,6 +78,8 @@ def criar_Servicos_Fornecidos():
 def editar_Servicos_Fornecidos():
     return editar_servicos_fornecidos()
 
+# Rotas da tela de Configurações (perfil, segurança e aba Salão do admin).
+# Quem está logado é identificado pelo token, por isso nenhuma delas recebe id na URL.
 @rotas_json.route("/api/editar/email", methods=['POST'])
 def editar_Email():
     return editar_email()
