@@ -5,7 +5,6 @@ import EditarProfissional from "./components/EditarProfissional/EditarProfission
 import BarraLateral from "@/BarraLateral/BarraLateral"
 import Header from "@/Header/Header"
 
-import { pegarSessao } from "../../services/pegarSessao"
 import { buscarSalao } from "../../services/BuscarSalao"
 import { mostrarMembros } from "./services/mostrarMembros"
 import { editarProfissional, removerProfissional as removerProfissionalApi } from "./services/gerenciarProfissionais"
@@ -28,15 +27,8 @@ export default function GerenciadorProfissionais() {
     useEffect(() => {
         // O salão é descoberto pela sessão; o front-end não escolhe o salão pela URL.
         async function carregarPagina() {
-            const sessao = await pegarSessao()
 
-            if (!sessao) {
-                return
-            }
-
-            setIdRemetente(sessao.user.id)
-
-            const salao = await buscarSalao(sessao.user.email)
+            const salao = await buscarSalao()
 
             if (salao) {
                 setNomeSalao(salao.nome_salao)

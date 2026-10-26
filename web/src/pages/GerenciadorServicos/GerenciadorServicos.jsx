@@ -2,7 +2,6 @@ import BarraLateral from "@/BarraLateral/BarraLateral"
 import Header from "@/Header/Header"
 import TabelaServicos from "./components/TabelaServicos/TabelaServicos"
 
-import { pegarSessao } from "../../services/pegarSessao"
 import { buscarSalao } from "../../services/BuscarSalao"
 import { editarServico } from "./services/gerenciarServicos"
 
@@ -30,14 +29,9 @@ export default function GerenciadorServicos() {
     // Busca o nome uma única vez quando a página é aberta.
     useEffect(() => {
         async function pegarNomeSalao() {
-            const sessao = await pegarSessao()
-
-            if (!sessao) {
-                return
-            }
-
-            const salao = await buscarSalao(sessao.user.email)
-            setNomeSalao(salao.nome_salao)
+            const salao = await buscarSalao(sessao.access_token)
+            if (salao) setNomeSalao(salao.nome_salao)
+                
         }
 
         pegarNomeSalao()

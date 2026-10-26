@@ -16,21 +16,21 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
-    id_gerente = autenticar(token)
+    id_remetente = autenticar(token)
 
-    if not id_gerente:
+    if not id_remetente:
         return jsonify({"sucesso": False, "erro": "Token não autorizado"}), 401
 
     try:
 
-        resultado_gerente = supabase_admin.table("profissionais").select("nivel_acesso, salao_associado").eq("id_profissional", id_gerente).execute()
+        resultado_remetente = supabase_admin.table("profissionais").select("nivel_acesso, salao_associado").eq("id_profissional", id_remetente).execute()
 
-        if not resultado_gerente.data:
-            return jsonify({"sucesso": False, "erro": "Não foi possível encontrar o gerente na tabela de profissionais"}), 404
+        if not resultado_remetente.data:
+            return jsonify({"sucesso": False, "erro": "Não foi possível encontrar o profissional"}), 404
 
-        gerente = resultado_gerente.data[0]
+        remetente = resultado_remetente.data[0]
 
-        if int(gerente["nivel_acesso"]) >= 3:
+        if int(remetente["nivel_acesso"]) >= 3:
             return jsonify({"sucesso": False, "erro": "Somente administradores e gerentes podem cadastrar um profissional"}), 403
 
         email_profissional = info["email"].strip().lower()
@@ -42,6 +42,12 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
         })
 
         id_profissional = resposta_auth.user.id
+
+        if remetente["nivel_acesso"] < info["nivel_acesso"]:
+            return jsonify({"sucesso": False, "erro": "Nível do profissional sendo cadastrado acima do nível do remetente"}), 403
+
+        if info["nivel_acesso"] < 1 or info["nivel_acesso"] > 3:
+            return jsonify({"sucesso": False, "erro": "Nível de acesso inexistente"}), 400
           
         supabase_admin.table("profissionais").insert({
             "id_profissional": id_profissional,
@@ -564,14 +570,18 @@ def agendamentos_salao():
 
     try:
         # Usado só para para pegar o salao do admin, confiando apenas no supabase
-        resposta_remetente = supabase_admin.table("profissionais").select("salao_associado").eq("id_profissional", id_remetente).execute()
+        resposta_remetente = supabase_admin.table("profissionais").select("salao_associado, nivel_acesso").eq("id_profissional", id_remetente).execute()
 
         if not resposta_remetente.data:
             return jsonify({"sucesso": False, "erro": "Salão do remetente não encontrado"}), 404
 
         salao_associado = resposta_remetente.data[0]["salao_associado"]
+        nivel_acesso = resposta_remetente.data[0]["nivel_acesso"]
 
-        # Traz dados do cliente e do profissional, pois o admin precisa ver
+        if int(nivel_acesso) >= 3:
+            return jsonify({"sucesso": False, "erro": "Somente administradores e gerentes podem buscar todos os agendamentos"}), 403
+        
+        # Traz dados do cliente e do profissional, pois o admin ou gerente precisa ver
         # "quem marcou" e "com quem marcou".
 
         busca = (

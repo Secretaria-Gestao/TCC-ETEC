@@ -7,7 +7,6 @@ import Formulario from './components/Formulario/Formulario.jsx'
 import { useState, useEffect } from 'react'
 import { useNotificacaoStore } from "@/Notificacao/notificacaoStore.js"
 import { buscarSalao } from '../../../../services/BuscarSalao.js'
-import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { cadastrarColaborador } from '../../services/CadastroColaborador'
 import { menuAdmin } from '@/BarraLateral/listaMenus'
 
@@ -44,14 +43,9 @@ function CadastroColaborador() {
 
     useEffect(() => { // Precisa disso para fazer a busca do nome do salão usando o React
         async function pegarNomeSalao() {
-            const sessao = await pegarSessao()
+            const salao = await buscarSalao()
+            if (salao) setNomeSalao(salao.nome_salao)
 
-            if (!sessao) {
-                return
-            }
-
-            const salao = await buscarSalao(sessao.user.email)
-            setNomeSalao(salao.nome_salao)
         }
 
         pegarNomeSalao()

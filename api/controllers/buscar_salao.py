@@ -4,18 +4,23 @@ from .autenticacao import autenticar
 
 
 def buscar_salao():
-    info = request.json
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
 
-    if "email_profissional" not in info:
-        return jsonify({"sucesso": False, "erro": "falta o email do gerente"})
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
+    id_profissional = info.get("id_profissional")
+
+    if not id_profissional:
+        return jsonify({"sucesso": False, "erro": "ID do profissional ausente"}), 400
+
+    
     try:
-        email = info["email_profissional"]
 
         resultado = (
             supabase_admin.table("profissionais")
             .select("salao_associado, saloes!salao_associado(*)")
-            .eq("email_profissional", email)
+            .eq("id_profissional", id_profissional)
             .execute()
         )
 

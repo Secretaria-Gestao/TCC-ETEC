@@ -7,8 +7,18 @@ def agendar():
     # Endpoint usado pela tela de agendamento para gravar o horario no Supabase.
     info = request.get_json()
 
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+
+    id_remetente = info.get("id_remetente")
+
+    if not id_remetente:
+        return jsonify({"sucesso": False, "erro": "ID do remetente ausente"}), 400
+
     # Garante que o front mandou tudo que a tabela precisa receber.
-    campos_necessarios = ["servicos", "id_profissional", "id_salao", "data_hora"]
+    campos_necessarios = ["servicos", "id_salao", "data_hora"]
     for campo in campos_necessarios:
         if campo not in info:
             return jsonify({"sucesso": False, "erro": f"Campo ausente: {campo}"}), 400
