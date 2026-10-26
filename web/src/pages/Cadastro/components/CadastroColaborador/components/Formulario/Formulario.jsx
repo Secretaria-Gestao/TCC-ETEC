@@ -1,4 +1,3 @@
-import { useState } from "react"
 import './Formulario.css'
 
 function Formulario({dados, setDados}) {

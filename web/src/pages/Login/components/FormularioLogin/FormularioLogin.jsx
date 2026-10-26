@@ -1,14 +1,12 @@
 import { useState } from "react"
-import { useNavigate, useLocation, Link } from "react-router"
+import { useNavigate, Link } from "react-router"
 
-import { logar } from "../../services/login.js"
-import { logarComGoogle } from "../../services/login.js"
+import { logar, logarComGoogle, buscarDestinoDoUsuario } from "../../services/login.js";
 import './FormularioLogin.css'
 
 function FormularioLogin() {
 
     const navegar = useNavigate()
-    const rotaAtual = useLocation()
 
     const [formulario, setFormulario] = useState({
         email: "",
@@ -28,13 +26,11 @@ function FormularioLogin() {
     async function enviarFormulario(event) {
         event.preventDefault()
 
-        const resultado = await logar(formulario.email, formulario.senha)
+        const usuario = await logar(formulario.email, formulario.senha)
+        if (!usuario) return // a notificação de erro já aparece pelo logar
 
-        if (resultado) {
-            rotaAtual.pathname == "/login/cliente" ? navegar('/agendamento') : undefined
-            rotaAtual.pathname == "/login/colaborador" ? navegar('/agendamento') : undefined
-            rotaAtual.pathname == "/login/gerente" ? navegar('/cadastro/colaborador') : undefined
-        }
+        const destino = await buscarDestinoDoUsuario()
+        navegar(destino, { replace: true })
     }
 
     return (

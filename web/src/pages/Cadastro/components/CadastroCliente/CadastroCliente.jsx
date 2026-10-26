@@ -76,7 +76,7 @@ function CadastroCliente() {
                         Cadastrar-se
                     </button>
 
-                    <Link to="/login/cliente" className="outline button-link">
+                    <Link to="/login/" className="outline button-link">
                         Entrar na conta
                     </Link>
 
