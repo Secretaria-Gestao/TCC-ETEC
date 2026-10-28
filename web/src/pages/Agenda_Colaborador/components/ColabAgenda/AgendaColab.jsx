@@ -30,7 +30,7 @@ function AgendaColaborador() {
     const [mensagem, setMensagem] = useState('')
 
     // Controla qual cartão está com o menu de ações aberto (guarda o id_agendamento, ou null).
-    const [agendamentoSelecionado, setAgendamentoSelecionado] = useState('')
+    const [agendamentoSelecionado, setAgendamentoSelecionado] = useState('null')
 
     // useEffect com [] roda apenas uma vez, quando o componente aparece na tela.
     // É aqui que fazemos a chamada à API para buscar os agendamentos do profissional.
@@ -70,7 +70,7 @@ function AgendaColaborador() {
         }
 
         carregarAgendamentos()
-    },
+    }, [])
 
     // Envia a mudança de status pro backend e, se der certo, atualiza
 // só o item alterado na lista local — sem precisar recarregar tudo.
@@ -106,7 +106,7 @@ async function atualizarStatus(idAgendamento, novoStatus) {
         console.error('Erro na requisição:', erro)
         setMensagem('Erro de conexão. Tente novamente.')
     }
-}, [])
+}
 
     // Domingo e sábado da semana exibida — usados no título e na montagem das células.
     const domingo = obterDomingoDaSemana(dataReferenciaSemana)
@@ -141,11 +141,14 @@ async function atualizarStatus(idAgendamento, novoStatus) {
         <div className="agenda-profissional-janela">
 
             {/* Sidebar esquerda com navegação */}
-            <div className="agenda-profissional-sidebar">
-                <div className="agenda-profissional-logo">SALÃO</div>
-                <div className="agenda-profissional-nav-icone ativo" title="Agenda">📅</div>
-                <div className="agenda-profissional-nav-icone" title="Perfil">👤</div>
-            </div>
+            <div className="agenda-profissional-nav-icone ativo" title="Agenda">
+    <span className="agenda-profissional-nav-emoji">📅</span>
+    <span className="agenda-profissional-nav-nome">Agenda</span>
+</div>
+<div className="agenda-profissional-nav-icone" title="Perfil">
+    <span className="agenda-profissional-nav-emoji">👤</span>
+    <span className="agenda-profissional-nav-nome">Perfil</span>
+</div>
 
             {/* Grade semanal central */}
             <div className="agenda-profissional-conteudo">

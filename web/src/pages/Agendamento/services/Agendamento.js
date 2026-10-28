@@ -1,7 +1,8 @@
 export async function mandarAgendamento(token, servicos, id_profissional, dia, horario, id_salao, preco) {
 
     if (!dia || !horario) {
-        return {ok: false, erro: "Dia e horário são obrigatórios."}
+       const corpo = await resposta.json().catch(() => ({}));
+       return { ok: resposta.ok && corpo.sucesso !== false, erro: corpo.erro || 'Dia ou horário não informado.' };
     }
 
     const data_hora = new Date(`${dia}T${horario}`).toISOString();

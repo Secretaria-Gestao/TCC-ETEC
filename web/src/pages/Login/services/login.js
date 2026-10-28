@@ -27,3 +27,22 @@ export async function logarComGoogle() { // Login com Google no Supabase Auth
         }
     });
 }
+
+// Descobre para onde mandar o usuário depois do login, pelo cargo dele
+export async function descobrirRotaPosLogin() {
+    const { data } = await supabase.auth.getSession()
+    const id = data.session?.user.id
+
+    if (!id) return '/login'
+
+    // Quem tem linha em "profissionais" é admin/gerente/profissional; quem não tem é cliente
+    const { data: prof } = await supabase
+        .from('profissionais')
+        .select('nivel_acesso')
+        .eq('id_profissional', id)
+        .maybeSingle() // devolve null (sem erro) se não encontrar
+
+    if (!prof) return '/agendamento/meus-agendamentos'                 // cliente
+    if (Number(prof.nivel_acesso) <= 2) return '/admin/agenda'         // admin (1) e gerente (2)
+    return '/profissional/agenda'                                      // profissional (3)
+}

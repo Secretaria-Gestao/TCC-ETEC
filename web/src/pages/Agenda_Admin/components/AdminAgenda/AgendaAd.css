@@ -20,6 +20,8 @@
     padding: 28px 0;
 }
 
+
+
 .agenda-admin-logo {
     font-weight: 700;
     font-size: 0.85rem;
@@ -357,6 +359,25 @@ table.agenda-admin-grade td {
     text-transform: uppercase;
     letter-spacing: 0.04em;
     margin-bottom: 4px;
+}
+
+.agenda-admin-nav-icone {
+    flex-direction: column; /* empilha emoji e nome */
+    width: 68px;            /* mais largo para caber "Profissionais" */
+    height: auto;           /* a altura passa a depender do conteúdo */
+    padding: 8px 4px;
+    gap: 3px;
+}
+
+.agenda-admin-nav-emoji {
+    font-size: 1.15rem;
+}
+
+.agenda-admin-nav-nome {
+    font-size: 0.62rem;
+    line-height: 1.1;
+    text-align: center;
+    overflow-wrap: anywhere; /* quebra "Profissionais" se ainda não couber */
 }
 
 @media (max-width: 900px) {

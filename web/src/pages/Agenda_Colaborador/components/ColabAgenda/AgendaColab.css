@@ -146,7 +146,8 @@ table.agenda-profissional-grade td {
     font-size: 0.7rem;
     color: var(--background-button);
     line-height: 1.3;
-    overflow: hidden;
+    overflow: invisible;
+    position:relative;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -238,6 +239,52 @@ table.agenda-profissional-grade td {
     background: transparent;
     cursor: default;
 }
+
+/* Menu de ações que abre ao clicar no cartão */
+.agenda-profissional-menu-acoes {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 130px;
+    padding: 6px;
+    background: var(--background-gradient-color-light);
+    border: 2px solid var(--border-transparent);
+    border-radius: 8px;
+}
+.agenda-profissional-menu-acoes button {
+    background: var(--background-button);
+    color: var(--font-color-transparent);
+    border: none;
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+
+/* Ícone da sidebar com o nome embaixo */
+.agenda-profissional-nav-icone {
+    flex-direction: column;
+    width: 68px;
+    height: auto;
+    padding: 8px 4px;
+    gap: 3px;
+}
+
+.agenda-profissional-nav-emoji { 
+    font-size: 1.15rem; 
+}
+
+.agenda-profissional-nav-nome {
+    font-size: 0.62rem;
+    line-height: 1.1;
+    text-align: center;
+}
+
+
 
 @media (max-width: 900px) {
     .agenda-profissional-painel-direito { display: none; }

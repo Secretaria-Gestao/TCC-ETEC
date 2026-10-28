@@ -4,8 +4,7 @@ export async function buscarServicos(profissionalSelecionado) {
     const sessao = await pegarSessao()
 
     if (!sessao) {
-        console.log("sem sessão")
-        return false
+        return []
     }
 
     const resposta = await fetch("/api/buscar/servicos-agendamento",{

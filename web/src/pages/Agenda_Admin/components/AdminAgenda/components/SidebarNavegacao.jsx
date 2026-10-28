@@ -18,7 +18,8 @@ function SidebarNavegacao({ secaoAtiva, setSecaoAtiva }) {
                     title={item.titulo}
                     onClick={() => setSecaoAtiva(item.chave)}
                 >
-                    {item.icone}
+                <span className="agenda-admin-nav-emoji">{item.icone}</span>
+                <span className="agenda-admin-nav-nome">{item.titulo}</span>
                 </div>
             ))}
         </div>
