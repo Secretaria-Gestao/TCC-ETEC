@@ -9,7 +9,7 @@ import { buscarServicos } from "../../services/buscarServicos.js"
 import { useNotificacaoStore } from "@/Notificacao"
 import './Formulario.css'
 
-function Formulario() {
+export default function Formulario() {
     const navegar = useNavigate()
     const [todosProfissionais, setTodosProfissionais] = useState([])
     const [todosServicos, setTodosServicos] = useState([])
@@ -137,161 +137,156 @@ function Formulario() {
         })
     }
 
+    function adicionarServico() {
 
-}
+        let valorTotal = todosServicos[0].servicos?.preco_servico
 
-function adicionarServico() {
+        dados.servicos.forEach(servico => {
+            const servicoSelecionado = todosServicos.find(s => s.id_servico == servico)
 
-    let valorTotal = todosServicos[0].servicos?.preco_servico
+            valorTotal += Number(servicoSelecionado.servicos?.preco_servico)
+        })
 
-    dados.servicos.forEach(servico => {
-        const servicoSelecionado = todosServicos.find(s => s.id_servico == servico)
+        if (todosServicos[0].servicos != undefined) {
 
-        valorTotal += Number(servicoSelecionado.servicos?.preco_servico)
-    })
+            setDados(dadosAntigos => ({
+                ...dadosAntigos,
+                servicos: [...dadosAntigos.servicos, todosServicos[0].id_servico],
+                preco: valorTotal
+            }))
+        }
 
-    if (todosServicos[0].servicos != undefined) {
+    }
+
+    function mudarValorDados(evento) {
+        const nomeCampo = evento.target.name
+        const valorCampo = evento.target.value
+
+        setDados({
+            ...dados,
+            [nomeCampo]: valorCampo
+        })
+    }
+
+    function mudarValorServico(evento, indice) {
+        const novaLista = [...dados.servicos]
+        novaLista[indice] = Number(evento.target.value)
 
         setDados(dadosAntigos => ({
             ...dadosAntigos,
-            servicos: [...dadosAntigos.servicos, todosServicos[0].id_servico],
+            servicos: novaLista,
+        }))
+
+        let valorTotal = 0
+
+        novaLista.forEach(servico => {
+            const servicoSelecionado = todosServicos.find(s => s.id_servico == servico)
+
+            valorTotal += Number(servicoSelecionado.servicos?.preco_servico)
+        })
+
+        setDados(dadosAntigos => ({
+            ...dadosAntigos,
             preco: valorTotal
         }))
+
     }
 
-}
-
-function mudarValorDados(evento) {
-    const nomeCampo = evento.target.name
-    const valorCampo = evento.target.value
-
-    setDados({
-        ...dados,
-        [nomeCampo]: valorCampo
-    })
-}
-
-function mudarValorServico(evento, indice) {
-    const novaLista = [...dados.servicos]
-    novaLista[indice] = Number(evento.target.value)
-
-    setDados(dadosAntigos => ({
-        ...dadosAntigos,
-        servicos: novaLista,
-    }))
-
-    let valorTotal = 0
-
-    novaLista.forEach(servico => {
-        const servicoSelecionado = todosServicos.find(s => s.id_servico == servico)
-
-        valorTotal += Number(servicoSelecionado.servicos?.preco_servico)
-    })
-
-    setDados(dadosAntigos => ({
-        ...dadosAntigos,
-        preco: valorTotal
-    }))
-
-}
-
-return (
-    <form className='agendamento-form md:w-full'>
-        <div className="card_1">
-            <div className="lista_servicos" id="lista_servicos">
-                {
-                    dados.servicos.map((servico, indice) => {
-                        return (
-                            <div className="servico_adicionado" key={indice}>
-                                <label htmlFor="servico">Selecione o serviço:</label>
-
-                                <select name='servico' className="servico" value={servico} onChange={(evento) => mudarValorServico(evento, indice)} key={indice}>
-
-                                    { // Pega todos os serviços em "todosServicos" e coloca um <option> para cada um
-                                        todosServicos.map((servico) => (
-                                            servico.servicos && (
-                                                <option key={servico.id_servico} value={servico.id_servico}>
-                                                    {servico.servicos?.nome_servico}
-                                                </option>
-                                            )
-                                        ))
-                                    }
-
-
-                                </select>
-
-
-                                {
-                                    indice == 0 && (
-                                        <button type="button" className="btn_servico bg-white" id="btn_add_servico" onClick={adicionarServico}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                                className="bi bi-plus-lg " viewBox="0 0 16 16">
-                                                <path fillRule="evenodd"
-                                                    d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                                            </svg>
-                                        </button>
-                                    )
-                                }
-                            </div>
-                        )
-                    })
-                }
-
-            </div>
-
-            <div className="profissional_selecionado">
-                <label htmlFor="profissional">Selecione o(a) profissional: </label>
-
-                <select name="profissional" onChange={mudarValorDados} value={dados.profissional}>
+    return (
+        <form className='agendamento-form md:w-full'>
+            <div className="card_1">
+                <div className="lista_servicos" id="lista_servicos">
                     {
-                        todosProfissionais.map((profissional) => {
+                        dados.servicos.map((servico, indice) => {
                             return (
-                                <option key={profissional.id_profissional} value={profissional.id_profissional}>{profissional.nome_profissional}</option>
+                                <div className="servico_adicionado" key={indice}>
+                                    <label htmlFor="servico">Selecione o serviço:</label>
+
+                                    <select name='servico' className="servico" value={servico} onChange={(evento) => mudarValorServico(evento, indice)} key={indice}>
+
+                                        { // Pega todos os serviços em "todosServicos" e coloca um <option> para cada um
+                                            todosServicos.map((servico) => (
+                                                servico.servicos && (
+                                                    <option key={servico.id_servico} value={servico.id_servico}>
+                                                        {servico.servicos?.nome_servico}
+                                                    </option>
+                                                )
+                                            ))
+                                        }
+
+
+                                    </select>
+
+
+                                    {
+                                        indice == 0 && (
+                                            <button type="button" className="btn_servico bg-white" id="btn_add_servico" onClick={adicionarServico}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                                    className="bi bi-plus-lg " viewBox="0 0 16 16">
+                                                    <path fillRule="evenodd"
+                                                        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                                                </svg>
+                                            </button>
+                                        )
+                                    }
+                                </div>
                             )
                         })
                     }
-                </select>
+
+                </div>
+
+                <div className="profissional_selecionado">
+                    <label htmlFor="profissional">Selecione o(a) profissional: </label>
+
+                    <select name="profissional" onChange={mudarValorDados} value={dados.profissional}>
+                        {
+                            todosProfissionais.map((profissional) => {
+                                return (
+                                    <option key={profissional.id_profissional} value={profissional.id_profissional}>{profissional.nome_profissional}</option>
+                                )
+                            })
+                        }
+                    </select>
+                </div>
+
+                <div>
+                    <label>Dia marcado:</label>
+                    <input type="date" name="dia" onChange={mudarValorDados} />
+                </div>
+
+                <div>
+                    <label>Horario da sessão:</label>
+                    <input type="time" name="horario" onChange={mudarValorDados} />
+                </div>
             </div>
 
-            <div>
-                <label>Dia marcado:</label>
-                <input type="date" name="dia" onChange={mudarValorDados} />
+            <div className="card_2">
+                <header className="agendamento-header">
+                    <h1 className="agendamento-title bold">Agendamento</h1>
+                    <img className="logo" src="/logo_pequena.png" alt="logo secretária gestão" />
+                </header>
+
+
+                <p className='text-white ml-1'> R$ {dados.preco || 0},00</p>
+
+
+                <div>
+                    <select name="endereco" className="local" value={dados.endereco} onChange={mudarValorDados}>
+                        {todosSaloes.map((salao) => {
+                            return (
+                                <option key={salao.id_salao} value={salao.id_salao}> {`${salao.nome_salao}. ${salao.endereco_salao}`} </option>
+                            )
+                        })}
+                    </select>
+                </div>
+
+                <div className="div_btn">
+                    <button id="btn-enviar" type="button" className="enviar solid" onClick={enviarDados}> Enviar </button>
+                    <button id="btn-resetar" type="reset" className="resetar solid" onClick={resetarDados}> Resetar </button>
+                </div>
+
             </div>
-
-            <div>
-                <label>Horario da sessão:</label>
-                <input type="time" name="horario" onChange={mudarValorDados} />
-            </div>
-        </div>
-
-        <div className="card_2">
-            <header className="agendamento-header">
-                <h1 className="agendamento-title bold">Agendamento</h1>
-                <img className="logo" src="/logo_pequena.png" alt="logo secretária gestão" />
-            </header>
-
-
-            <p className='text-white ml-1'> R$ {dados.preco || 0},00</p>
-
-
-            <div>
-                <select name="endereco" className="local" value={dados.endereco} onChange={mudarValorDados}>
-                    {todosSaloes.map((salao) => {
-                        return (
-                            <option key={salao.id_salao} value={salao.id_salao}> {`${salao.nome_salao}. ${salao.endereco_salao}`} </option>
-                        )
-                    })}
-                </select>
-            </div>
-
-            <div className="div_btn">
-                <button id="btn-enviar" type="button" className="enviar solid" onClick={enviarDados}> Enviar </button>
-                <button id="btn-resetar" type="reset" className="resetar solid" onClick={resetarDados}> Resetar </button>
-            </div>
-
-        </div>
-    </form>
-)
-
-
-export default Formulario
+        </form>
+    )
+}

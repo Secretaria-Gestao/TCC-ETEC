@@ -30,12 +30,18 @@ def agendar():
 
     token = token.replace("Bearer ", "")
 
-    id_cliente = autenticar(token)
+    id_remetente = autenticar(token)
 
-    if id_cliente is None:
+    if id_remetente is None:
         return jsonify({"sucesso": False, "erro": "Token é invalido"}), 401
     
     try:
+
+        resposta_cliente = supabase.table("clientes").select("id_cliente").eq("id_cliente", id_remetente).execute()
+
+        if not resposta_cliente.data:
+            return jsonify({"sucesso": False, "erro": "Somente clientes podem agendar um horário"}), 403
+
         id_salao = info["id_salao"]
 
         profissional_escolhido = (
@@ -78,6 +84,11 @@ def agendar():
             ids_servicos = []
 
             for servico in info["servicos"]:
+                resposta_servico = supabase.table("servicos").select("id_servico").eq("id_servico", servico).execute()
+
+                if not respota_servico:
+                    return jsonify({"sucesso": False, "erro": "Algum serviço não foi localizado no sistema, tente novamente"}), 404
+                    
                 ids_servicos.append(servico)
 
             resposta_servicos = supabase.table("servicos").select("preco_servico").in_("id_servico", ids_servicos).execute()
@@ -90,7 +101,7 @@ def agendar():
                 valor_total += float(servico["preco_servico"])
                 
             novo_agendamento = {
-                "id_cliente": id_cliente,
+                "id_cliente": id_remetente,
                 "id_profissional": id_profissional,
                 "salao_associado": id_salao,
                 "horario": info["data_hora"],

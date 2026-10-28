@@ -83,7 +83,7 @@ def agendamentos_cliente(id_cliente):
 
     try:
         if id_cliente_pelo_token != id_cliente: # Verificação do id_cliente
-            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"})
+            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"}), 403
 
         resultado = (
             supabase_admin.table("agendamentos")
@@ -526,7 +526,7 @@ def agendamentos_profissional(id_profissional):
 
     try:
         if id_profissional_pelo_token != id_profissional: # Verificação do id_profissional
-            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"})
+            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"}), 403
         
         # Traz os dados do cliente porque o profissional precisa saber quem vai atender.
         resultado = (
@@ -683,7 +683,7 @@ def historico_cliente(id_cliente):
 
     try:
         if id_usuario != id_cliente: # Verificação do id_cliente
-            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"})
+            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"}), 403
 
         resultado = (
             supabase_admin.table("agendamentos")
