@@ -38,12 +38,10 @@ function AgendaAdmin() {
                 const resultado = await resposta.json()
 
                 if (!resultado.sucesso) {
-                    console.log(resultado.erro)
                     setMensagem('Erro ao buscar agendamentos: ' + resultado.erro)
                     return
                 }
 
-                console.log(resultado)
 
             const agendamentosTratados = (resultado.agendamentos || []).map((ag) => ({
                 ...ag,
@@ -54,14 +52,14 @@ function AgendaAdmin() {
 
             setAgendamentos(agendamentosTratados)
             } catch (erro) {
-                console.log(erro)
+                console.error(erro)
                 setMensagem('Erro ao buscar agendamentos: ' + erro.message)
             }
         }
+        carregarAgendamentos()
 
     }, [])
     
-    console.log(agendamentos)
     const nomesUnicos = [...new Set(agendamentos.map((ag) => ag.profissional).filter(Boolean))]
 
     const domingo = obterDomingoDaSemana(dataReferenciaSemana)
@@ -81,13 +79,17 @@ function AgendaAdmin() {
         setDataReferenciaMes(novaData)
     }
 
-    // Total de receita da semana atual, usado na seção Financeiro.
+    const fimSemana = new Date(domingo)
+    fimSemana.setDate(fimSemana.getDate() + 7)
+
     const totalSemana = agendamentos
         .filter((ag) => {
             const dataAg = new Date(ag.horario)
-            return dataAg >= domingo && dataAg <= sabado
+
+            const concluido = ag.status?.toLowerCase().startsWith('conclu')
+            return concluido && dataAg >= domingo && dataAg < fimSemana
         })
-        .reduce((soma, ag) => soma + (ag.preco || 0), 0)
+        .reduce((soma, ag) => soma + Number (ag.preco || 0), 0)
 
     // Aplica o filtro de profissional antes de passar pra grade da seção "Agenda".
     const agendamentosFiltrados = filtroProfissional
@@ -117,7 +119,7 @@ function AgendaAdmin() {
                         <NavegacaoSemana tituloSemana={tituloSemana} mudarSemana={mudarSemana} />
                         <GradeSemanal
                             domingo={domingo}
-                            agendamentos={agendamentos.filter((ag) => ag.idAdmin === idAdmin)}
+                            agendamentos={agendamentos.filter((ag) => ag.id_profissional === idAdmin)}
                             campoPrincipal="cliente"
                             campoSecundario="status"
                         />
