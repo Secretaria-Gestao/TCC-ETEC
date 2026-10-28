@@ -29,7 +29,7 @@ export default function GerenciadorServicos() {
     // Busca o nome uma única vez quando a página é aberta.
     useEffect(() => {
         async function pegarNomeSalao() {
-            const salao = await buscarSalao(sessao.access_token)
+            const salao = await buscarSalao()
             if (salao) setNomeSalao(salao.nome_salao)
                 
         }

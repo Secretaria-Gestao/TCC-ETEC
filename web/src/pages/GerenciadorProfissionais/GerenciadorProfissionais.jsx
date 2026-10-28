@@ -12,6 +12,7 @@ import { editarProfissional, removerProfissional as removerProfissionalApi } fro
 import { menuAdmin } from "@/BarraLateral/listaMenus"
 
 import { useEffect, useState } from "react"
+import { pegarSessao } from "../../services/pegarSessao.js"
 
 export default function GerenciadorProfissionais() {
     // Estes estados representam a página inteira: membros, agenda do mês e o painel de edição.
@@ -42,6 +43,10 @@ export default function GerenciadorProfissionais() {
                 setAgendamentos(membros[1])
 
             }
+
+            const sessao = await pegarSessao()
+
+            if (sessao) setIdRemetente(sessao.user.id)
 
         }
 

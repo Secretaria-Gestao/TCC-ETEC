@@ -12,28 +12,16 @@ def agendar():
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
-    id_remetente = info.get("id_remetente")
-
-    if not id_remetente:
-        return jsonify({"sucesso": False, "erro": "ID do remetente ausente"}), 400
+    id_remetente = autenticar(token)
+   
+    if id_remetente is None:
+        return jsonify({"sucesso": False, "erro": "Token é invalido"}), 401
 
     # Garante que o front mandou tudo que a tabela precisa receber.
-    campos_necessarios = ["servicos", "id_salao", "data_hora"]
+    campos_necessarios = ["servicos", "id_salao", "data_hora", "id_profissional"]
     for campo in campos_necessarios:
         if campo not in info:
             return jsonify({"sucesso": False, "erro": f"Campo ausente: {campo}"}), 400
-
-    token = request.headers.get("Authorization")
-
-    if not token:
-        return jsonify({"sucesso": False, "erro": "token ausente."}), 401
-
-    token = token.replace("Bearer ", "")
-
-    id_remetente = autenticar(token)
-
-    if id_remetente is None:
-        return jsonify({"sucesso": False, "erro": "Token é invalido"}), 401
     
     try:
 
@@ -42,11 +30,11 @@ def agendar():
         if not resposta_cliente.data:
             return jsonify({"sucesso": False, "erro": "Somente clientes podem agendar um horário"}), 403
 
-        id_salao = info["id_salao"]
+        id_salao = int(info["id_salao"])
 
         profissional_escolhido = (
             supabase.table("profissionais")
-            .select("id_profissional")
+            .select("id_profissional, salao_associado")
             .eq("id_profissional", info["id_profissional"])
             .eq("salao_associado", id_salao)
             .eq("status", True)
@@ -58,6 +46,9 @@ def agendar():
             return jsonify({"sucesso": False, "erro": "Profissional não encontrado"}), 404
 
         id_profissional = profissional_escolhido.data[0]["id_profissional"]
+        
+        if profissional_escolhido.data[0]["salao_associado"] != id_salao:
+            return jsonify({"sucesso": False, "erro": "O profissional escolhido não pertence ao salão escolhido"}), 403
 
         salao_escolhido = (
             supabase.table("saloes")
@@ -84,11 +75,19 @@ def agendar():
             ids_servicos = []
 
             for servico in info["servicos"]:
-                resposta_servico = supabase.table("servicos").select("id_servico").eq("id_servico", servico).execute()
+                resposta_servico = supabase.table("servicos").select("nome_servico, removido, em_funcionamento, salao_associado").eq("id_servico", servico).execute()
 
-                if not respota_servico:
+                if not resposta_servico.data:
                     return jsonify({"sucesso": False, "erro": "Algum serviço não foi localizado no sistema, tente novamente"}), 404
-                    
+                
+                servico_atual = resposta_servico.data[0]
+                
+                if int(servico_atual["salao_associado"]) != id_salao:
+                    return jsonify({"sucesso": False, "erro": f"O serviço {servico_atual["nome_servico"]} não é do mesmo salão escolhido"}),  403
+                
+                if servico_atual["removido"] == True or servico_atual["em_funcionamento"] == False:
+                    return jsonify({"sucesso": False, "erro": f"O serviço {servico_atual["nome_servico"]} não está em funcionamento no momento"}), 409
+
                 ids_servicos.append(servico)
 
             resposta_servicos = supabase.table("servicos").select("preco_servico").in_("id_servico", ids_servicos).execute()
@@ -137,7 +136,7 @@ def agendar():
                         "erro": "Profissional já possui serviço neste horário.",
                     },
                 ),
-                409,
+                409
             )
 
     except Exception as e:

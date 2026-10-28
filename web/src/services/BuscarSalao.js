@@ -5,6 +5,7 @@ export async function buscarSalao() {
     const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
     const sessao = await pegarSessao()
 
+
     // O token da sessão é enviado para o back-end descobrir o usuário e o salão.
     if (!sessao || !sessao.access_token) {
         mostrarNotificacao({
@@ -18,6 +19,7 @@ export async function buscarSalao() {
         return
     }
 
+
     const resposta = await fetch("/api/buscar/salao", {
         method: "GET",
         headers: {
@@ -26,9 +28,11 @@ export async function buscarSalao() {
         }
     })
 
+
     const dadosSalao = await resposta.json()
+    
 
     if (!dadosSalao.sucesso) return
-    
+
     return dadosSalao.salao
 }

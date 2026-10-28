@@ -31,6 +31,34 @@ function CadastroColaborador() {
     const [nomeSalao, setNomeSalao] = useState("")
 
     async function mandarFormulario() {
+
+        var camposFaltando = false
+
+        Object.entries(formulario).forEach( (valor) => {
+            if ( camposFaltando == true ) return
+
+            if (valor[1] == "") {
+                mostrarNotificacao({titulo: "Preencha todos os campos"})
+                camposFaltando = true
+
+                return
+            }
+        })
+
+        if ( camposFaltando == true ) return
+
+        if (!/\S+@\S+\.\S+/.test(formulario.email)) {
+            mostrarNotificacao({titulo: "Email incorreto"})
+            
+            return
+        }
+
+        if (formulario.senha.length < 6) {
+            mostrarNotificacao({titulo: "Erro ao cadastrar", texto: "A senha deve conter pelo menos 6 caracteres"})
+            
+            return
+        }
+
         const resposta = await cadastrarColaborador(formulario.email, formulario.senha, nomeUsuario, formulario.cargo, formulario.telefone, formulario.nivelAcesso);
 
         if (resposta) {

@@ -20,7 +20,7 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
 
     if not id_remetente:
         return jsonify({"sucesso": False, "erro": "Token não autorizado"}), 401
-
+    
     try:
 
         resultado_remetente = supabase_admin.table("profissionais").select("nivel_acesso, salao_associado").eq("id_profissional", id_remetente).execute()
@@ -34,6 +34,12 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
             return jsonify({"sucesso": False, "erro": "Somente administradores e gerentes podem cadastrar um profissional"}), 403
 
         email_profissional = info["email"].strip().lower()
+        
+        if remetente["nivel_acesso"] > int(info["nivel_acesso"]):
+                    return jsonify({"sucesso": False, "erro": "Nível do profissional sendo cadastrado acima do nível do remetente"}), 403
+        
+        if int(info["nivel_acesso"]) < 1 or int(info["nivel_acesso"]) > 3:
+            return jsonify({"sucesso": False, "erro": "Nível de acesso inexistente"}), 400
 
         resposta_auth = supabase_admin.auth.admin.create_user({    # Cria o usuário no Supabase Auth
             "email": email_profissional,
@@ -43,20 +49,14 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
 
         id_profissional = resposta_auth.user.id
 
-        if remetente["nivel_acesso"] < info["nivel_acesso"]:
-            return jsonify({"sucesso": False, "erro": "Nível do profissional sendo cadastrado acima do nível do remetente"}), 403
-
-        if info["nivel_acesso"] < 1 or info["nivel_acesso"] > 3:
-            return jsonify({"sucesso": False, "erro": "Nível de acesso inexistente"}), 400
-          
         supabase_admin.table("profissionais").insert({
             "id_profissional": id_profissional,
             "email_profissional": email_profissional,
             "nome_profissional": info["nome_profissional"],
             "cargo": info["cargo"],
             "telefone_profissional": info["telefone_profissional"],
-            "nivel_acesso": info["nivel_acesso"],
-            "salao_associado": gerente["salao_associado"]
+            "nivel_acesso": int(info["nivel_acesso"]),
+            "salao_associado": remetente["salao_associado"]
         }).execute()
         
         return jsonify({"sucesso": True, "resultado": "Profissional cadastrado com sucesso!"})

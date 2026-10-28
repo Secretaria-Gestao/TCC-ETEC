@@ -1,4 +1,5 @@
 import { pegarSessao } from "../../../services/pegarSessao";
+import { useNotificacaoStore } from "@/Notificacao";
 
 export async function mandarAgendamento(servicos, id_profissional, dia, horario, id_salao, preco) {
 
@@ -28,7 +29,7 @@ export async function mandarAgendamento(servicos, id_profissional, dia, horario,
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${sessao.access_token}`
         },
 
         body: JSON.stringify({

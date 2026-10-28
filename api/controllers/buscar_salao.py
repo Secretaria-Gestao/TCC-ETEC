@@ -5,16 +5,15 @@ from .autenticacao import autenticar
 
 def buscar_salao():
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
-
+    
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
-    id_profissional = info.get("id_profissional")
+    id_profissional = autenticar(token)
 
     if not id_profissional:
-        return jsonify({"sucesso": False, "erro": "ID do profissional ausente"}), 400
+        return jsonify({"sucesso": False, "erro": "Token não autorizado"}), 401
 
-    
     try:
 
         resultado = (
