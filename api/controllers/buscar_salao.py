@@ -23,8 +23,8 @@ def buscar_salao():
             .execute()
         )
 
-        if not resultado.data[0]:
-            return jsonify({"sucesso": False, "erro": "Profissional não encontrado"}), 500
+        if not resultado.data:
+            return jsonify({"sucesso": False, "erro": "Profissional não encontrado"}), 404
 
         salao = resultado.data[0]["saloes"]
 

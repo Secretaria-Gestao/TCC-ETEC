@@ -32,6 +32,12 @@ def agendar():
 
         id_salao = int(info["id_salao"])
 
+        if not isinstance(info["servicos"], list) or not info["servicos"]:
+            return jsonify({"sucesso": False, "erro": "Escolha pelo menos um serviço"}), 400
+
+        # Remove ids repetidos mantendo a ordem, assim o preço e o vínculo contam cada serviço uma vez só.
+        servicos_escolhidos = list(dict.fromkeys(info["servicos"]))
+
         profissional_escolhido = (
             supabase.table("profissionais")
             .select("id_profissional, salao_associado")
@@ -74,8 +80,8 @@ def agendar():
             
             ids_servicos = []
 
-            for servico in info["servicos"]:
-                resposta_servico = supabase.table("servicos").select("nome_servico, removido, em_funcionamento, salao_associado").eq("id_servico", servico).execute()
+            for servico in servicos_escolhidos:
+                resposta_servico =supabase.table("servicos").select("nome_servico, removido, em_funcionamento, salao_associado").eq("id_servico", servico).execute()
 
                 if not resposta_servico.data:
                     return jsonify({"sucesso": False, "erro": "Algum serviço não foi localizado no sistema, tente novamente"}), 404
@@ -83,10 +89,10 @@ def agendar():
                 servico_atual = resposta_servico.data[0]
                 
                 if int(servico_atual["salao_associado"]) != id_salao:
-                    return jsonify({"sucesso": False, "erro": f"O serviço {servico_atual["nome_servico"]} não é do mesmo salão escolhido"}),  403
+                    return jsonify({"sucesso": False, "erro": f"O serviço {servico_atual['nome_servico']} não é do mesmo salão escolhido"}),  403
                 
                 if servico_atual["removido"] == True or servico_atual["em_funcionamento"] == False:
-                    return jsonify({"sucesso": False, "erro": f"O serviço {servico_atual["nome_servico"]} não está em funcionamento no momento"}), 409
+                    return jsonify({"sucesso": False, "erro": f"O serviço {servico_atual['nome_servico']} não está em funcionamento no momento"}), 409
 
                 ids_servicos.append(servico)
 
@@ -114,7 +120,7 @@ def agendar():
             id_agendamento = resultado.data[0]["id_agendamento"]
             
 
-            for servico in info["servicos"]:
+            for servico in servicos_escolhidos:
                 agendamento_servicos = {
                     "id_agendamento": id_agendamento,
                     "id_servicos": servico,

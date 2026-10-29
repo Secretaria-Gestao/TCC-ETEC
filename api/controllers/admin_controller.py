@@ -1,3 +1,4 @@
+import re
 from flask import request, jsonify
 from database import supabase, supabase_admin
 from controllers.autenticacao import autenticar
@@ -34,7 +35,13 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
             return jsonify({"sucesso": False, "erro": "Somente administradores e gerentes podem cadastrar um profissional"}), 403
 
         email_profissional = info["email"].strip().lower()
-        
+
+        if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email_profissional):
+            return jsonify({"sucesso": False, "erro": "E-mail inválido"}), 400
+
+        if len(str(info["senha"])) < 6:
+            return jsonify({"sucesso": False, "erro": "A senha deve conter pelo menos 6 caracteres"}), 400
+
         if remetente["nivel_acesso"] > int(info["nivel_acesso"]):
                     return jsonify({"sucesso": False, "erro": "Nível do profissional sendo cadastrado acima do nível do remetente"}), 403
         
