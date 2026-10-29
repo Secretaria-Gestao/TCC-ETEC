@@ -44,5 +44,5 @@ export async function descobrirRotaPosLogin() {
 
     if (!prof) return '/agendamento/meus-agendamentos'                 // cliente
     if (Number(prof.nivel_acesso) <= 2) return '/admin/agenda'         // admin (1) e gerente (2)
-    return '/profissional/agenda'                                      // profissional (3)
+    return '/colaborador/agenda'                                      // profissional (3)
 }

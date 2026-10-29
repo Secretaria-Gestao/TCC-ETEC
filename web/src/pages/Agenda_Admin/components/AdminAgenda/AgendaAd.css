@@ -1,4 +1,5 @@
 .agenda-admin-janela {
+    --quadrado-claro: rgba(255,255,255,0.7);
     width: 100vw;
     max-width: none;
     height: 100vh;
@@ -53,7 +54,7 @@
 /* Ícone ativo fica com fundo amarelo, igual ao padrão das outras páginas */
 .agenda-admin-nav-icone.ativo {
     opacity: 1;
-    background: var(--background-gradient-color-dark);
+    background: var(--quadrado-claro);
 }
 
 /* Área central */
@@ -139,7 +140,7 @@ table.agenda-admin-grade td {
 }
 
 .agenda-admin-cartao {
-    background: var(--background-gradient-color-dark);
+    background: var(--quadrado-claro);
     border-left: 3px solid var(--background-button);
     border-radius: 6px;
     padding: 4px 6px;
@@ -244,7 +245,7 @@ table.agenda-admin-grade td {
     width: 36px;
     height: 36px;
     border-radius: 10px;
-    background: var(--background-gradient-color-dark);
+    background: var(--quadrado-claro);
     color: var(--background-button);
     display: flex;
     align-items: center;

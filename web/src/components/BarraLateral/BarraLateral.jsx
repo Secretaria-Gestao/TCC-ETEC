@@ -29,6 +29,7 @@ function BarraLateral({ menu = [] }) {
                 <NavLink
                     to={linha.to}
                     key={linha.to}
+                    end
                     className={({ isActive }) => `flex gap-3 p-2 rounded-md my-1 items-center transition-colors ${isActive ? 'bg-[#33435a]' : 'hover:bg-[#2f3d50]'}`}
                 >
 
