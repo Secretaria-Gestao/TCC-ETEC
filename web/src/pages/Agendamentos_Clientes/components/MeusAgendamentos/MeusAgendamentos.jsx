@@ -104,10 +104,18 @@ function MeusAgendamentos() {
             <div className="meus-agendamentos-sidebar">
                 <div className="meus-agendamentos-logo">SALÃO</div>
 
-                <div className="meus-agendamentos-nav-icone ativo" title="Agenda">📅</div>
-                <div className="meus-agendamentos-nav-icone" title="Equipe">👥</div>
-                <div className="meus-agendamentos-nav-icone" title="Galeria">🖼️</div>
-                <div className="meus-agendamentos-nav-icone" title="Histórico" onClick={() => navegar ('/agendamento/historico')}>🕘</div>
+               <div className="meus-agendamentos-nav-icone ativo" title="Agenda">
+   <span className="meus-agendamentos-nav-emoji">📅</span>
+    <span className="meus-agendamentos-nav-nome">Agenda</span>
+</div>
+<div className="meus-agendamentos-nav-icone" title="Galeria">
+    <span className="meus-agendamentos-nav-emoji">🖼️</span>
+    <span className="meus-agendamentos-nav-nome">Galeria</span>
+</div>
+<div className="meus-agendamentos-nav-icone" title="Histórico" onClick={() => navegar('/agendamento/historico')}>
+    <span className="meus-agendamentos-nav-emoji">🕘</span>
+    <span className="meus-agendamentos-nav-nome">Histórico</span>
+</div>
 
                 <div className="meus-agendamentos-sidebar-rodape">
                     <button className="meus-agendamentos-btn-sair" onClick={sair}>Sair</button>

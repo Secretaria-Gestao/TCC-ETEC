@@ -130,7 +130,7 @@ def atualizar_status():
     # Rota usada pelo profissional para atualizar o status de um agendamento.
     return atualizar_status_agendamento()
 
-@rotas_json.route("/api/agendamentos/historico/<id_cliente>", methods=["GET"])
-def historico_cliente(id_cliente):
+@rotas_json.route("/api/agendamentos/cliente/<id_cliente>/historico", methods=["GET"])
+def buscar_historico_cliente(id_cliente):
     # Rota usada pelo cliente para ver o histórico de agendamentos.
     return historico_cliente(id_cliente)

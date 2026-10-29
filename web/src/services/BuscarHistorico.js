@@ -1,24 +1,27 @@
 import { supabase } from "./SupabaseConfig.js";
 
+// Busca os atendimentos concluídos do cliente logado.
+// Agora LANÇA erro (em vez de devolver []), para a tela diferenciar "erro" de "vazio".
 export async function buscarHistorico() {
-    const {data} = await supabase.auth.refreshSession()
-    if (!data.sessao) return []
+    // Renova o token antes de chamar a API (evita 401 por token expirado)
+    const { data } = await supabase.auth.refreshSession()
 
-    const id_cliente = data.sessao.user.id
-    const token = data.sessao.access_token
+    // O nome certo é "session" (antes estava "sessao")
+    if (!data.session) throw new Error('Sessão expirada. Faça login novamente.')
 
-    try {
-        const resposta = await fetch(`/api/agendamentos/historico/${sessao.id_usuario}`, {headers: {'Authorization': `Bearer ${token}`} }            
-        )
-        const resultado = await resposta.json()
-        if (!resultado.sucesso) {
-            console.error('Erro ao buscar historico:', resultado.erro)
-            return []
-        }
-        return resultado.historico
+    const id_cliente = data.session.user.id // o id vem de user.id
+    const token = data.session.access_token
+
+    // URL igual à rota do Flask: /api/agendamentos/cliente/<id>/historico
+    const resposta = await fetch(`/api/agendamentos/cliente/${id_cliente}/historico`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
+
+    const resultado = await resposta.json()
+
+    if (!resultado.sucesso) {
+        throw new Error(resultado.erro || 'Erro ao buscar histórico')
     }
-    catch (erro) {
-        console.error('Erro na requisição do historico:', erro)
-        return []
-    }
+
+    return resultado.historico
 }

@@ -112,3 +112,21 @@
     font-weight: 700;
     color: var(--background-button);
 }
+
+.historico-atendimentos-nav-icone {
+    flex-direction: column;
+    width: 68px;
+    height: auto;
+    padding: 8px 4px;
+    gap: 3px;
+}
+
+.historico-atendimentos-nav-emoji { 
+    font-size: 1.15rem; 
+}
+
+.historico-atendimentos-nav-nome {
+    font-size: 0.62rem;
+    line-height: 1.1;
+    text-align: center;
+}

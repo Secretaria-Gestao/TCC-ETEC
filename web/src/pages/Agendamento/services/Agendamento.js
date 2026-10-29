@@ -42,5 +42,8 @@ export async function mandarAgendamento(servicos, id_profissional, dia, horario,
 
     })
 
-    return resposta
+    // Devolve o erro da API junto, para a tela mostrar a mensagem do servidor (ex.: 403, 409)
+    const corpo = await resposta.json().catch(() => ({}))
+
+    return { ok: resposta.ok && corpo.sucesso !== false, erro: corpo.erro }
 }

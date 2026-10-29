@@ -1,14 +1,13 @@
 import { useState } from "react"
-import { useNavigate, useLocation, Link } from "react-router"
+import { useNavigate, Link } from "react-router"
 
 import { logar } from "../../services/login.js"
-import { logarComGoogle } from "../../services/login.js"
+import { logarComGoogle, descobrirRotaPosLogin } from "../../services/login.js"
 import './FormularioLogin.css'
 
 function FormularioLogin() {
 
     const navegar = useNavigate()
-    const rotaAtual = useLocation()
 
     const [formulario, setFormulario] = useState({
         email: "",
@@ -16,6 +15,7 @@ function FormularioLogin() {
     })
 
     const [mandou, setMandou] = useState(0)
+    const [enviando, setEnviando] = useState(false)
 
     function mudarValor(evento) {
         const nomeCampo = evento.target.name
@@ -27,18 +27,24 @@ function FormularioLogin() {
         })
     }
 
-    async function enviarFormulario(event) {
-        event.preventDefault()
+   async function enviarFormulario(event) {
+    event.preventDefault()
+    if (enviando) return // ignora clique duplo
 
-        setMandou(1)
+    setMandou(1)
+    setEnviando(true)
+
+    try {
         const resultado = await logar(formulario.email, formulario.senha)
 
         if (resultado) {
-            rotaAtual.pathname == "/login/cliente" ? navegar('/agendamento') : undefined
-            rotaAtual.pathname == "/login/colaborador" ? navegar('/agendamento') : undefined
-            rotaAtual.pathname == "/login/gerente" ? navegar('/cadastro/colaborador') : undefined
+            // Navega pelo cargo do usuário, não pelo endereço atual da tela
+            navegar(await descobrirRotaPosLogin())
         }
+    } finally {
+        setEnviando(false) // libera o botão, com sucesso ou erro
     }
+}
 
     return (
         <>
@@ -97,8 +103,7 @@ function FormularioLogin() {
                         Recuperar senha
                     </button>
 
-                    <button type="submit" className="solid" id="login-button">
-                        Entrar
+                    <button type="submit" className="solid" id="login-button" disabled={enviando}> {enviando ? "Entrando..." : "Entrar" }
                     </button>
 
                     <Link to="/cadastro/cliente" id="btn_cadastrar" className="outline button-link">

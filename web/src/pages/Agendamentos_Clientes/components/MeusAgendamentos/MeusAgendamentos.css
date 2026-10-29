@@ -314,6 +314,25 @@ table.meus-agendamentos-grade td {
     opacity: 0.65;
 }
 
+/* Ícone da sidebar com o nome embaixo */
+.meus-agendamentos-nav-icone {
+    flex-direction: column;
+    width: 68px;
+    height: auto;
+    padding: 8px 4px;
+    gap: 3px;
+}
+
+.meus-agendamentos-nav-emoji { 
+    font-size: 1.15rem; 
+}
+
+.meus-agendamentos-nav-nome {
+    font-size: 0.62rem;
+    line-height: 1.1;
+    text-align: center;
+}
+
 @media (max-width: 900px) {
     .meus-agendamentos-painel-direito { display: none; }
 }

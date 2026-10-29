@@ -576,17 +576,29 @@ def agendamentos_salao():
     fim = request.args.get("fim")
 
     try:
-        # Usado só para para pegar o salao do admin, confiando apenas no supabase
-        resposta_remetente = supabase_admin.table("profissionais").select("salao_associado, nivel_acesso").eq("id_profissional", id_remetente).execute()
+        # Busca o nível e o salão de quem está pedindo (o salão vem do token, não do front)
+        resposta_remetente = (
+            supabase_admin.table("profissionais")
+            .select("nivel_acesso, salao_associado")
+            .eq("id_profissional", id_remetente)
+            .execute()
+        )
 
         if not resposta_remetente.data:
+            # Cliente ou usuário sem perfil de profissional não acessa esta rota
             return jsonify({"sucesso": False, "erro": "Salão do remetente não encontrado"}), 404
 
-        salao_associado = resposta_remetente.data[0]["salao_associado"]
-        nivel_acesso = resposta_remetente.data[0]["nivel_acesso"]
+        remetente = resposta_remetente.data[0]
 
-        if int(nivel_acesso) >= 3:
-            return jsonify({"sucesso": False, "erro": "Somente administradores e gerentes podem buscar todos os agendamentos"}), 403
+        # Só admin (1) e gerente (2) veem agenda e preços do salão inteiro;
+        # profissional (3) usa a própria rota /agendamentos/profissional
+        if int(remetente["nivel_acesso"]) >= 3:
+            return jsonify({"sucesso": False, "erro": "Somente administradores e gerentes podem ver a agenda do salão"}), 403
+
+        salao_associado = remetente["salao_associado"]
+
+        if salao_associado is None:
+            return jsonify({"sucesso": False, "erro": "O remetente não está associado a um salão"}), 404
         
         # Traz dados do cliente e do profissional, pois o admin ou gerente precisa ver
         # "quem marcou" e "com quem marcou".
@@ -677,40 +689,57 @@ def atualizar_status_agendamento():
         return jsonify({"sucesso": False, "erro": "Erro ao atualizar o status"}), 500
 
 def historico_cliente(id_cliente):
-    # Busca o histórico de agendamentos de um cliente específico.
-    # Usado na página do cliente para ele ver seus próprios atendimentos.
+    # Retorna só os atendimentos CONCLUÍDOS do cliente logado, do mais recente
+    # para o mais antigo. Usado na página "Histórico de atendimentos".
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
-    id_usuario= autenticar(token) # Serve para verificar depois se o id que a pessoa está mandando, realmente é dela
+    id_usuario = autenticar(token)
 
     if not id_usuario:
         return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
 
-    try:
-        if id_usuario != id_cliente: # Verificação do id_cliente
-            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"}), 403
+    # Segurança: supabase_admin ignora o RLS, então conferimos aqui que o
+    # cliente só vê o PRÓPRIO histórico. Antes devolvia 200 com sucesso:false.
+    if str(id_usuario) != str(id_cliente):
+        return jsonify({"sucesso": False, "erro": "Acesso negado"}), 403
 
+    try:
         resultado = (
             supabase_admin.table("agendamentos")
-            .select("horario, status, preco, profissionais(nome_profissional, cargo)")
+            # Traz o profissional e os serviços (relações via FK); o front precisa de id_agendamento e servicos
+            .select(
+                "id_agendamento, horario, status, preco, "
+                "profissionais(nome_profissional, cargo), "
+                "agendamento_servicos(servicos(nome_servico))"
+            )
             .eq("id_cliente", id_cliente)
+            # ilike ignora maiúscula/minúscula: pega 'Concluído' e 'concluido'
+            .ilike("status", "conclu%")
+            .order("horario", desc=True)
             .execute()
         )
 
         historico = []
-        for ag in resultado.data:
-            prof = ag.get("profissionais", {})
+        for ag in resultado.data or []:
+            prof = ag.get("profissionais") or {}  # "or {}" evita erro se vier None
+            # Cada agendamento pode ter vários serviços
+            servicos = [
+                (item.get("servicos") or {}).get("nome_servico")
+                for item in (ag.get("agendamento_servicos") or [])
+            ]
             historico.append({
+                "id_agendamento": ag["id_agendamento"],
                 "horario": ag["horario"],
-                "status": ag["status"],
-                "preco": ag["preco"],
+                "preco": ag.get("preco"),
                 "profissional": prof.get("nome_profissional"),
-                "cargo": prof.get("cargo")
+                "cargo": prof.get("cargo"),
+                "servicos": [s for s in servicos if s],  # descarta nomes vazios
             })
 
         return jsonify({"sucesso": True, "historico": historico})
 
     except Exception as e:
+        print("Erro ao buscar histórico do cliente:", e)
         return jsonify({"sucesso": False, "erro": str(e)}), 500
