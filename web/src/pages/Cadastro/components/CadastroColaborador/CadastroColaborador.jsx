@@ -7,7 +7,6 @@ import Formulario from './components/Formulario/Formulario.jsx'
 import { useState, useEffect } from 'react'
 import { useNotificacaoStore } from "@/Notificacao/notificacaoStore.js"
 import { buscarSalao } from '../../../../services/BuscarSalao.js'
-import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { cadastrarColaborador } from '../../services/CadastroColaborador'
 import { menuAdmin } from '@/BarraLateral/listaMenus'
 
@@ -32,6 +31,34 @@ function CadastroColaborador() {
     const [nomeSalao, setNomeSalao] = useState("")
 
     async function mandarFormulario() {
+
+        var camposFaltando = false
+
+        Object.entries(formulario).forEach( (valor) => {
+            if ( camposFaltando == true ) return
+
+            if (valor[1] == "") {
+                mostrarNotificacao({titulo: "Preencha todos os campos"})
+                camposFaltando = true
+
+                return
+            }
+        })
+
+        if ( camposFaltando == true ) return
+
+        if (!/\S+@\S+\.\S+/.test(formulario.email)) {
+            mostrarNotificacao({titulo: "Email incorreto"})
+            
+            return
+        }
+
+        if (formulario.senha.length < 6) {
+            mostrarNotificacao({titulo: "Erro ao cadastrar", texto: "A senha deve conter pelo menos 6 caracteres"})
+            
+            return
+        }
+
         const resposta = await cadastrarColaborador(formulario.email, formulario.senha, nomeUsuario, formulario.cargo, formulario.telefone, formulario.nivelAcesso);
 
         if (resposta) {
@@ -44,14 +71,9 @@ function CadastroColaborador() {
 
     useEffect(() => { // Precisa disso para fazer a busca do nome do salão usando o React
         async function pegarNomeSalao() {
-            const sessao = await pegarSessao()
+            const salao = await buscarSalao()
+            if (salao) setNomeSalao(salao.nome_salao)
 
-            if (!sessao) {
-                return
-            }
-
-            const salao = await buscarSalao(sessao.user.email)
-            setNomeSalao(salao.nome_salao)
         }
 
         pegarNomeSalao()

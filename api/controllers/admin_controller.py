@@ -1,3 +1,4 @@
+import re
 from flask import request, jsonify
 from database import supabase, supabase_admin
 from controllers.autenticacao import autenticar
@@ -16,24 +17,36 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
-    id_gerente = autenticar(token)
+    id_remetente = autenticar(token)
 
-    if not id_gerente:
+    if not id_remetente:
         return jsonify({"sucesso": False, "erro": "Token não autorizado"}), 401
-
+    
     try:
 
-        resultado_gerente = supabase_admin.table("profissionais").select("nivel_acesso, salao_associado").eq("id_profissional", id_gerente).execute()
+        resultado_remetente = supabase_admin.table("profissionais").select("nivel_acesso, salao_associado").eq("id_profissional", id_remetente).execute()
 
-        if not resultado_gerente.data:
-            return jsonify({"sucesso": False, "erro": "Não foi possível encontrar o gerente na tabela de profissionais"}), 404
+        if not resultado_remetente.data:
+            return jsonify({"sucesso": False, "erro": "Não foi possível encontrar o profissional"}), 404
 
-        gerente = resultado_gerente.data[0]
+        remetente = resultado_remetente.data[0]
 
-        if int(gerente["nivel_acesso"]) >= 3:
+        if int(remetente["nivel_acesso"]) >= 3:
             return jsonify({"sucesso": False, "erro": "Somente administradores e gerentes podem cadastrar um profissional"}), 403
 
         email_profissional = info["email"].strip().lower()
+
+        if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email_profissional):
+            return jsonify({"sucesso": False, "erro": "E-mail inválido"}), 400
+
+        if len(str(info["senha"])) < 6:
+            return jsonify({"sucesso": False, "erro": "A senha deve conter pelo menos 6 caracteres"}), 400
+
+        if remetente["nivel_acesso"] > int(info["nivel_acesso"]):
+                    return jsonify({"sucesso": False, "erro": "Nível do profissional sendo cadastrado acima do nível do remetente"}), 403
+        
+        if int(info["nivel_acesso"]) < 1 or int(info["nivel_acesso"]) > 3:
+            return jsonify({"sucesso": False, "erro": "Nível de acesso inexistente"}), 400
 
         resposta_auth = supabase_admin.auth.admin.create_user({    # Cria o usuário no Supabase Auth
             "email": email_profissional,
@@ -42,15 +55,15 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
         })
 
         id_profissional = resposta_auth.user.id
-          
+
         supabase_admin.table("profissionais").insert({
             "id_profissional": id_profissional,
             "email_profissional": email_profissional,
             "nome_profissional": info["nome_profissional"],
             "cargo": info["cargo"],
             "telefone_profissional": info["telefone_profissional"],
-            "nivel_acesso": info["nivel_acesso"],
-            "salao_associado": gerente["salao_associado"]
+            "nivel_acesso": int(info["nivel_acesso"]),
+            "salao_associado": remetente["salao_associado"]
         }).execute()
         
         return jsonify({"sucesso": True, "resultado": "Profissional cadastrado com sucesso!"})
@@ -77,7 +90,7 @@ def agendamentos_cliente(id_cliente):
 
     try:
         if id_cliente_pelo_token != id_cliente: # Verificação do id_cliente
-            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"})
+            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"}), 403
 
         resultado = (
             supabase_admin.table("agendamentos")
@@ -520,7 +533,7 @@ def agendamentos_profissional(id_profissional):
 
     try:
         if id_profissional_pelo_token != id_profissional: # Verificação do id_profissional
-            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"})
+            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"}), 403
         
         # Traz os dados do cliente porque o profissional precisa saber quem vai atender.
         resultado = (
@@ -563,7 +576,7 @@ def agendamentos_salao():
     fim = request.args.get("fim")
 
     try:
-                # Busca o nível e o salão de quem está pedindo (o salão vem do token, não do front)
+        # Busca o nível e o salão de quem está pedindo (o salão vem do token, não do front)
         resposta_remetente = (
             supabase_admin.table("profissionais")
             .select("nivel_acesso, salao_associado")
@@ -586,8 +599,8 @@ def agendamentos_salao():
 
         if salao_associado is None:
             return jsonify({"sucesso": False, "erro": "O remetente não está associado a um salão"}), 404
-
-        # Traz dados do cliente e do profissional, pois o admin precisa ver
+        
+        # Traz dados do cliente e do profissional, pois o admin ou gerente precisa ver
         # "quem marcou" e "com quem marcou".
 
         busca = (

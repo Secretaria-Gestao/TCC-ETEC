@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { mandarAgendamento } from '../../services/Agendamento.js'
 
-import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { buscarTodosProfissionais } from "../../../../services/BuscarProfissionais.js"
 import { buscarSaloes } from '../../services/buscarSaloes.js'
 import { buscarServicos } from "../../services/buscarServicos.js"
@@ -145,16 +144,8 @@ function calcularTotal(listaIds) {
 
     setEnviando(true)
     try {
-        const resultadoToken = await pegarSessao()
-
-        if (!resultadoToken) {
-            alert("Você precisa estar logado!")
-            navegar('/')
-            return
-        }
-
+        // O token agora é pego dentro do mandarAgendamento; sem sessão ele avisa e devolve undefined
         const respostaFetch = await mandarAgendamento(
-            resultadoToken.access_token,
             dados.servicos,
             dados.profissional,
             dados.dia,
@@ -162,6 +153,8 @@ function calcularTotal(listaIds) {
             dados.endereco,
             dados.preco
         )
+
+        if (!respostaFetch) return
 
         if (respostaFetch.ok) {
             mostrarNotificacao({
@@ -314,5 +307,5 @@ function calcularTotal(listaIds) {
         </form>
     )
   }
-  
+
 export default Formulario

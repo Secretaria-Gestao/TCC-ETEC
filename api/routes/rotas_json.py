@@ -52,7 +52,7 @@ def editar_prof():
 def deletar_prof():
     return remover_profissional()
 
-@rotas_json.route("/api/buscar/salao", methods=["POST"])
+@rotas_json.route("/api/buscar/salao", methods=["GET"])
 def buscarSalao():
     return buscar_salao()
 
