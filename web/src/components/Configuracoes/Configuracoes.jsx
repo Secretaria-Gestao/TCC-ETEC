@@ -5,7 +5,6 @@ import Cliente from "./components/Abas/Clientes/Cliente"
 import Profissional from "./components/Abas/Profissionais/Profissional"
 
 export default function Configuracoes({ perfil, setConfigAberto }) {
-
     const [abaAtual, setAbaAtual] = useState("perfil")
 
     return (

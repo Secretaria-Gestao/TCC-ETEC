@@ -689,6 +689,7 @@ def atualizar_status_agendamento():
         return jsonify({"sucesso": False, "erro": "Erro ao atualizar o status"}), 500
 
 def historico_cliente(id_cliente):
+
     # Retorna só os atendimentos CONCLUÍDOS do cliente logado, do mais recente
     # para o mais antigo. Usado na página "Histórico de atendimentos".
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
@@ -743,3 +744,95 @@ def historico_cliente(id_cliente):
     except Exception as e:
         print("Erro ao buscar histórico do cliente:", e)
         return jsonify({"sucesso": False, "erro": str(e)}), 500
+
+def buscar_horarios_salao(id_salao):
+    # Qualquer usuário logado pode ler (o cliente precisa disso no formulário de agendamento)
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    if not autenticar(token):
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    try:
+        resposta = (
+            supabase_admin.table("horario_funcionamento_salao")
+            .select("dia_semana, hora_abertura, hora_fechamento, fechado")
+            .eq("id_salao", id_salao)
+            .order("dia_semana")
+            .execute()
+        )
+        # Lista vazia NÃO é erro: salão que ainda não configurou os horários
+        return jsonify({"sucesso": True, "horarios": resposta.data or []})
+    except Exception as erro:
+        print("Erro ao buscar horários do salão:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao buscar horários"}), 500
+
+def salvar_horarios_salao():
+    # Só administrador (nível 1) altera os horários do PRÓPRIO salão
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    id_usuario = autenticar(token)
+    if not id_usuario:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    try:
+        # O salão vem do banco (pelo token), nunca do front: evita editar salão alheio
+        resp = (
+            supabase_admin.table("profissionais")
+            .select("nivel_acesso, salao_associado")
+            .eq("id_profissional", id_usuario)
+            .execute()
+        )
+        if not resp.data:
+            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404
+
+        admin = resp.data[0]
+        if int(admin["nivel_acesso"]) != 1:
+            return jsonify({"sucesso": False, "erro": "Somente administradores podem editar horários"}), 403
+        if admin["salao_associado"] is None:
+            return jsonify({"sucesso": False, "erro": "Administrador sem salão associado"}), 404
+
+        info = request.get_json(silent=True) or {}
+        horarios = info.get("horarios")
+        if not isinstance(horarios, list) or not horarios:
+            return jsonify({"sucesso": False, "erro": "Campo ausente: horarios"}), 400
+
+        linhas = []
+        dias_vistos = set()
+        for h in horarios:
+            dia = h.get("dia_semana")
+            if dia not in range(0, 7) or dia in dias_vistos:
+                return jsonify({"sucesso": False, "erro": f"Dia da semana inválido ou repetido: {dia}"}), 400
+            dias_vistos.add(dia)
+
+            fechado = bool(h.get("fechado"))
+            abertura = h.get("hora_abertura")
+            fechamento = h.get("hora_fechamento")
+
+            if not fechado:
+                if not abertura or not fechamento:
+                    return jsonify({"sucesso": False, "erro": f"Informe abertura e fechamento (dia {dia})"}), 400
+                # Compara só "HH:MM" (os 5 primeiros caracteres): texto nesse formato ordena certo
+                if str(abertura)[:5] >= str(fechamento)[:5]:
+                    return jsonify({"sucesso": False, "erro": f"A abertura deve ser antes do fechamento (dia {dia})"}), 400
+
+            linhas.append({
+                "id_salao": admin["salao_associado"],
+                "dia_semana": dia,
+                # Dia fechado grava NULL nos horários
+                "hora_abertura": None if fechado else abertura,
+                "hora_fechamento": None if fechado else fechamento,
+                "fechado": fechado,
+            })
+
+        # upsert = insere se não existe, atualiza se já existe (usa a constraint do passo 1)
+        supabase_admin.table("horario_funcionamento_salao").upsert(
+            linhas, on_conflict="id_salao,dia_semana"
+        ).execute()
+
+        return jsonify({"sucesso": True})
+
+    except Exception as erro:
+        print("Erro ao salvar horários do salão:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao salvar horários"}), 500

@@ -5,7 +5,7 @@ import '../Agendamento/Agendamento.css' ;
 
 function PageHistoricoAtendimentos() {
     return (
-        <div className="main-principal">
+        <div className="main-principal flex">
             <BarraLateral menu={menuCliente}/>
             <HistoricoAtendimentos />
         </div>
