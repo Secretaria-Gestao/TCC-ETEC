@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-    --background-gradient-color-light: #85D6FF;
-    --background-gradient-color-dark: #2D353D;
+    --background-gradient-color-light: #2563EB33;
+    --background-gradient-color-dark: #A2BEFE;
     --background-transparent: #90ABDC34;
     --background-color-error: #EB620A;
     --font-color-error: #180402;

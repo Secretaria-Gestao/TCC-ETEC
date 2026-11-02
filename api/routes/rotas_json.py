@@ -2,7 +2,7 @@ from flask import Flask, Blueprint
 from controllers.login_controller import cadastroUserCliente
 from controllers.login_controller import cadastroUserGerente
 from controllers.agendamento_controller import agendar
-from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento, historico_cliente
+from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento, cancelar_agendamento_cliente, historico_cliente
 from controllers.buscar_salao import buscar_salao, buscar_servicos_fornecidos, criar_servicos_fornecidos, editar_servicos_fornecidos, deletar_servicos_fornecidos
 from controllers.buscar_saloes import buscar_saloes
 from controllers.buscar_servicos import buscar_servicos_agendamento
@@ -28,9 +28,9 @@ def agendamento():
 def cadastrar_prof():
     return cadastrar_profissional()
 
-@rotas_json.route("/api/agendamentos/cliente/<id_cliente>", methods=["GET"])
-def buscar_agendamentos(id_cliente):
-    return agendamentos_cliente(id_cliente)
+@rotas_json.route("/api/agendamentos/cliente", methods=["GET"])
+def buscar_agendamentos():
+    return agendamentos_cliente()
 
 @rotas_json.route("/api/buscar/profissionais/email", methods=["GET"])
 def buscar_profEmail():
@@ -129,6 +129,11 @@ def buscar_agendamentos_salao():
 def atualizar_status():
     # Rota usada pelo profissional para atualizar o status de um agendamento.
     return atualizar_status_agendamento()
+
+@rotas_json.route("/api/agendamentos/cancelar", methods=["POST"])
+def cancelar_agendamento():
+    # Rota usada pelo cliente para cancelar um agendamento dele (até 2h30 antes).
+    return cancelar_agendamento_cliente()
 
 @rotas_json.route("/api/agendamentos/cliente/<id_cliente>/historico", methods=["GET"])
 def buscar_historico_cliente(id_cliente):
