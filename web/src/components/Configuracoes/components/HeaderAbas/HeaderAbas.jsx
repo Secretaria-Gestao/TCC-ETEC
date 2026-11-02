@@ -29,7 +29,7 @@ export default function HeaderAbas({abaAtual, setAbaAtual, setConfigAberto, perf
             <button
                 type="button"
                 className="absolute right-2 -top-2 z-10 text-laranja text-3xl"
-                onClick={() =>{console.log('clicou no X'); setConfigAberto(false)}}
+                onClick={() => setConfigAberto(false)}
             >
                 X
             </button>
