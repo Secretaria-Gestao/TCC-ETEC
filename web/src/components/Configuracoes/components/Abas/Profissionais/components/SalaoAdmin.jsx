@@ -5,9 +5,11 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useMeuPerfil } from "../../../../../../services/pegarMeuPerfil"
 import estilos from "../../Abas.module.css"
 import { mudarSalao } from "../../Clientes/services/atualizarDados"
+import HorariosFuncionamento from "./HorariosFuncionamento.jsx"
 
 export default function SalaoAdmin() {
   const { data: perfil } = useMeuPerfil()
+  const idSalao = perfil?.salao_associado ?? perfil?.saloes?.id_salao
   const queryClient = useQueryClient()
 
   const [mudandoNome, setMudandoNome] = useState(false)
@@ -34,6 +36,8 @@ export default function SalaoAdmin() {
   const editando = mudandoNome || mudandoEndereco
 
   return (
+
+    <>
     <form className="py-5 px-3 flex flex-1 " onSubmit={handleSubmit(onSubmit)}>
 
       <div className="gap-5 flex flex-1 flex-col ">
@@ -99,5 +103,7 @@ export default function SalaoAdmin() {
 
       </div>
     </form>
+    <HorariosFuncionamento idSalao={idSalao} />
+    </>
   )
 }
