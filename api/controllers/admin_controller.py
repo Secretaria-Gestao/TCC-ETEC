@@ -719,8 +719,7 @@ def cancelar_agendamento_cliente():
 
         agendamento = resultado_agendamento.data[0]
 
-        # Segurança: supabase_admin ignora o RLS, então conferimos aqui que o
-        # agendamento realmente pertence a este cliente.
+        # conferindo se o agendamento realmente pertence a este cliente.
         if str(agendamento["id_cliente"]) != str(id_cliente):
             return jsonify({"sucesso": False, "erro": "Este agendamento não pertence a este cliente"}), 403
 

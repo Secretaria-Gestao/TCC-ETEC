@@ -73,6 +73,7 @@ def agendar():
             .select("id_agendamento")
             .eq("id_profissional", id_profissional)
             .eq("horario", info["data_hora"])
+            .neq("status", "cancelado")
             .execute()
         )
 
