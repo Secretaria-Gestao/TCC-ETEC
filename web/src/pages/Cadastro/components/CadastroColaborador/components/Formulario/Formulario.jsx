@@ -58,7 +58,7 @@ function Formulario({dados, setDados}) {
                 <input name="email" type="email" placeholder="Email" className="cadastroProfInput" onChange={mudarValor} />
                 <div></div>
                 <label htmlFor="senha"> Senha: </label>
-                <input name="senha" type="password" placeholder="Senha" className="cadastroProfInput" onChange={mudarValor} />
+                <input name="senha" type="password" placeholder="Senha" className="cadastroProfInput" autoComplete="new-password" onChange={mudarValor} />
             </div>
 
             <div className="flex justify-center my-5!">

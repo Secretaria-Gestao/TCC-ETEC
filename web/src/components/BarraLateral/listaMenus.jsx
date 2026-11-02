@@ -111,7 +111,7 @@ export const menuCliente = [
         )
     },
     {
-        "to": "/historico",
+        "to": "/agendamento/historico",
         "titulo": "Histórico",
         "icone": () => (
             <svg

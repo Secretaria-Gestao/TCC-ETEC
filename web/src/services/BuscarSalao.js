@@ -1,17 +1,38 @@
-export async function buscarSalao(email) {
-    const resposta = await fetch("/api/buscar/salao", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({email_profissional: email})
-    })
+import { pegarSessao } from "./pegarSessao"
+import { useNotificacaoStore } from "@/Notificacao"
 
-    const dadosSalao = await resposta.json()
+export async function buscarSalao() {
+    const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
+    const sessao = await pegarSessao()
 
-    if (!dadosSalao.sucesso) {
+
+    // O token da sessão é enviado para o back-end descobrir o usuário e o salão.
+    if (!sessao || !sessao.access_token) {
+        mostrarNotificacao({
+            titulo: "Erro ao continuar na página",
+            texto: "Sua sessão expirou, faça login novamente",
+            mostrarBotao: true,
+            textoBotao: "Voltar",
+            funcaoBotao: () => (window.location.href = "/")
+        })
+
         return
     }
+
+
+    const resposta = await fetch("/api/buscar/salao", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${sessao.access_token}`
+        }
+    })
+
+
+    const dadosSalao = await resposta.json()
+    
+
+    if (!dadosSalao.sucesso) return
 
     return dadosSalao.salao
 }

@@ -1,20 +1,11 @@
 import './HistoricoAtendimentos.css';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { supabase } from '../../../../services/SupabaseConfig.js';
 import {buscarHistorico} from '../../../../services/BuscarHistorico.js';
 
 function HistoricoAtendimentos() {
     const [historico, setHistorico] = useState([])
     const [carregando, setCarregando] = useState(true)
     const [erro, setErro] = useState(null)
-
-    const navegar = useNavigate()
-
-    async function sair() {
-        await supabase.auth.signOut()
-        window.location.replace('/login')
-    }
 
     useEffect(() => {
     buscarHistorico()
@@ -33,27 +24,6 @@ function HistoricoAtendimentos() {
         valor == null ? '—' : Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
     return (
-        <div className="historico-atendimentos-janela">
-            <div className="historico-atendimentos-sidebar">
-                <div
-                    className="historico-atendimentos-nav-icone"
-                    title="Agenda"
-                    onClick={() => navegar('/agendamento/meus-agendamentos')}
-                >
-                    <span className="historico-atendimentos-nav-emoji">📅</span>
-                    <span className="historico-atendimentos-nav-nome">Agenda</span>
-                </div>
-
-                <div className="historico-atendimentos-nav-icone ativo" title="Histórico de atendimentos">
-                    <span className="historico-atendimentos-nav-emoji">🕘</span>
-                    <span className="historico-atendimentos-nav-nome">Histórico</span>
-                </div>
-
-                <div className="historico-atendimentos-sidebar-rodape">
-                    <button className="historico-atendimentos-btn-sair" onClick={sair}>Sair</button>
-                </div>
-            </div>
-
             <div className="historico-atendimentos-conteudo">
                 <h2 className="historico-atendimentos-titulo">Histórico de atendimentos</h2>
                 {carregando ? (
@@ -77,7 +47,6 @@ function HistoricoAtendimentos() {
                     </ul>
                 )}
             </div>
-        </div>
     )
 }
 export default HistoricoAtendimentos

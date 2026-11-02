@@ -7,7 +7,6 @@ import Profissional from "./components/Abas/Profissionais/Profissional"
 // perfil é o tipo de quem está logado: "cliente", "profissional" ou "admin" (calculado na BarraLateral).
 // Ele decide quais abas existem: Perfil e Segurança para todos, e Salão só para o admin.
 export default function Configuracoes({ perfil, setConfigAberto }) {
-
     const [abaAtual, setAbaAtual] = useState("perfil")
 
     return (

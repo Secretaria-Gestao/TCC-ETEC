@@ -26,7 +26,13 @@ export default function HeaderAbas({abaAtual, setAbaAtual, setConfigAberto, perf
                 </button>
             )}
 
-            <button className="absolute right-2 -top-2 text-laranja text-3xl" onClick={() => setConfigAberto(false)}> X </button>
+            <button
+                type="button"
+                className="absolute right-2 -top-2 z-10 text-laranja text-3xl"
+                onClick={() => setConfigAberto(false)}
+            >
+                X
+            </button>
 
 
         </div>
