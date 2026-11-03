@@ -2,6 +2,7 @@ from flask import Flask, Blueprint
 from controllers.login_controller import cadastroUserCliente
 from controllers.login_controller import cadastroUserGerente
 from controllers.agendamento_controller import agendar
+from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento, historico_cliente, buscar_horarios_salao, salvar_horarios_salao, definir_acordo_financeiro 
 from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento, cancelar_agendamento_cliente, historico_cliente, buscar_horarios_salao, salvar_horarios_salao
 from controllers.buscar_salao import buscar_salao, buscar_servicos_fornecidos, criar_servicos_fornecidos, editar_servicos_fornecidos, deletar_servicos_fornecidos
 from controllers.buscar_saloes import buscar_saloes
@@ -150,3 +151,8 @@ def horarios_salao(id_salao):
 @rotas_json.route("/api/editar/salao-horarios", methods=["POST"])
 def editar_horarios_salao():
     return salvar_horarios_salao()
+
+@rotas_json.route("/api/profissionais/acordo-financeiro", methods=["POST"])
+def acordo_financeiro():
+    # Nome diferente da função importada, para não chamar a si mesma
+    return definir_acordo_financeiro()
