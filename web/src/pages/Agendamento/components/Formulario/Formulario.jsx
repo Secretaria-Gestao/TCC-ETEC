@@ -277,7 +277,7 @@ function calcularTotal(listaIds) {
 
             <div className="card_2">
                 <header className="agendamento-header">
-                    <h1 className="agendamento-title bold">Agendamento</h1>
+                    <h1 className="agendamento-title text-azul-ceu! font-bold">Agendamento</h1>
                     <img className="logo" src="/logo_pequena.png" alt="logo secretária gestão" />
                 </header>
 
@@ -298,9 +298,9 @@ function calcularTotal(listaIds) {
                     </select>
                 </div>
 
-                <div className="div_btn">
-                    <button id="btn-enviar" type="button" className="enviar solid" onClick={enviarDados} disabled={enviando || todosSaloes.length === 0}> {enviando ? 'Enviando...' : 'Enviar'} </button>
-                    <button id="btn-resetar" type="reset" className="resetar solid" onClick={resetarDados}> Resetar </button>
+                <div className="div_btn mt-2">
+                    <button id="btn-enviar" type="button" className="enviar bg-ameixa/50! solid" onClick={enviarDados} disabled={enviando || todosSaloes.length === 0}> {enviando ? 'Enviando...' : 'Enviar'} </button>
+                    <button id="btn-resetar" type="reset" className="resetar bg-ameixa/50! solid" onClick={resetarDados}> Resetar </button>
                 </div>
 
             </div>
