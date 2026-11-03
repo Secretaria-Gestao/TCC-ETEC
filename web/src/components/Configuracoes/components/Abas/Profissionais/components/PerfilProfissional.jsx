@@ -14,6 +14,8 @@ export default function PerfilProfissional({ setAbaAtual }) {
   const [mudandoNome, setMudandoNome] = useState(false)
   const [mudandoTelefone, setMudandoTelefone] = useState(false)
 
+  // Usar "values" (e não "defaultValues") faz o formulário se preencher quando o perfil termina de carregar,
+  // e o reset() do botão Cancelar volta para os valores salvos.
   const { register, handleSubmit, watch, reset } = useForm({
     values: perfil && {
       nome: perfil.nome_profissional,
@@ -21,6 +23,9 @@ export default function PerfilProfissional({ setAbaAtual }) {
     }
   })
 
+  // Nome e telefone são salvos um de cada vez, na ordem. Se o nome falhar, o telefone nem é enviado
+  // e o campo continua em edição para a pessoa tentar de novo.
+  // invalidateQueries atualiza o cache do perfil, para a tela e a barra lateral mostrarem o valor novo.
   const onSubmit = async () => {
     if (mudandoNome) {
       if (!watch("nome")?.trim()) return
@@ -46,6 +51,7 @@ export default function PerfilProfissional({ setAbaAtual }) {
   async function trocarFoto(arquivo) {
     if (!arquivo) return
 
+    // Limite de 8 MB, conferido aqui no front antes de enviar (8 * 1024 * 1024 bytes).
     if (arquivo.size > 8 * 1024 * 1024) {
       useNotificacaoStore.getState().mostrarNotificacao({
         titulo: "Foto grande demais",
@@ -83,6 +89,9 @@ export default function PerfilProfissional({ setAbaAtual }) {
                 Mudar foto
               </p>
 
+              {/* O input de arquivo fica invisível por cima da foto inteira, então clicar nela abre o seletor.
+                  O "Mudar foto" acima só aparece no hover (group-hover). O e.target.value = "" limpa o campo
+                  depois de escolher, para ser possível selecionar o mesmo arquivo de novo. */}
               <input className="absolute inset-0 w-full h-full opacity-0"
                 type="file"
                 accept="image/jpeg, image/png, image/webp"

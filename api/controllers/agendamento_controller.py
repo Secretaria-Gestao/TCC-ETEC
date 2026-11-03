@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 from database import supabase, supabase_admin
+from datetime import datetime, timedelta
+from database import supabase
 from .autenticacao import autenticar
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
@@ -116,83 +118,100 @@ def agendar():
         if problema_horario:
             return jsonify({"sucesso": False, "erro": problema_horario}), 400
 
+         
+        ids_servicos = []
+
+        for servico in servicos_escolhidos:
+            resposta_servico =supabase.table("servicos").select("nome_servico, removido, em_funcionamento, salao_associado").eq("id_servico", servico).execute()
+
+            if not resposta_servico.data:
+                return jsonify({"sucesso": False, "erro": "Algum serviço não foi localizado no sistema, tente novamente"}), 404
+            
+            servico_atual = resposta_servico.data[0]
+            
+            if int(servico_atual["salao_associado"]) != id_salao:
+                return jsonify({"sucesso": False, "erro": f"O serviço {servico_atual['nome_servico']} não é do mesmo salão escolhido"}),  403
+            
+            if servico_atual["removido"] == True or servico_atual["em_funcionamento"] == False:
+                return jsonify({"sucesso": False, "erro": f"O serviço {servico_atual['nome_servico']} não está em funcionamento no momento"}), 409
+
+            ids_servicos.append(servico)
+
+        resposta_servicos = supabase.table("servicos").select("id_servico, nome_servico, preco_servico, duracao").in_("id_servico", ids_servicos).execute()
+
+        servicos = resposta_servicos.data
+
+        correlacao = (
+            supabase.table("profissionais_servicos")
+                .select("id_servico")
+                .eq("id_profissional", id_profissional)
+                .in_("id_servico", ids_servicos)
+                .execute()
+            )
+
+        servicos_fornecidos = {int(item["id_servico"]) for item in correlacao.data}
+
+        if servicos_fornecidos != {int(servico) for servico in ids_servicos}:
+            return jsonify({"sucesso": False, "erro": "O profissional escolhido não realiza todos os serviços selecionados"}), 400
         
-        checagem_agendamento = (
+        valor_total = 0
+        duracao_total = 0
+        
+        for servico in servicos:
+            valor_total += float( servico["preco_servico"] )
+            duracao_total += float( servico["duracao"] or 0 )
+
+        inicio_novo = datetime.fromisoformat(info["data_hora"].replace("Z", "+00:00")) # "Novo" seria sobre o novo hoário que estão querendo agendar
+        fim_novo = inicio_novo + timedelta(minutes=duracao_total)
+
+        agendamentos_vizinhos = (
             supabase.table("agendamentos")
-            .select("id_agendamento")
+            .select("id_agendamento, horario, duracao_total")
             .eq("id_profissional", id_profissional)
-            .eq("horario", info["data_hora"])
+            .not_.in_("status", ["cancelado", "ausente"])
+            .lt("horario", fim_novo.isoformat())
+            .gte("horario", (inicio_novo - timedelta(hours=12)).isoformat())
             .execute()
         )
 
-        if not checagem_agendamento.data:
+        for existente in agendamentos_vizinhos.data:
+            inicio_existente = datetime.fromisoformat(existente["horario"].replace("Z", "+00:00"))
+            fim_existente = inicio_existente + timedelta(minutes=float(existente["duracao_total"] or 0))
+
+            if inicio_novo < fim_existente and fim_novo > inicio_existente:
+                return jsonify({"sucesso": False, "erro": "Profissional já possui serviço neste horário."}), 409
             
-            ids_servicos = []
+        novo_agendamento = {
+            "id_cliente": id_remetente,
+            "id_profissional": id_profissional,
+            "salao_associado": id_salao,
+            "horario": info["data_hora"],
+            "endereco": endereco_salao,
+            "preco": valor_total,
+            "duracao_total": duracao_total,
+            "status": "Pendente"
+        }
 
-            for servico in servicos_escolhidos:
-                resposta_servico =supabase.table("servicos").select("nome_servico, removido, em_funcionamento, salao_associado").eq("id_servico", servico).execute()
+        resultado = supabase.table("agendamentos").insert(novo_agendamento).execute()
 
-                if not resposta_servico.data:
-                    return jsonify({"sucesso": False, "erro": "Algum serviço não foi localizado no sistema, tente novamente"}), 404
-                
-                servico_atual = resposta_servico.data[0]
-                
-                if int(servico_atual["salao_associado"]) != id_salao:
-                    return jsonify({"sucesso": False, "erro": f"O serviço {servico_atual['nome_servico']} não é do mesmo salão escolhido"}),  403
-                
-                if servico_atual["removido"] == True or servico_atual["em_funcionamento"] == False:
-                    return jsonify({"sucesso": False, "erro": f"O serviço {servico_atual['nome_servico']} não está em funcionamento no momento"}), 409
+        id_agendamento = resultado.data[0]["id_agendamento"]
 
-                ids_servicos.append(servico)
-
-            resposta_servicos = supabase.table("servicos").select("preco_servico").in_("id_servico", ids_servicos).execute()
-
-            servicos = resposta_servicos.data
+        try:
+            itens = [ { "id_agendamento": id_agendamento, "id_servicos": servico } for servico in servicos_escolhidos ]
             
-            valor_total = 0
+            supabase.table("agendamento_servicos").insert(itens).execute()
             
-            for servico in servicos:
-                valor_total += float(servico["preco_servico"])
-                
-            novo_agendamento = {
-                "id_cliente": id_remetente,
-                "id_profissional": id_profissional,
-                "salao_associado": id_salao,
-                "horario": info["data_hora"],
-                "endereco": endereco_salao,
-                "preco": valor_total,
-                "status": "Pendente"
-            }
+        except Exception:
+            try:
+                supabase.table("agendamentos").delete().eq("id_agendamento", id_agendamento).execute()
+            except Exception:
+                pass
 
-            resultado = supabase.table("agendamentos").insert(novo_agendamento).execute()
-
-            id_agendamento = resultado.data[0]["id_agendamento"]
-            
-
-            for servico in servicos_escolhidos:
-                agendamento_servicos = {
-                    "id_agendamento": id_agendamento,
-                    "id_servicos": servico,
-                }
-
-                supabase.table("agendamento_servicos").insert(
-                    agendamento_servicos
-                ).execute()
-
-            return jsonify(
-                {"sucesso": True, "resultado": "Agendamento realizado com sucesso!"}
-            )
-
-        else:
-            return (
-                jsonify(
-                    {
-                        "sucesso": False,
-                        "erro": "Profissional já possui serviço neste horário.",
-                    },
-                ),
-                409
-            )
+            return jsonify({"sucesso": False, "erro": "Não foi possível concluir o agendamento, tente novamente"}), 500
+        
+        return jsonify(
+            {"sucesso": True, "resultado": "Agendamento realizado com sucesso!"}
+        )
 
     except Exception as e:
         return jsonify({"sucesso": False, "erro": str(e)}), 500

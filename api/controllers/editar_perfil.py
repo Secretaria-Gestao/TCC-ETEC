@@ -5,6 +5,11 @@ from supabase_auth.errors import AuthApiError
 from database import supabase_admin, novo_cliente_anonimo
 from controllers.autenticacao import autenticar
 
+# Funções da tela de Configurações. Todas seguem o mesmo roteiro: pegam o token do cabeçalho,
+# descobrem quem é o usuário por ele (autenticar) e só mexem nos dados desse usuário.
+# O id nunca vem do corpo da requisição: como supabase_admin ignora as regras de acesso do banco,
+# aceitar um id vindo do front deixaria qualquer um editar a conta de outra pessoa.
+
 def editar_email():
     info = request.get_json(silent=True) or {}
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
@@ -23,6 +28,8 @@ def editar_email():
     tabela_certa = ""
 
     try:
+        # O id do Auth é o mesmo id de profissionais e de clientes, e a pessoa existe em só uma das duas.
+        # Por isso procura primeiro em profissionais e, se não achar, em clientes (cada tabela tem sua coluna de email).
         resposta_busca = supabase_admin.table("profissionais").select("email_profissional").eq("id_profissional", id_usuario).execute()
 
         if not resposta_busca.data:
@@ -40,6 +47,8 @@ def editar_email():
 
         email_antigo = resposta_busca.data[0][tipo_email]
 
+        # Troca primeiro o email de login (Auth). O email_confirm=True faz valer na hora, sem mandar
+        # link de confirmação. Se a tabela falhar logo abaixo, essa troca é desfeita.
         supabase_admin.auth.admin.update_user_by_id(
             uid=id_usuario,
             attributes={
@@ -123,6 +132,9 @@ def editar_telefone():
     if not id_usuario:
         return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
 
+    # Só profissionais têm telefone (a tabela de clientes não tem essa coluna).
+    # Para validar conta só os dígitos, então aceita máscara tipo "(11) 91234-5678":
+    # 10 dígitos = fixo com DDD, 11 = celular com DDD. O que é salvo é o texto como veio.
     novo_telefone = str(info.get("novoTelefone") or "").strip()
     digitos = "".join(letra for letra in novo_telefone if letra.isdigit())
 
@@ -157,6 +169,9 @@ def editar_foto():
     if not arquivo:
         return jsonify({"sucesso": False, "erro": "Arquivo não enviado"}), 400
 
+    # Cada usuário tem a própria pasta no bucket "fotos-perfil" e cada foto leva o horário no nome.
+    # Assim a URL muda a cada troca e o navegador não continua mostrando a foto antiga do cache.
+    # O ".jpg" é só o nome: o tipo real do arquivo vai no content-type do upload.
     foto = arquivo.read()
     nome_arquivo = f"{int(time.time())}.jpg"
     caminho = f"{id_usuario}/{nome_arquivo}"
@@ -176,6 +191,8 @@ def editar_foto():
         if not resposta_tabela.data:
             return jsonify({"sucesso": False, "erro": "Erro ao encontrar o usuário, tente novamente mais tarde"}),500
 
+        # Limpeza das fotos antigas: só acontece depois do banco já apontar para a nova e, se falhar,
+        # não derruba a troca (só sobra arquivo velho no bucket).
         try:
             antigas = [f"{id_usuario}/{item['name']}" for item in bucket.list(id_usuario) if item["name"] != nome_arquivo]
 
@@ -252,6 +269,7 @@ def excluir_salao():
     senha = str(info.get("senha") or "")
     nome_confirmacao = str(info.get("nomeSalao") or "").strip()
 
+    # Ids que já tiveram o login bloqueado, para conseguir desfazer se algo falhar no meio do caminho.
     bloqueados = []
 
     try:
@@ -274,11 +292,14 @@ def excluir_salao():
             if not senha:
                 return jsonify({"sucesso": False, "erro": "Digite sua senha"}), 400
 
+            # A senha é conferida tentando um login. Isso é feito num client descartável porque o login
+            # grava a sessão dentro do client, e os clients globais (supabase / supabase_admin) não podem receber isso.
             try:
                 novo_cliente_anonimo().auth.sign_in_with_password({"email": usuario_auth.email, "password": senha})
             except AuthApiError as erro:
                 if erro.code == "invalid_credentials":
                     return jsonify({"sucesso": False, "erro": "Senha incorreta"}), 401
+                # Qualquer outro erro do Auth cai no except de fora, que também desbloqueia os logins.
                 raise
 
         else:
@@ -293,15 +314,20 @@ def excluir_salao():
         resposta_profissionais = supabase_admin.table("profissionais").select("id_profissional").eq("salao_associado", id_salao).eq("removido", False).execute()
 
         # 1. Bloqueia o login de todos do salão, guardando quem já foi bloqueado para poder desfazer.
+        # O Auth do Supabase não tem "desativar usuário", então o ban de 876000h (~100 anos) faz esse papel.
+        # Para desfazer é só mandar ban_duration "none" (ver desbloquear_logins).
         for profissional in resposta_profissionais.data:
             supabase_admin.auth.admin.update_user_by_id(profissional["id_profissional"], {"ban_duration": "876000h"})
             bloqueados.append(profissional["id_profissional"])
 
         # 2. Marca tudo no banco de uma vez só (função do banco, numa transação).
+        # A função excluir_salao_logico foi criada direto no Supabase: o SQL dela não está neste repositório.
         supabase_admin.rpc("excluir_salao_logico", {"p_id_salao": id_salao, "p_id_admin": id_usuario}).execute()
 
         return jsonify({"sucesso": True})
 
+    # Se qualquer coisa falhar depois dos bloqueios, eles são desfeitos: senão o pessoal ficaria
+    # sem conseguir entrar e o salão continuaria ativo.
     except AuthApiError as erro:
         print("Erro do Auth ao excluir salão:", erro.status, erro.code, erro.message)
         desbloquear_logins(bloqueados)
@@ -314,6 +340,7 @@ def excluir_salao():
 
 def desbloquear_logins(ids):
     # Desfaz os bloqueios feitos antes de uma falha, para ninguém ficar sem acesso sem o salão ter sido removido.
+    # Cada um tem seu try próprio: se um falhar, os outros ainda são desbloqueados.
     for id_bloqueado in ids:
         try:
             supabase_admin.auth.admin.update_user_by_id(id_bloqueado, {"ban_duration": "none"})
@@ -344,6 +371,9 @@ def excluir_conta():
             attributes={"ban_duration": "876000h"}
         )
 
+        # Só clientes passam por aqui (profissional é removido pelo admin, e o admin exclui o salão).
+        # O email vira um valor único por cliente e com domínio ".invalid", que é reservado e nunca
+        # existe de verdade, então o dado pessoal some sem colidir com o de outra conta anonimizada.
         try:
             resposta_tabela = supabase_admin.table("clientes").update({
                 "removido": True,

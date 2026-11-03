@@ -9,6 +9,10 @@ import { mudarSenha, mudarEmail, excluirConta, excluirSalao } from "../services/
 
 import estilos from "../../Abas.module.css"
 
+// Aba Segurança, usada pelos três tipos de usuário:
+//  - cliente: nenhuma prop; pode excluir a própria conta.
+//  - profissional: profissional={true}; não exclui a conta, precisa pedir ao administrador.
+//  - admin: profissional e admin; "Excluir conta" apaga também o salão (abre o modal de confirmação).
 export default function Seguranca({ profissional, admin }) {
   const { data: perfil, isLoading } = useMeuPerfil()
 
@@ -23,6 +27,8 @@ export default function Seguranca({ profissional, admin }) {
   // Contas que entram só pelo Google não têm senha nem email próprio para editar.
   const [temSenha, setTemSenha] = useState(true)
 
+  // app_metadata.providers lista como a conta entra: "email" (com senha) e/ou "google".
+  // Quem não tem "email" na lista só existe pelo Google, então escondemos os botões de senha e email.
   useEffect(() => {
     pegarSessao().then((sessao) => {
       const provedores = sessao?.user?.app_metadata?.providers ?? []
@@ -30,11 +36,16 @@ export default function Seguranca({ profissional, admin }) {
     })
   }, [])
 
+  // Com "values" o campo de email se preenche sozinho quando o perfil carrega, e cada tipo de usuário
+  // guarda o email em uma coluna diferente (email_profissional / email_cliente).
   const { register, handleSubmit, watch, reset } = useForm({ values: perfil && { email: profissional ? perfil.email_profissional : perfil.email_cliente } })
 
+  // Um único formulário serve para senha e email; mudandoSenha / mudandoEmail dizem qual dos dois está aberto.
   const onSubmit = async () => {
 
     if (mudandoSenha) {
+      // O botão Atualizar não fica desabilitado, então as regras da senha são conferidas de novo aqui.
+      // Se alguma falhar, simplesmente não envia (a lista vermelha/verde da tela mostra o que falta).
       if (watch("novaSenha") != watch("novaSenhaRepetida")) return
 
       if (!/[A-Z]/.test(watch("novaSenha"))) return
@@ -59,6 +70,8 @@ export default function Seguranca({ profissional, admin }) {
   async function sair() {
     if (!window.confirm("Tem certeza que deseja sair da sua conta?")) return
     await supabase.auth.signOut()
+    // replace() troca a página em vez de empilhar no histórico (o botão voltar não leva a uma tela de quem já saiu)
+    // e recarrega tudo, o que também limpa o cache do perfil da pessoa anterior.
     window.location.replace(profissional ? '/login/colaborador' : '/login/cliente')
   }
 
@@ -208,6 +221,8 @@ export default function Seguranca({ profissional, admin }) {
         </div>
       </div>
 
+      {/* Sair / Excluir só aparecem quando nenhum campo está em edição. Como && pesa mais que ||, isto é lido como
+          mudandoEmail || (!mudandoSenha && botões): com o email em edição o resultado é "true", que o React não desenha. */}
       {mudandoEmail || !mudandoSenha && (
         <div className="flex gap-5 mt-auto">
           <button type="submit"
@@ -218,6 +233,8 @@ export default function Seguranca({ profissional, admin }) {
             Sair da conta
           </button>
 
+          {/* Três casos: admin (exclui a conta e o salão, via modal), profissional comum (não exclui, pede ao admin)
+              e cliente (exclui a própria conta, com um window.confirm simples). */}
           {admin ? (
             <button type="button"
               className="p-2 rounded-lg bg-marrom/40 hover:bg-marrom/70 transition-colors text-white "
@@ -243,6 +260,8 @@ export default function Seguranca({ profissional, admin }) {
         </div>
       )}
 
+      {/* Modal de exclusão do salão. O "fixed inset-0" cobre a tela inteira e o z-[100] o deixa acima do resto do
+          painel. O campo muda conforme a conta: senha (conta com email) ou nome do salão (conta Google). */}
       {confirmandoExclusao && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70">
           <div className="w-96 p-5 rounded-2xl bg-[#4B3639] border-2 border-amarelo flex flex-col items-center gap-4 text-center">

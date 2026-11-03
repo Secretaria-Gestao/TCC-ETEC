@@ -15,6 +15,8 @@ export default function SalaoAdmin() {
   const [mudandoNome, setMudandoNome] = useState(false)
   const [mudandoEndereco, setMudandoEndereco] = useState(false)
 
+  // perfil.saloes vem junto do perfil (join feito em meu_perfil no back-end). Usar "values" faz o formulário
+  // se preencher sozinho quando o perfil termina de carregar. O endereço pode ser null no banco, por isso o ?? "".
   const { register, handleSubmit, watch, reset } = useForm({
     values: perfil?.saloes && {
       nomeSalao: perfil.saloes.nome_salao,
@@ -25,6 +27,8 @@ export default function SalaoAdmin() {
   const onSubmit = async () => {
     if (!watch("nomeSalao")?.trim()) return
 
+    // Nome e endereço sempre vão juntos, mesmo que só um tenha sido editado: o back-end recebe os dois campos.
+    // O id do salão não é enviado, o back-end descobre pelo token de quem está logado.
     const resposta = await mudarSalao(watch("nomeSalao"), watch("enderecoSalao"))
     if (!resposta) return
 

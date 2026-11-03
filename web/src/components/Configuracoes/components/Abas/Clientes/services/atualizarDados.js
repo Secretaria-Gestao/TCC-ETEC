@@ -3,6 +3,15 @@ import { supabase } from "../../../../../../services/SupabaseConfig";
 import { useNotificacaoStore } from "@/Notificacao";
 import { pegarSessao } from "../../../../../../services/pegarSessao";
 
+// Funções que a tela de Configurações chama para alterar os dados do usuário logado.
+// Todas começam igual: pegam a sessão e, se ela expirou, avisam e devolvem null.
+// Retorno: true = deu certo, false = o servidor recusou (a notificação de erro já foi mostrada)
+// e null = sessão expirada. Quem chama costuma só testar "if (resposta)".
+// O token da sessão vai no cabeçalho Authorization: é por ele que o back-end sabe de quem é a conta.
+
+// Diferente das outras, a senha não passa pelo nosso back-end: quem troca é o próprio Supabase Auth.
+// Antes disso pedimos um novo login com a senha atual, para provar que é a própria pessoa e não alguém
+// que só encontrou o computador com a sessão aberta.
 export async function mudarSenha(senhaAtual, novaSenha) {
     const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
     const sessao = await pegarSessao()
@@ -90,6 +99,8 @@ export async function mudarEmail(novoEmail) {
         return false
     }
 
+    // O email já mudou no Auth, então renovamos a sessão para o token novo vir com o email atualizado.
+    // Se a renovação falhar, o email foi trocado do mesmo jeito: devolvemos true e pedimos um novo login.
     const { error } = await supabase.auth.refreshSession()
 
     if (error) {
@@ -209,6 +220,8 @@ export async function mudarFoto(novaFoto) {
         return null
     }
 
+    // Arquivo vai como multipart (FormData), não como JSON. Por isso aqui não definimos o Content-Type:
+    // o navegador coloca sozinho, junto com o "boundary" que separa as partes do envio.
     const form = new FormData()
 
     form.append("foto", novaFoto)
@@ -281,6 +294,10 @@ export async function mudarSalao(nomeSalao, enderecoSalao) {
     return true
 }
 
+// As duas exclusões abaixo não mostram notificação de sucesso: a conta já foi bloqueada no servidor,
+// então quem chama (Seguranca.jsx) faz o signOut e leva a pessoa para fora da tela em seguida.
+// Para excluirSalao, a confirmação é a senha (conta com email) ou o nome do salão (conta Google);
+// o componente manda um dos dois e deixa o outro vazio.
 export async function excluirSalao(senha, nomeSalao) {
     const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
     const sessao = await pegarSessao()

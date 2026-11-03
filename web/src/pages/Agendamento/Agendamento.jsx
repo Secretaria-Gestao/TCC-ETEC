@@ -12,7 +12,7 @@ function Agendamento() {
 
             <BarraLateral menu={menuCliente}/>
 
-            <div className="agendamento-page ">
+            <div className="main-principal flex">
 
                 <Formulario />
 

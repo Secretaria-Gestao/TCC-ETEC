@@ -99,6 +99,7 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
             setConfirmacaoRemocaoAberta(false)
         }
     }
+    
 
     return (
         <div className="bg-blue-100/50 w-full min-h-170 mt-15 flex flex-col border border-collapse">
