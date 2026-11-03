@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { mandarAgendamento } from '../../services/Agendamento.js'
+import { buscarHorarios } from '../../../../services/horariosSalao.js'
 
 import { buscarTodosProfissionais } from "../../../../services/BuscarProfissionais.js"
 import { buscarSaloes } from '../../services/buscarSaloes.js'
@@ -24,6 +25,10 @@ function Formulario() {
     const mostrarNotificacao = useNotificacaoStore((state) => state.mostrarNotificacao)
 
     const [enviando, setEnviando] = useState(false)
+
+    // Horários de funcionamento do salão escolhido ([] = salão sem horários configurados)
+    const [horariosSalao, setHorariosSalao] = useState([])
+
     const hoje = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10)
 
    // Soma o preço de uma lista de ids de serviço (única fonte do total)
@@ -56,6 +61,41 @@ function calcularTotal(listaIds) {
         buscarDados()
     }, [])
 
+    // Recarrega sempre que o cliente troca de salão (dados.endereco guarda o id_salao)
+    useEffect(() => {
+  if (!dados.endereco) { setHorariosSalao([]); return }
+  buscarHorarios(dados.endereco)
+    .then(setHorariosSalao)
+    .catch(() => setHorariosSalao([])) // se falhar, não bloqueia o agendamento
+}, [dados.endereco])
+
+// Regra do dia escolhido (null = sem restrição)
+function regraDoDia(dia) {
+  if (!dia || horariosSalao.length === 0) return null
+  // "T00:00" faz o JS ler a data no fuso local; getDay(): 0 = domingo ... 6 = sábado
+  const diaSemana = new Date(`${dia}T00:00`).getDay()
+  const regra = horariosSalao.find((h) => h.dia_semana === diaSemana)
+  if (!regra) return null
+  return {
+    fechado: regra.fechado,
+    // O banco devolve "09:00:00"; o input de hora usa "09:00"
+    abertura: regra.hora_abertura?.slice(0, 5),
+    fechamento: regra.hora_fechamento?.slice(0, 5),
+  }
+}
+
+const regra = regraDoDia(dados.dia)
+
+// Texto do problema ('' = tudo certo). "HH:MM" em texto compara certo com < e >=
+function motivoHorarioInvalido() {
+  if (!regra) return ''
+  if (regra.fechado) return 'O salão não funciona neste dia.'
+  if (dados.horario && (dados.horario < regra.abertura || dados.horario >= regra.fechamento)) {
+    return `Neste dia o salão funciona das ${regra.abertura} às ${regra.fechamento}.`
+  }
+  return ''
+}
+const avisoHorario = motivoHorarioInvalido()
 
     useEffect(() => {
         if (!dados.endereco) {
@@ -153,6 +193,12 @@ function calcularTotal(listaIds) {
             dados.endereco,
             dados.preco
         )
+
+        // Bloqueia horário fora do funcionamento do salão
+        if (avisoHorario) {
+             mostrarNotificacao({ titulo: 'Horário indisponível', texto: avisoHorario })
+             return
+    }
 
         if (!respostaFetch) return
 
@@ -271,7 +317,10 @@ function calcularTotal(listaIds) {
 
                 <div>
                     <label>Horario da sessão:</label>
-                    <input type="time" name="horario" value={dados.horario} onChange={mudarValorDados} />
+                    <input type="time" name="horario" value={dados.horario} onChange={mudarValorDados}
+                    min={regra?.abertura} max={regra?.fechamento} />
+                    {/* Aviso na hora, antes de enviar */}
+                    {avisoHorario && <p className='text-red-300 text-sm'>{avisoHorario}</p>}
                 </div>
             </div>
 
@@ -299,7 +348,7 @@ function calcularTotal(listaIds) {
                 </div>
 
                 <div className="div_btn">
-                    <button id="btn-enviar" type="button" className="enviar solid" onClick={enviarDados} disabled={enviando || todosSaloes.length === 0}> {enviando ? 'Enviando...' : 'Enviar'} </button>
+                    <button id="btn-enviar" type="button" className="enviar solid" onClick={enviarDados} disabled={enviando || todosSaloes.length === 0 || Boolean(avisoHorario)}></button>
                     <button id="btn-resetar" type="reset" className="resetar solid" onClick={resetarDados}> Resetar </button>
                 </div>
 

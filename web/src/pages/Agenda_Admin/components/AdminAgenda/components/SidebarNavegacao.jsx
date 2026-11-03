@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import Configuracoes from "@/Configuracoes/Configuracoes.jsx"
+import {useNavigate} from 'react-router'
 
 // Ícones de navegação entre as seções do painel do admin.
 function SidebarNavegacao({ secaoAtiva, setSecaoAtiva }) {
-    const [configAberto, setConfigAberto] = useState(false)
+    const navegar = useNavigate()
     const itens = [
         { chave: 'agenda', titulo: 'Agenda', icone: '📅' },
         { chave: 'minha-agenda', titulo: 'Minha Agenda', icone: '🗓️' },
@@ -27,18 +27,11 @@ function SidebarNavegacao({ secaoAtiva, setSecaoAtiva }) {
                 </div>
             ))}
 
-            <div
-                className="agenda-admin-nav-icone"
-                title="Configurações"
-                onClick={() => setConfigAberto((aberto) => !aberto)}
-            >
+            <div className="agenda-admin-nav-icone agenda-admin-nav-rodape" title="Gerenciar salão"
+             onClick={() => navegar('/admin/gerenciador-profissionais')}>
                 <span className="agenda-admin-nav-emoji">⚙️</span>
-                <span className="agenda-admin-nav-nome">Configurações</span>
+                <span className="agenda-admin-nav-nome">Gerenciar Salão</span>
             </div>
-
-            {configAberto && (
-                <Configuracoes perfil="admin" setConfigAberto={setConfigAberto} />
-            )}
         </div>
     )
 }

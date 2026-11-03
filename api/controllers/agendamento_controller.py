@@ -1,7 +1,51 @@
 from flask import Flask, request, jsonify
-from database import supabase
+from database import supabase, supabase_admin
 from .autenticacao import autenticar
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
+FUSO_SALAO = ZoneInfo("America/Sao_Paulo")
+
+def validar_horario_funcionamento(id_salao, data_hora_iso):
+    # Devolve o texto do problema, ou None se o horário está dentro do expediente
+    try:
+        # "2026-11-10T13:00:00.000Z" -> datetime com fuso UTC
+        dt = datetime.fromisoformat(str(data_hora_iso).replace("Z", "+00:00"))
+    except ValueError:
+        return "Data e hora inválidas"
+
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)  # sem fuso = UTC, igual ao banco
+
+    local = dt.astimezone(FUSO_SALAO)
+
+    # weekday(): segunda=0 ... domingo=6. No banco: domingo=0 ... sábado=6
+    dia_semana = (local.weekday() + 1) % 7
+
+    resposta = (
+        supabase_admin.table("horario_funcionamento_salao")
+        .select("hora_abertura, hora_fechamento, fechado")
+        .eq("id_salao", id_salao)
+        .eq("dia_semana", dia_semana)
+        .execute()
+    )
+
+    # Sem regra salva para o dia = sem restrição (salão que não configurou os horários)
+    if not resposta.data:
+        return None
+
+    regra = resposta.data[0]
+    if regra["fechado"]:
+        return "O salão não funciona neste dia."
+
+    hora = local.strftime("%H:%M")
+    abertura = str(regra["hora_abertura"])[:5]
+    fechamento = str(regra["hora_fechamento"])[:5]
+    # Texto "HH:MM" compara certo com < e >=
+    if hora < abertura or hora >= fechamento:
+        return f"Neste dia o salão funciona das {abertura} às {fechamento}."
+
+    return None
 
 def agendar():
     # Endpoint usado pela tela de agendamento para gravar o horario no Supabase.
@@ -67,6 +111,11 @@ def agendar():
             return jsonify({"sucesso": False, "erro": "Salão não encontrado"}), 404
 
         endereco_salao = salao_escolhido.data[0]["endereco_salao"]
+
+        problema_horario = validar_horario_funcionamento(id_salao, info["data_hora"])
+        if problema_horario:
+            return jsonify({"sucesso": False, "erro": problema_horario}), 400
+
         
         checagem_agendamento = (
             supabase.table("agendamentos")

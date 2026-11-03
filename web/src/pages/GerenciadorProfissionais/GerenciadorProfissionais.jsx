@@ -151,6 +151,7 @@ export default function GerenciadorProfissionais() {
                                 onSalvar={salvarEdicaoProfissional}
                                 idRemetente={idRemetente}
                                 onRemover={removerProfissional}
+                                onAcordoSalvo={() => setAtualizacaoProfissionais((valorAtual) => valorAtual + 1)}
                             />
                         )}
                     </div>

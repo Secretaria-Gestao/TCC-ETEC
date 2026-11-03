@@ -58,6 +58,10 @@
     background: var(--quadrado-claro);
 }
 
+.agenda-admin-nav-rodape {
+  margin-top: auto;
+}
+
 /* Área central */
 .agenda-admin-conteudo {
     flex: 1;

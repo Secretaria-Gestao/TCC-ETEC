@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 
 import "./EditarProfissional.css"
+import AcordoFinanceiro from "./AcordoFinanceiro.jsx"
 
 const FOTO_PADRAO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVWGYKJzBSw8qBRXBMcHBdY1XK_aywT9ZX_gMa5Wj8jA8QyX6DHP-O0Al-&s=10"
 
@@ -12,7 +13,8 @@ export default function EditarProfissional({
     setEstaEditando,
     onSalvar,
     idRemetente,
-    onRemover
+    onRemover,
+    onAcordoSalvo
 }) {
     // O painel recebe o profissional selecionado e devolve os dados por onSalvar.
     const nomeProfissional = profissional?.nome_profissional || "Carregando...  "
@@ -159,6 +161,18 @@ export default function EditarProfissional({
                 <p> Alguém com o acesso de <b> {acessoSelecionado.titulo} </b> {acessoSelecionado.descricao} </p>
 
                 </section>
+
+                {/* Acordo financeiro: tem o próprio botão "Salvar acordo" e a própria rota.
+                    key reinicia o formulário quando você troca de profissional na tabela. */}
+                {profissional && (
+                    <section className="mt-4 border-t border-slate-400 pt-4">
+                        <AcordoFinanceiro
+                            key={profissional.id_profissional}
+                            profissional={profissional}
+                            aoSalvar={onAcordoSalvo}
+                        />
+                    </section>
+                )}
 
                 {/* Status do profissional. */}
                 <section className="flex flex-1 w-full items-end gap-3 border-slate-400 pt-4 self-end ">
