@@ -38,12 +38,12 @@ export default function Perfil({ setAbaAtual }) {
           <p>Nome</p>
 
           <input type="text" name="nome" disabled={!mudandoNome}
-            className="p-2 rounded-lg flex-1 bg-white/10"
+            className="p-2 rounded-lg flex-1 bg-linho"
             {...register("nome")}
           />
 
           {!mudandoNome && (
-            <button type="button" className="py-1 px-3 rounded-lg bg-amarelo text-black text-sm"
+            <button type="button" className="py-1 px-3 rounded-lg bg-cobre text-black text-sm"
               onClick={() => setMudandoNome(true)} >
 
               Editar
@@ -73,7 +73,7 @@ export default function Perfil({ setAbaAtual }) {
 
         <div className="flex gap-5 mt-auto">
           <button type="submit" disabled={!mudandoNome}
-            className="p-2 rounded-lg bg-amarelo/80 hover:bg-amarelo/70 transition-colors text-black "
+            className="p-2 rounded-lg bg-cobre/80 hover:bg-cobre/70 transition-colors text-black "
 
           >
 
@@ -81,7 +81,7 @@ export default function Perfil({ setAbaAtual }) {
           </button>
 
           <button type="button" disabled={!mudandoNome}
-            className="p-2 rounded-lg bg-laranja/80 hover:bg-laranja/70 transition-colors text-black "
+            className="p-2 rounded-lg bg-laranja text-white transition-colors "
             onClick={() => { reset(); setMudandoNome(false); }}>
 
             Cancelar

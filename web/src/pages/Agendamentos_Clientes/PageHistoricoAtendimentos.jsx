@@ -5,10 +5,12 @@ import '../Agendamento/Agendamento.css' ;
 
 function PageHistoricoAtendimentos() {
     return (
-        <div className="main-principal flex">
-            <BarraLateral menu={menuCliente}/>
-            <HistoricoAtendimentos />
-        </div>
+        <main className="main-principal">
+            <div className="w-full h-full flex">
+                <BarraLateral menu={menuCliente}/>
+                <HistoricoAtendimentos />
+            </div>
+        </main>
     )
 }
 

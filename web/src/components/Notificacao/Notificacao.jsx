@@ -25,14 +25,14 @@ function Notificacao({ id, titulo, texto, mostrarBotao, lblBotao, textoBotao, fu
             <button type="button" className=" absolute right-0 mr-4! top-4 text-2xl text-laranja " onClick={fecharNotificacao}>X</button>
 
             <div className="">
-                <b> <p className="text-2xl">{titulo}</p></b>
+                <b className="text-white"> <p className="text-2xl">{titulo}</p></b>
                 {texto && (<p className="text-[14px] py-0.5!">{texto}</p>)}
             </div>
 
             {mostrarBotao && (
                 <>
                     {lblBotao && (<p className="text-[14px] "> {lblBotao} </p>)}
-                    <button type="button" className="bg-marrom text-laranja p-2! mt-1! rounded-sm" onClick={executarBotao}>{textoBotao}</button>
+                    <button type="button" className="bg-vinho text-laranja p-2! mt-1! rounded-sm" onClick={executarBotao}>{textoBotao}</button>
                 </>
             )}
         </div>

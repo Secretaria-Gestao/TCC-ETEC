@@ -4,9 +4,11 @@ import AdminAgenda from './components/AdminAgenda/AgendaAd.jsx'
 
 function PageAgendaAdmin() {
     return (
-        <div className="main-principal">
-            <AdminAgenda />
-        </div>
+        <main className="main-principal">
+            <div className="w-full min-h-dvh">
+                <AdminAgenda />
+            </div>
+        </main>
     )
 }
 

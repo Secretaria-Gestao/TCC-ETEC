@@ -1,9 +1,8 @@
 .meus-agendamentos-agenda-janela {
-    --quadrado-claro: rgba(255,255,255,0.7);
     width: 100%;
     height: 100dvh;
-    border: 2px solid var(--border-transparent);
-    background-color: var(--background-transparent);
+    border: 2px solid var(--borda-suave);
+    background-color: transparent;
     /* backdrop-filter: blur(10px); */
     display: flex;
     overflow: hidden;
@@ -24,14 +23,14 @@
     gap: 14px;
     margin-bottom: 20px;
     font-size: 0.92rem;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .meus-agendamentos-navegacao-semana button {
     background: none;
     border: none;
     font-size: 1.1rem;
-    color: var(--font-color);
+    color: var(--texto);
     cursor: pointer;
     padding: 4px 10px;
     border-radius: 8px;
@@ -40,13 +39,13 @@
 
 .meus-agendamentos-navegacao-semana button:hover {
     opacity: 1;
-    background: var(--background-transparent);
+    background: var(--fundo-cartao);
 }
 
 .meus-agendamentos-grade-wrapper {
     flex: 1;
-    border: 2px solid var(--border-transparent);
-    background: #9cbdfed0;
+    border: 2px solid var(--borda-suave);
+    background: var(--fundo-painel);
     min-height: 0;
     max-height: max-content;
     
@@ -56,7 +55,7 @@
 .meus-agendamentos-grade thead {
     display: block;
     scrollbar-width: thin;
-    scrollbar-color: #eebd85 #9cbdfed0;
+    scrollbar-color: var(--color-azul-ceu) var(--fundo-painel);
 }
 
 .meus-agendamentos-grade thead {
@@ -88,20 +87,20 @@ table.meus-agendamentos-grade {
 table.meus-agendamentos-grade th {
     position: sticky;
     top: 0;
-    background: #87aaf7;
+    background: var(--color-azul-profundo);
     font-size: 0.76rem;
-    color: var(--font-color);
+    color: var(--texto-invertido);
     font-weight: 700;
     padding: 10px 4px;
-    border-bottom: 2px solid var(--border-transparent);
+    border-bottom: 3px solid var(--color-ameixa);
     text-align: center;
     z-index: 2;
 }
 
 table.meus-agendamentos-grade td {
     border: 0;
-    border-top: 1px solid var(--border-transparent);
-    border-left: 1px solid var(--border-transparent);
+    border-top: 1px solid var(--borda-suave);
+    border-left: 1px solid var(--borda-suave);
     height: 62px;
     vertical-align: top;
     padding: 2px;
@@ -116,7 +115,7 @@ table.meus-agendamentos-grade tbody tr:first-child td {
 .meus-agendamentos-coluna-hora {
     width: 60px;
     font-size: 0.72rem;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.8;
     text-align: right;
     padding-right: 8px !important;
@@ -126,12 +125,12 @@ table.meus-agendamentos-grade tbody tr:first-child td {
 }
 
 .meus-agendamentos-cartao-agendamento {
-    background: var(--quadrado-claro);
-    border-left: 3px solid var(--background-button);
+    background: var(--fundo-evento);
+    border-left: 3px solid var(--color-laranja);
     border-radius: 6px;
     padding: 4px 6px;
     font-size: 0.7rem;
-    color: var(--background-button);
+    color: var(--cor-primaria);
     line-height: 1.3;
     overflow: hidden;
     height: 100%;
@@ -145,19 +144,19 @@ table.meus-agendamentos-grade tbody tr:first-child td {
 
 .meus-agendamentos-painel-direito {
     width: 270px;
-    border-left: 2px solid var(--border-transparent);
+    border-left: 2px solid var(--borda-suave);
     padding: 26px 18px;
     display: flex;
     flex-direction: column;
     gap: 18px;
     overflow-y: auto;
-    background-color: #9cbdfed8;
+    background-color: var(--fundo-painel);
     height: 100dvh;
 }
 
 .meus-agendamentos-mini-calendario {
-    background: rgba(255,255,255,0.35);
-    border: 2px solid var(--border-transparent);
+    background: var(--fundo-pagina);
+    border: 2px solid var(--borda-suave);
     border-radius: 14px;
     padding: 14px;
 }
@@ -169,14 +168,14 @@ table.meus-agendamentos-grade tbody tr:first-child td {
     font-weight: 700;
     font-size: 0.82rem;
     margin-bottom: 10px;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .meus-agendamentos-mini-calendario-cabecalho button {
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--font-color);
+    color: var(--texto);
     font-size: 0.9rem;
     opacity: 0.7;
 }
@@ -194,23 +193,23 @@ table.meus-agendamentos-grade tbody tr:first-child td {
 }
 
 .meus-agendamentos-mini-grade .meus-agendamentos-dia-semana {
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.6;
     font-weight: 700;
     padding-bottom: 4px;
 }
 
 .meus-agendamentos-mini-grade .meus-agendamentos-dia {
-    background: rgba(255,255,255,0.6);
+    background: var(--fundo-pagina-listra);
     border-radius: 6px;
     padding: 5px 0;
-    color: var(--font-color);
+    color: var(--texto);
     cursor: pointer;
 }
 
 .meus-agendamentos-mini-grade .meus-agendamentos-dia.meus-agendamentos-hoje {
-    background: var(--background-button);
-    color: var(--font-color-transparent);
+    background: var(--color-ameixa);
+    color: var(--texto-invertido);
     font-weight: 700;
 }
 
@@ -223,16 +222,16 @@ table.meus-agendamentos-grade tbody tr:first-child td {
     width: 100%;
     padding: 10px 12px;
     border-radius: 10px;
-    border: 2px solid var(--border-transparent);
+    border: 2px solid var(--borda-suave);
     font-size: 0.82rem;
-    color: var(--font-color);
-    background: rgba(255,255,255,0.5);
+    color: var(--texto);
+    background: var(--fundo-painel);
 }
 
 .meus-agendamentos-titulo-secao {
     font-size: 0.76rem;
     font-weight: 700;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.65;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -243,8 +242,8 @@ table.meus-agendamentos-grade tbody tr:first-child td {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: rgba(255,255,255,0.4);
-    border: 2px solid var(--border-transparent);
+    background: var(--fundo-pagina);
+    border: 2px solid var(--borda-suave);
     border-radius: 10px;
     padding: 10px 12px;
 }
@@ -253,8 +252,8 @@ table.meus-agendamentos-grade tbody tr:first-child td {
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    background: var(--quadrado-claro);
-    color: var(--background-button);
+    background: var(--color-azul-po);
+    color: var(--color-azul-profundo);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -266,18 +265,18 @@ table.meus-agendamentos-grade tbody tr:first-child td {
 .meus-agendamentos-cartao-profissional .meus-agendamentos-nome {
     font-size: 0.82rem;
     font-weight: 600;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .meus-agendamentos-cartao-profissional .meus-agendamentos-funcao {
     font-size: 0.7rem;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.6;
 }
 
 .meus-agendamentos-mensagem-vazio {
     text-align: center;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.7;
     font-size: 0.82rem;
     padding: 40px 12px;
@@ -316,17 +315,17 @@ table.meus-agendamentos-grade tbody tr:first-child td {
     align-items: center;
     justify-content: center;
     padding: 16px;
-    background: rgba(0, 0, 0, 0.4);
+    background: color-mix(in srgb, var(--color-azul-profundo) 55%, transparent);
 }
 
 .meus-agendamentos-modal {
     width: 100%;
     max-width: 380px;
     padding: 22px;
-    border: 2px solid var(--border-transparent);
+    border: 2px solid var(--borda-suave);
     border-radius: 14px;
-    background: rgb(232, 240, 255);
-    color: var(--font-color);
+    background: var(--fundo-painel);
+    color: var(--texto);
 }
 
 .meus-agendamentos-modal-titulo {
@@ -356,7 +355,7 @@ table.meus-agendamentos-grade tbody tr:first-child td {
     margin-top: 14px;
     padding: 8px 10px;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.6);
+    background: var(--fundo-pagina);
     border-left: 3px solid #d97706;
     font-size: 0.76rem;
 }
@@ -378,12 +377,12 @@ table.meus-agendamentos-grade tbody tr:first-child td {
 }
 
 .meus-agendamentos-btn-secundario {
-    background: rgba(255, 255, 255, 0.7);
-    color: var(--font-color);
+    background: var(--fundo-campo);
+    color: var(--texto);
 }
 
 .meus-agendamentos-btn-perigo {
-    background: var(--background-color-error);
+    background: var(--cor-perigo);
     color: #fff;
 }
 

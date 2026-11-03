@@ -5,10 +5,12 @@ import { menuCliente } from '@/BarraLateral/listaMenus.jsx'
 
 function PageMeusAgendamentos() {
     return (
-        <div className="main-principal flex">
-            <BarraLateral menu={menuCliente}/>
-            <MeusAgendamentosComponente />
-        </div>
+        <main className="main-principal">
+            <div className="w-full h-full flex">
+                <BarraLateral menu={menuCliente}/>
+                <MeusAgendamentosComponente />
+            </div>
+        </main>
     )
 }
 

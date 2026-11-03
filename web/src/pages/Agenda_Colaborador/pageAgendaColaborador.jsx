@@ -6,9 +6,11 @@ import AgendaColaborador from './components/ColabAgenda/AgendaColab.jsx'
 function PageAgendaColaborador() {
     return (
 
-        <div className="main-principal">
-            <AgendaColaborador />
-        </div>
+        <main className="main-principal">
+            <div className="w-full min-h-dvh">
+                <AgendaColaborador />
+            </div>
+        </main>
     )
 }
 

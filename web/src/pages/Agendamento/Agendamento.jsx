@@ -8,17 +8,21 @@ import './Agendamento.css'
 
 function Agendamento() {
     return (
-        <div className="flex">
+        <main className="main-principal">
 
-            <BarraLateral menu={menuCliente}/>
+            <div className="w-full h-full flex">
 
-            <div className="main-principal flex">
+                <BarraLateral menu={menuCliente}/>
 
-                <Formulario />
+                <div className="flex flex-1 min-w-0">
+
+                    <Formulario />
+
+                </div>
 
             </div>
 
-        </div>
+        </main>
     )
 }
 

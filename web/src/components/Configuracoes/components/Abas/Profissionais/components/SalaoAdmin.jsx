@@ -55,12 +55,12 @@ export default function SalaoAdmin() {
           <p>Nome do salão</p>
 
           <input type="text" name="nomeSalao" disabled={!mudandoNome}
-            className="p-2 rounded-lg flex-1 bg-white/10"
+            className="p-2 rounded-lg flex-1 bg-linho"
             {...register("nomeSalao")}
           />
 
           {!mudandoNome && (
-            <button type="button" className="py-1 px-3 rounded-lg bg-amarelo text-black text-sm"
+            <button type="button" className="py-1 px-3 rounded-lg bg-cobre text-black text-sm"
               onClick={() => setMudandoNome(true)}>
 
               Editar
@@ -77,12 +77,12 @@ export default function SalaoAdmin() {
           <p>Endereço do salão</p>
 
           <input type="text" name="enderecoSalao" disabled={!mudandoEndereco}
-            className="p-2 rounded-lg flex-1 bg-white/10"
+            className="p-2 rounded-lg flex-1 bg-linho"
             {...register("enderecoSalao")}
           />
 
           {!mudandoEndereco && (
-            <button type="button" className="py-1 px-3 rounded-lg bg-amarelo text-black text-sm"
+            <button type="button" className="py-1 px-3 rounded-lg bg-cobre text-black text-sm"
               onClick={() => setMudandoEndereco(true)}>
 
               Editar
@@ -92,7 +92,7 @@ export default function SalaoAdmin() {
 
         <div className="flex gap-5 mt-auto">
           <button type="submit" disabled={!editando}
-            className="p-2 rounded-lg bg-amarelo/80 hover:bg-amarelo/70 transition-colors text-black disabled:opacity-50">
+            className="p-2 rounded-lg bg-cobre/80 hover:bg-cobre/70 transition-colors text-black disabled:opacity-50">
 
             Salvar
           </button>

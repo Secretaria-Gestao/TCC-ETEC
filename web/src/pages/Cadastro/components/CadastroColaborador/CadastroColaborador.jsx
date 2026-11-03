@@ -82,17 +82,17 @@ function CadastroColaborador() {
 
     return (
         <main className='main-principal flex'>
-            <div className='w-full h-full flex backdrop-blur-md'>
+            <div className='w-full h-full flex'>
                 <div className='flex'>
                     <BarraLateral menu={menuAdmin}/>
                 </div>
                 <div className='w-full'>
                     <Header titulo="Novo profissional" subtitulo={nomeSalao}>
-                        <button type="button" className='absolute bg-marrom text-laranja right-0 p-4! mt-[-36px] w-29 lg:right-20 lg:w-39 xl:right-40 rounded-2xl' onClick={mandarFormulario}>
+                        <button type="button" className='absolute bg-vinho text-laranja right-0 p-4! mt-[-36px] w-29 lg:right-20 lg:w-39 xl:right-40 rounded-2xl' onClick={mandarFormulario}>
                             Criar profissional
                         </button>
                     </Header>
-                    <hr className='w-10/12 place-self-center mt-[-36px]' />
+                    <hr className='w-10/12 place-self-center mt-[-36px] border-azul-ceu' />
                     <div className='flex justify-center h-160 my-[2%]!'>
                         <Formulario dados={formulario} setDados={setFormulario} />
                     </div>

@@ -20,7 +20,7 @@ function BarraLateral({ menu = [] }) {
         <aside className='barraLateral z-40' >
             <div className="flex  gap-3 px-2 mt-5!">
                 <img className="w-20 " src="/logo_pequena.png" />
-                <p className="mt-10 font-semibold">Secretária Gestão</p>
+                <p className="mt-10 font-semibold text-white">Secretária Gestão</p>
             </div>
 
             <hr className='w-[94.5%] mx-2! mt-1.5!' />
@@ -30,7 +30,7 @@ function BarraLateral({ menu = [] }) {
                     to={linha.to}
                     key={linha.to}
                     end
-                    className={({ isActive }) => `flex gap-3 p-2 rounded-md my-1 items-center transition-colors ${isActive ? 'bg-[#33435a]' : 'hover:bg-[#2f3d50]'}`}
+                    className={({ isActive }) => `flex gap-3 p-2 rounded-md my-1 items-center transition-colors ${isActive ? 'bg-white/12 shadow-[inset_3px_0_0_var(--color-rosa-queimado)]' : 'hover:bg-white/8'}`}
                 >
 
                     <linha.icone />
@@ -39,7 +39,7 @@ function BarraLateral({ menu = [] }) {
                 </NavLink>
             ))}
 
-            <button type="button" className='flex bg-[#1a2431] mt-auto mb-5 p-3 rounded-md gap-2 items-center justify-center' onClick={() => setConfigAberto(!configAberto)}>
+            <button type="button" className='flex bg-white/12 mt-auto mb-5 p-3 rounded-md gap-2 items-center justify-center' onClick={() => setConfigAberto(!configAberto)}>
                 <svg
                     className="w-5 h-5 shrink-0"
                     viewBox="0 0 24 24" fill="none"

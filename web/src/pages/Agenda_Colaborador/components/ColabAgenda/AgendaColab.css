@@ -1,13 +1,12 @@
 
 
 .agenda-profissional-janela {
-    --quadrado-claro: rgba(255,255,255,0.7);
     width: 100vw;
     max-width: none;
     height: 100vh;
     border-radius: 25px;
-    border: 2px solid var(--border-transparent);
-    background-color: var(--background-transparent);
+    border: 2px solid var(--borda-suave);
+    background-color: transparent;
     backdrop-filter: blur(10px);
     display: flex;
     overflow: hidden;
@@ -16,7 +15,7 @@
 /* Sidebar esquerda */
 .agenda-profissional-sidebar {
     width: 84px;
-    border-right: 2px solid var(--border-transparent);
+    border-right: 2px solid var(--borda-suave);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -27,7 +26,7 @@
     font-weight: 700;
     font-size: 0.85rem;
     margin-bottom: 36px;
-    color: var(--font-color);
+    color: var(--texto);
     text-align: center;
 }
 
@@ -39,7 +38,7 @@
     justify-content: center;
     border-radius: 12px;
     margin-bottom: 14px;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.55;
     cursor: pointer;
     transition: opacity 0.15s, background 0.15s;
@@ -48,12 +47,12 @@
 
 .agenda-profissional-nav-icone:hover {
     opacity: 1;
-    background: var(--background-transparent);
+    background: var(--fundo-cartao);
 }
 
 .agenda-profissional-nav-icone.ativo {
     opacity: 1;
-   background: var(--quadrado-claro);
+   background: var(--fundo-evento);
 }
 
 /* Área central */
@@ -73,14 +72,14 @@
     margin-bottom: 20px;
     font-size: 0.92rem;
     font-weight: 600;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .agenda-profissional-navegacao-semana button {
     background: none;
     border: none;
     font-size: 1.1rem;
-    color: var(--font-color);
+    color: var(--texto);
     cursor: pointer;
     padding: 4px 10px;
     border-radius: 8px;
@@ -89,13 +88,13 @@
 
 .agenda-profissional-navegacao-semana button:hover {
     opacity: 1;
-    background: var(--background-transparent);
+    background: var(--fundo-cartao);
 }
 
 .agenda-profissional-grade-wrapper {
     flex: 1;
     overflow-y: auto;
-    border: 2px solid var(--border-transparent);
+    border: 2px solid var(--borda-suave);
     border-radius: 14px;
     background: rgba(255,255,255,0.25);
 }
@@ -109,18 +108,18 @@ table.agenda-profissional-grade {
 table.agenda-profissional-grade th {
     position: sticky;
     top: 0;
-    background: var(--background-gradient-color-light);
+    background: var(--fundo-pagina);
     font-size: 0.76rem;
-    color: var(--font-color);
+    color: var(--texto);
     font-weight: 700;
     padding: 10px 4px;
-    border-bottom: 2px solid var(--border-transparent);
+    border-bottom: 2px solid var(--borda-suave);
     text-align: center;
     z-index: 2;
 }
 
 table.agenda-profissional-grade td {
-    border: 1px solid var(--border-transparent);
+    border: 1px solid var(--borda-suave);
     height: 62px;
     vertical-align: top;
     padding: 2px;
@@ -130,7 +129,7 @@ table.agenda-profissional-grade td {
 .agenda-profissional-coluna-hora {
     width: 60px;
     font-size: 0.72rem;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.7;
     text-align: right;
     padding-right: 8px !important;
@@ -140,12 +139,12 @@ table.agenda-profissional-grade td {
 
 /* Cartão de agendamento exibido dentro da célula */
 .agenda-profissional-cartao {
-    background: var(--quadrado-claro);
-    border-left: 3px solid var(--background-button);
+    background: var(--fundo-evento);
+    border-left: 3px solid var(--cor-primaria);
     border-radius: 6px;
     padding: 4px 6px;
     font-size: 0.7rem;
-    color: var(--background-button);
+    color: var(--cor-primaria);
     line-height: 1.3;
     overflow: invisible;
     position:relative;
@@ -160,7 +159,7 @@ table.agenda-profissional-grade td {
 
 .agenda-profissional-mensagem {
     text-align: center;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.7;
     font-size: 0.82rem;
     padding: 20px;
@@ -169,7 +168,7 @@ table.agenda-profissional-grade td {
 /* Sidebar direita */
 .agenda-profissional-painel-direito {
     width: 270px;
-    border-left: 2px solid var(--border-transparent);
+    border-left: 2px solid var(--borda-suave);
     padding: 26px 18px;
     display: flex;
     flex-direction: column;
@@ -179,7 +178,7 @@ table.agenda-profissional-grade td {
 
 .agenda-profissional-mini-calendario {
     background: rgba(255,255,255,0.35);
-    border: 2px solid var(--border-transparent);
+    border: 2px solid var(--borda-suave);
     border-radius: 14px;
     padding: 14px;
 }
@@ -191,14 +190,14 @@ table.agenda-profissional-grade td {
     font-weight: 700;
     font-size: 0.82rem;
     margin-bottom: 10px;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .agenda-profissional-mini-calendario-cabecalho button {
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--font-color);
+    color: var(--texto);
     font-size: 0.9rem;
     opacity: 0.7;
 }
@@ -216,7 +215,7 @@ table.agenda-profissional-grade td {
 }
 
 .agenda-profissional-dia-semana {
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.6;
     font-weight: 700;
     padding-bottom: 4px;
@@ -226,13 +225,13 @@ table.agenda-profissional-grade td {
     background: rgba(255,255,255,0.6);
     border-radius: 6px;
     padding: 5px 0;
-    color: var(--font-color);
+    color: var(--texto);
     cursor: pointer;
 }
 
 .agenda-profissional-dia.agenda-profissional-hoje {
-    background: var(--background-button);
-    color: var(--font-color-transparent);
+    background: var(--cor-primaria);
+    color: var(--texto-invertido);
     font-weight: 700;
 }
 
@@ -252,14 +251,14 @@ table.agenda-profissional-grade td {
     min-width: 130px;
     padding: 6px;
     background: rgba(255,255,255,0.9);
-    border: 2px solid var(--border-transparent);
+    border: 2px solid var(--borda-suave);
     border-radius: 8px;
 }
 
 .agenda-profissional-menu-acoes button {
-    background: var(--quadrado-claro);
-    color: var(--font-color);
-    border: 1px solid var(--border-transparent);
+    background: var(--fundo-evento);
+    color: var(--texto);
+    border: 1px solid var(--borda-suave);
     border-radius: 6px;
     padding: 5px 8px;
     font-size: 0.7rem;
@@ -267,7 +266,7 @@ table.agenda-profissional-grade td {
 }
 
 .agenda-profissional-menu-acoes button:hover {
-    background: var(--background-gradient-color-light);
+    background: var(--fundo-pagina);
 }
 
 /* Ícone da sidebar com o nome embaixo */

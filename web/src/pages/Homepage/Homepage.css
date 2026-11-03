@@ -2,7 +2,7 @@
     width: 100%;
     height: 100dvh;
     box-sizing: border-box;
-    background: repeating-linear-gradient(to top right, var(--background-gradient-color-light) 10% 35%, var(--background-gradient-color-dark) 35% 40%, var(--background-gradient-color-light) 40% 45%) no-repeat fixed center;
+    background: repeating-linear-gradient(to top right, var(--fundo-pagina) 10% 35%, var(--fundo-pagina-listra) 35% 40%, var(--fundo-pagina) 40% 45%) no-repeat fixed center;
     backdrop-filter: blur(10px);
     display: flex;
     align-items: center;

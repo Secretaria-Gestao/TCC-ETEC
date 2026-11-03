@@ -119,21 +119,21 @@ export default function Seguranca({ profissional, admin }) {
           <p> ************** </p>
 
           {temSenha ? (
-            <button type="button" className="py-1 px-3 rounded-lg bg-amarelo text-black hover:bg-amarelo/80 transition-colors text-sm" onClick={() => setMudandoSenha(true)}>
+            <button type="button" className="py-1 px-3 rounded-lg bg-cobre text-black hover:bg-cobre/80 transition-colors text-sm" onClick={() => setMudandoSenha(true)}>
               Editar
             </button>
           ) : (
             <p className="text-sm opacity-70">Conta Google</p>
           )}
 
-        </div>
+        </div> 
 
         {mudandoSenha && (
-          <div className="w-[93%] flex flex-col flex-1 gap-3 p-2 self-end rounded-xl bg-[#775b5b]/35  ">
+          <div className="w-[93%] flex flex-col flex-1 gap-3 p-2 self-end rounded-xl bg-marfim  ">
             <label htmlFor="senhaAtual" className="text-sm flex flex-col gap-1">
               Senha Atual
               <input type="password" name="senhaAtual"
-                className="p-2 rounded-lg flex-1 bg-white/10 border-amarelo "
+                className="p-2 rounded-lg flex-1 bg-linho border-cobre "
                 {...register("senhaAtual")}
               />
             </label>
@@ -141,7 +141,7 @@ export default function Seguranca({ profissional, admin }) {
             <label htmlFor="novaSenha" className="text-sm flex flex-col gap-1">
               Nova senha
               <input type="password" name="novaSenha"
-                className="p-2 rounded-lg flex-1 bg-white/10 border-amarelo "
+                className="p-2 rounded-lg flex-1 bg-linho border-cobre "
                 {...register("novaSenha")}
               />
             </label>
@@ -155,7 +155,7 @@ export default function Seguranca({ profissional, admin }) {
             <label htmlFor="novaSenhaRepetida" className="text-sm flex flex-col gap-1">
               Repita a nova senha
               <input type="password" name="novaSenhaRepetida"
-                className="p-2 rounded-lg flex-1 bg-white/10 border-amarelo "
+                className="p-2 rounded-lg flex-1 bg-linho border-cobre "
                 {...register("novaSenhaRepetida")}
               />
             </label>
@@ -166,12 +166,12 @@ export default function Seguranca({ profissional, admin }) {
 
             <div className="flex gap-5 mt-2">
               <button type="submit"
-                className="p-1 rounded-lg bg-amarelo/80 hover:bg-amarelo/70 transition-colors text-black w-2/10">
+                className="p-1 rounded-lg bg-cobre/80 hover:bg-cobre/70 transition-colors text-black w-2/10">
 
                 Atualizar
               </button>
 
-              <button type="button" className="p-1 rounded-lg bg-laranja/80 hover:bg-laranja/70 transition-colors text-black w-2/10"
+              <button type="button" className="p-1 rounded-lg bg-laranja text-white transition-colors w-2/10"
                 onClick={() => { reset(); setMudandoSenha(false); }}>
 
                 Cancelar
@@ -191,12 +191,12 @@ export default function Seguranca({ profissional, admin }) {
           <p>Email</p>
 
           <input type="text" name="email" disabled={!mudandoEmail}
-            className="p-2 rounded-lg flex-1 bg-white/10 disabled:opacity-70"
+            className="p-2 rounded-lg flex-1 bg-linho disabled:opacity-70"
             {...register("email")}
           />
 
           {!mudandoEmail && temSenha && (
-            <button type="button" className="py-1 px-3 rounded-lg bg-amarelo text-black hover:bg-amarelo/80 transition-colors text-sm" onClick={() => setMudandoEmail(true)}>
+            <button type="button" className="py-1 px-3 rounded-lg bg-cobre text-black hover:bg-cobre/80 transition-colors text-sm" onClick={() => setMudandoEmail(true)}>
               Editar
             </button>
           )}
@@ -205,7 +205,7 @@ export default function Seguranca({ profissional, admin }) {
             <div className={estilos["cliente-perfil-email"]}>
 
               <button type="submit"
-                className="p-1.5 flex-1 rounded-lg bg-amarelo/80 hover:bg-amarelo/70 transition-colors text-black "
+                className="p-1.5 flex-1 rounded-lg bg-cobre/80 hover:bg-cobre/70 transition-colors text-black "
                 onClick={() => console.log("a")}>
 
                 Atualizar
@@ -237,7 +237,7 @@ export default function Seguranca({ profissional, admin }) {
               e cliente (exclui a própria conta, com um window.confirm simples). */}
           {admin ? (
             <button type="button"
-              className="p-2 rounded-lg bg-marrom/40 hover:bg-marrom/70 transition-colors text-white "
+              className="p-2 rounded-lg bg-vinho/40 hover:bg-vinho/70 transition-colors text-white "
               onClick={() => setConfirmandoExclusao(true)}
             >
 
@@ -249,7 +249,7 @@ export default function Seguranca({ profissional, admin }) {
             </p>
           ) : (
             <button type="button"
-              className="p-2 rounded-lg bg-marrom/40 hover:bg-marrom/70 transition-colors text-white "
+              className="p-2 rounded-lg bg-vinho/40 hover:bg-vinho/70 transition-colors text-white "
               onClick={() => excluir()}
             >
 
@@ -263,8 +263,8 @@ export default function Seguranca({ profissional, admin }) {
       {/* Modal de exclusão do salão. O "fixed inset-0" cobre a tela inteira e o z-[100] o deixa acima do resto do
           painel. O campo muda conforme a conta: senha (conta com email) ou nome do salão (conta Google). */}
       {confirmandoExclusao && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70">
-          <div className="w-96 p-5 rounded-2xl bg-[#4B3639] border-2 border-amarelo flex flex-col items-center gap-4 text-center">
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/70">
+          <div className="w-96 p-5 rounded-2xl bg-vinho border-2 border-cobre flex flex-col items-center gap-4 text-center">
             <p className="text-lg">Tem certeza?</p>
 
             <p className="text-xs">Esta ação causará a exclusão da sua conta e a do salão.</p>
@@ -273,7 +273,7 @@ export default function Seguranca({ profissional, admin }) {
               placeholder={temSenha ? "Digite sua senha" : "Digite o nome do salão"}
               value={confirmacao}
               onChange={(e) => setConfirmacao(e.target.value)}
-              className="p-2 rounded-lg w-full bg-white/10"
+              className="p-2 rounded-lg w-full bg-linho"
             />
 
             <p className="text-xs">Não haverá reversão caso confirme.</p>
