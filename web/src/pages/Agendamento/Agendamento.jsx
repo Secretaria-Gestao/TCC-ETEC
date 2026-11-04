@@ -1,8 +1,5 @@
-import { Link } from "react-router"
-
 import Formulario from './components/Formulario/Formulario'
 import BarraLateral from "@/BarraLateral/BarraLateral"
-import { menuCliente } from "@/BarraLateral/listaMenus"
 
 import './Agendamento.css'
 
@@ -12,7 +9,7 @@ function Agendamento() {
 
             <div className="w-full h-full flex">
 
-                <BarraLateral menu={menuCliente}/>
+                <BarraLateral />
 
                 <div className="flex flex-1 min-w-0">
 

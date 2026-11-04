@@ -1,6 +1,7 @@
 .agenda-admin-janela {
-    width: 100vw;
-    max-width: none;
+    /* Ocupa o espaço que sobra ao lado da BarraLateral */
+    flex: 1;
+    min-width: 0;
     height: 100vh;
     border-radius: 25px;
     border: 2px solid var(--borda-suave);
@@ -10,51 +11,37 @@
     overflow: hidden;
 }
 
-/* Sidebar esquerda */
-.agenda-admin-sidebar {
-    width: 84px;
-    border-right: 2px solid var(--borda-suave);
+/* Abas das seções do painel (Agenda, Financeiro, Profissionais) */
+.agenda-admin-abas {
     display: flex;
-    position: relative;
-    flex-direction: column;
-    align-items: center;
-    padding: 28px 0;
-}
-
-
-
-.agenda-admin-logo {
-    font-weight: 700;
-    font-size: 0.85rem;
-    margin-bottom: 36px;
-    color: var(--texto);
-    text-align: center;
-}
-
-.agenda-admin-nav-icone {
-    width: 42px;
-    height: 42px;
-    display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     justify-content: center;
-    border-radius: 12px;
-    margin-bottom: 14px;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.agenda-admin-aba {
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--borda-suave);
+    background: transparent;
     color: var(--texto);
-    opacity: 0.55;
+    font-size: 0.8rem;
+    opacity: 0.7;
     cursor: pointer;
     transition: opacity 0.15s, background 0.15s;
-    font-size: 1.15rem;
 }
 
-.agenda-admin-nav-icone:hover {
+.agenda-admin-aba:hover {
     opacity: 1;
     background: var(--fundo-cartao);
 }
 
-/* Ícone ativo fica com fundo amarelo, igual ao padrão das outras páginas */
-.agenda-admin-nav-icone.ativo {
+/* Aba ativa usa o mesmo fundo dos eventos da agenda */
+.agenda-admin-aba.ativa {
     opacity: 1;
     background: var(--fundo-evento);
+    font-weight: 600;
 }
 
 /* Área central */
@@ -360,25 +347,6 @@ table.agenda-admin-grade td {
     text-transform: uppercase;
     letter-spacing: 0.04em;
     margin-bottom: 4px;
-}
-
-.agenda-admin-nav-icone {
-    flex-direction: column; /* empilha emoji e nome */
-    width: 68px;            /* mais largo para caber "Profissionais" */
-    height: auto;           /* a altura passa a depender do conteúdo */
-    padding: 8px 4px;
-    gap: 3px;
-}
-
-.agenda-admin-nav-emoji {
-    font-size: 1.15rem;
-}
-
-.agenda-admin-nav-nome {
-    font-size: 0.62rem;
-    line-height: 1.1;
-    text-align: center;
-    overflow-wrap: anywhere; /* quebra "Profissionais" se ainda não couber */
 }
 
 @media (max-width: 900px) {

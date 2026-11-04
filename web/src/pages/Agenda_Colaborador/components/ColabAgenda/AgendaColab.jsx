@@ -140,15 +140,7 @@ async function atualizarStatus(idAgendamento, novoStatus) {
     return (
         <div className="agenda-profissional-janela">
 
-            {/* Sidebar esquerda com navegação */}
-            <div className="agenda-profissional-nav-icone ativo" title="Agenda">
-    <span className="agenda-profissional-nav-emoji">📅</span>
-    <span className="agenda-profissional-nav-nome">Agenda</span>
-</div>
-<div className="agenda-profissional-nav-icone" title="Perfil">
-    <span className="agenda-profissional-nav-emoji">👤</span>
-    <span className="agenda-profissional-nav-nome">Perfil</span>
-</div>
+            {/* A navegação fica na BarraLateral, renderizada pela página */}
 
             {/* Grade semanal central */}
             <div className="agenda-profissional-conteudo">

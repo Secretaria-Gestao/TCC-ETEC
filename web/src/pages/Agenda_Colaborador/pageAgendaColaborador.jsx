@@ -2,12 +2,14 @@
 // Segue o mesmo padrão das outras páginas do projeto:
 // a página em si é simples e só renderiza o componente principal.
 import AgendaColaborador from './components/ColabAgenda/AgendaColab.jsx'
+import BarraLateral from '@/BarraLateral/BarraLateral.jsx'
 
 function PageAgendaColaborador() {
     return (
 
         <main className="main-principal">
-            <div className="w-full min-h-dvh">
+            <div className="w-full min-h-dvh flex">
+                <BarraLateral />
                 <AgendaColaborador />
             </div>
         </main>

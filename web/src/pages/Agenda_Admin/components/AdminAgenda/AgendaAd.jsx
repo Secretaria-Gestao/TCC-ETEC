@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { obterDomingoDaSemana, MESES } from './utils/AgendaHelpers.js'
 
-import SidebarNavegacao from './components/SidebarNavegacao'
+import AbasSecoes from './components/AbasSecoes'
 import NavegacaoSemana from './components/NavegacaoSemana'
 import GradeSemanal from './components/GradeSemanal'
 import MiniCalendario from './components/MiniCalendario'
@@ -14,7 +14,6 @@ import './AgendaAd.css'
 
 function AgendaAdmin() {
     const [agendamentos, setAgendamentos] = useState([])
-    const [idAdmin, setIdAdmin] = useState('')
     const [filtroProfissional, setFiltroProfissional] = useState('')
     const [dataReferenciaSemana, setDataReferenciaSemana] = useState(new Date())
     const [dataReferenciaMes, setDataReferenciaMes] = useState(new Date())
@@ -26,8 +25,6 @@ function AgendaAdmin() {
 
             const sessao = await pegarSessao()
             const token = sessao.access_token
-
-            setIdAdmin(sessao.user.id)
 
             try {
                 const resposta = await fetch(`/api/agendamentos/salao`, {
@@ -98,9 +95,9 @@ function AgendaAdmin() {
 
     return (
         <div className="agenda-admin-janela">
-            <SidebarNavegacao secaoAtiva={secaoAtiva} setSecaoAtiva={setSecaoAtiva} />
-
             <div className="agenda-admin-conteudo">
+                <AbasSecoes secaoAtiva={secaoAtiva} setSecaoAtiva={setSecaoAtiva} />
+
                 {secaoAtiva === 'agenda' && (
                     <>
                         <NavegacaoSemana tituloSemana={tituloSemana} mudarSemana={mudarSemana} />
@@ -111,18 +108,6 @@ function AgendaAdmin() {
                             campoSecundario="cliente"
                         />
                         {mensagem && <p className="agenda-admin-mensagem">{mensagem}</p>}
-                    </>
-                )}
-
-                {secaoAtiva === 'minha-agenda' && (
-                    <>
-                        <NavegacaoSemana tituloSemana={tituloSemana} mudarSemana={mudarSemana} />
-                        <GradeSemanal
-                            domingo={domingo}
-                            agendamentos={agendamentos.filter((ag) => ag.id_profissional === idAdmin)}
-                            campoPrincipal="cliente"
-                            campoSecundario="status"
-                        />
                     </>
                 )}
 

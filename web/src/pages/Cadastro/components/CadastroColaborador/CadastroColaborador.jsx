@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react'
 import { useNotificacaoStore } from "@/Notificacao/notificacaoStore.js"
 import { buscarSalao } from '../../../../services/BuscarSalao.js'
 import { cadastrarColaborador } from '../../services/CadastroColaborador'
-import { menuAdmin } from '@/BarraLateral/listaMenus'
 
 
 function CadastroColaborador() {
@@ -84,7 +83,7 @@ function CadastroColaborador() {
         <main className='main-principal flex'>
             <div className='w-full h-full flex'>
                 <div className='flex'>
-                    <BarraLateral menu={menuAdmin}/>
+                    <BarraLateral />
                 </div>
                 <div className='w-full'>
                     <Header titulo="Novo profissional" subtitulo={nomeSalao}>

@@ -1,8 +1,9 @@
 
 
 .agenda-profissional-janela {
-    width: 100vw;
-    max-width: none;
+    /* Ocupa o espaço que sobra ao lado da BarraLateral */
+    flex: 1;
+    min-width: 0;
     height: 100vh;
     border-radius: 25px;
     border: 2px solid var(--borda-suave);
@@ -10,49 +11,6 @@
     backdrop-filter: blur(10px);
     display: flex;
     overflow: hidden;
-}
-
-/* Sidebar esquerda */
-.agenda-profissional-sidebar {
-    width: 84px;
-    border-right: 2px solid var(--borda-suave);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 28px 0;
-}
-
-.agenda-profissional-logo {
-    font-weight: 700;
-    font-size: 0.85rem;
-    margin-bottom: 36px;
-    color: var(--texto);
-    text-align: center;
-}
-
-.agenda-profissional-nav-icone {
-    width: 42px;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    margin-bottom: 14px;
-    color: var(--texto);
-    opacity: 0.55;
-    cursor: pointer;
-    transition: opacity 0.15s, background 0.15s;
-    font-size: 1.15rem;
-}
-
-.agenda-profissional-nav-icone:hover {
-    opacity: 1;
-    background: var(--fundo-cartao);
-}
-
-.agenda-profissional-nav-icone.ativo {
-    opacity: 1;
-   background: var(--fundo-evento);
 }
 
 /* Área central */
@@ -269,24 +227,6 @@ table.agenda-profissional-grade td {
     background: var(--fundo-pagina);
 }
 
-/* Ícone da sidebar com o nome embaixo */
-.agenda-profissional-nav-icone {
-    flex-direction: column;
-    width: 68px;
-    height: auto;
-    padding: 8px 4px;
-    gap: 3px;
-}
-
-.agenda-profissional-nav-emoji { 
-    font-size: 1.15rem; 
-}
-
-.agenda-profissional-nav-nome {
-    font-size: 0.62rem;
-    line-height: 1.1;
-    text-align: center;
-}
 
 
 
