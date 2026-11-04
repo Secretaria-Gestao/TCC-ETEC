@@ -3,9 +3,12 @@ import { pegarSessao } from '../../../../services/pegarSessao.js'
 import './AgendaColab.css'
 
 // Constantes fora do componente porque nunca mudam — evita recriá-las a cada render.
-const HORARIOS = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00']
 const DIAS_SEMANA = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
+
+// Horas usadas quando o salão ainda não configurou o horário de funcionamento.
+const PRIMEIRA_HORA_PADRAO = 8
+const ULTIMA_HORA_PADRAO = 18
 
 // Recebe qualquer data e devolve o domingo da semana correspondente.
 // Necessário para sempre exibir a semana completa (dom → sáb) na grade.
@@ -16,9 +19,53 @@ function obterDomingoDaSemana(data) {
     return novaData
 }
 
+// "09:30:00" → 570 (minutos desde a meia-noite)
+function textoParaMinutos(texto) {
+    const [horas, minutos] = String(texto).split(':').map(Number)
+    return horas * 60 + (minutos || 0)
+}
+
+// Monta as linhas da grade (uma por hora) a partir do horário de funcionamento do salão.
+// Se algum agendamento da semana cair fora desse horário, a grade cresce para ele aparecer.
+function montarHorasDaGrade(horarioFuncionamento, agendamentosDaSemana) {
+    const diasAbertos = horarioFuncionamento.filter((dia) => !dia.fechado && dia.hora_abertura && dia.hora_fechamento)
+
+    let primeiraHora = PRIMEIRA_HORA_PADRAO
+    let ultimaHora = ULTIMA_HORA_PADRAO
+
+    if (diasAbertos.length > 0) {
+        primeiraHora = Math.min(...diasAbertos.map((dia) => Math.floor(textoParaMinutos(dia.hora_abertura) / 60)))
+        // Fechando às 18:00, o último atendimento começa antes das 18:00, então a última linha é a das 17:00
+        ultimaHora = Math.max(...diasAbertos.map((dia) => Math.floor((textoParaMinutos(dia.hora_fechamento) - 1) / 60)))
+    }
+
+    for (const ag of agendamentosDaSemana) {
+        const hora = new Date(ag.horario).getHours()
+        primeiraHora = Math.min(primeiraHora, hora)
+        ultimaHora = Math.max(ultimaHora, hora)
+    }
+
+    return Array.from({ length: ultimaHora - primeiraHora + 1 }, (_, i) => primeiraHora + i)
+}
+
+// Horário do cartão: "14:30 – 15:15", ou só o início quando a duração não foi gravada.
+function formatarHorarioAtendimento(ag) {
+    const opcoes = { hour: '2-digit', minute: '2-digit' }
+    const inicio = new Date(ag.horario)
+    const textoInicio = inicio.toLocaleTimeString('pt-BR', opcoes)
+
+    if (!ag.duracao_total) return textoInicio
+
+    const fim = new Date(inicio.getTime() + Number(ag.duracao_total) * 60000)
+    return `${textoInicio} – ${fim.toLocaleTimeString('pt-BR', opcoes)}`
+}
+
 function AgendaColaborador() {
     // Lista de agendamentos do profissional logado, vinda do back-end.
     const [agendamentos, setAgendamentos] = useState([])
+
+    // Horário de funcionamento do salão (um item por dia da semana), usado para montar as linhas da grade.
+    const [horarioFuncionamento, setHorarioFuncionamento] = useState([])
 
     // Data que controla qual semana está sendo exibida na grade central.
     const [dataReferenciaSemana, setDataReferenciaSemana] = useState(new Date())
@@ -62,6 +109,7 @@ function AgendaColaborador() {
                 }
 
                 setAgendamentos(resultado.agendamentos || [])
+                setHorarioFuncionamento(resultado.horario_funcionamento || [])
 
             } catch (erro) {
                 console.error('Erro na requisição:', erro)
@@ -114,6 +162,16 @@ async function atualizarStatus(idAgendamento, novoStatus) {
     sabado.setDate(sabado.getDate() + 6)
 
     const tituloSemana = `${domingo.getDate()} de ${MESES[domingo.getMonth()]} - ${sabado.getDate()} de ${MESES[sabado.getMonth()]}`
+
+    // Agendamentos da semana exibida: definem se a grade precisa de horas fora do funcionamento do salão.
+    const domingoSeguinte = new Date(domingo)
+    domingoSeguinte.setDate(domingoSeguinte.getDate() + 7)
+    const agendamentosDaSemana = agendamentos.filter((ag) => {
+        const dataAg = new Date(ag.horario)
+        return dataAg >= domingo && dataAg < domingoSeguinte
+    })
+
+    const horasDaGrade = montarHorasDaGrade(horarioFuncionamento, agendamentosDaSemana)
 
     // Avança ou recua a semana exibida. direcao = 1 (próxima) ou -1 (anterior).
     function mudarSemana(direcao) {
@@ -170,55 +228,64 @@ async function atualizarStatus(idAgendamento, novoStatus) {
                             </tr>
                         </thead>
                         <tbody>
-                            {HORARIOS.map((hora) => (
+                            {horasDaGrade.map((hora) => (
                                 <tr key={hora}>
-                                    <td className="agenda-profissional-coluna-hora">{hora}</td>
+                                    <td className="agenda-profissional-coluna-hora">{`${String(hora).padStart(2, '0')}:00`}</td>
 
                                     {/* Para cada linha de horário, gera 7 colunas (dom → sáb) */}
                                     {Array.from({ length: 7 }, (_, diaIndex) => {
                                         const dataCelula = new Date(domingo)
                                         dataCelula.setDate(dataCelula.getDate() + diaIndex)
 
-                                        // Verifica se existe algum agendamento que caia
-                                        // exatamente neste dia e nesta hora.
-                                        const agendamentoDoSlot = agendamentos.find((ag) => {
+                                        // Todos os agendamentos deste dia que começam nesta hora (ex.: 14:00 e 14:30).
+                                        // A API já devolve em ordem de horário.
+                                        const agendamentosDoSlot = agendamentosDaSemana.filter((ag) => {
                                             const dataAg = new Date(ag.horario)
                                             const mesmoDia = dataAg.toDateString() === dataCelula.toDateString()
-                                            const mesmaHora = dataAg.getHours() === parseInt(hora.split(':')[0])
+                                            const mesmaHora = dataAg.getHours() === hora
                                             return mesmoDia && mesmaHora
                                         })
 
                             return (
                                 <td key={diaIndex}>
-                                    {agendamentoDoSlot && (
-                                    // Cartão exibido dentro da célula quando há agendamento.
-                                    // Mostra o nome do cliente e o status do agendamento.
+                                    {agendamentosDoSlot.length > 0 && (
+                                    <div className="agenda-profissional-slot">
+                                    {agendamentosDoSlot.map((ag) => (
+                                    // Cartão exibido dentro da célula para cada agendamento.
+                                    // Mostra o horário, o cliente, os serviços e o status do agendamento.
                                     <div
+                                        key={ag.id_agendamento}
                                         className="agenda-profissional-cartao"
                                         onClick={() => setAgendamentoSelecionado(
-                                        agendamentoSelecionado === agendamentoDoSlot.id_agendamento
+                                        agendamentoSelecionado === ag.id_agendamento
                                         ? null
-                                        : agendamentoDoSlot.id_agendamento
+                                        : ag.id_agendamento
                                         )}
                                     >
-                                        <b>{agendamentoDoSlot.cliente || 'Cliente'}</b>
-                                        <span>{agendamentoDoSlot.status}</span>
+                                        <span className="agenda-profissional-cartao-horario">{formatarHorarioAtendimento(ag)}</span>
+                                        <b>{ag.cliente || 'Cliente'}</b>
+                                        {ag.servicos?.length > 0 && (
+                                            <span className="agenda-profissional-cartao-servicos">{ag.servicos.join(', ')}</span>
+                                        )}
+                                        <span>{ag.status}</span>
 
-                                    {agendamentoSelecionado === agendamentoDoSlot.id_agendamento && (
+                                    {agendamentoSelecionado === ag.id_agendamento && (
                                         // stopPropagation evita que o clique num botão também
                                         // dispare o onClick do cartão e feche o menu antes da hora.
                                         <div
                                             className="agenda-profissional-menu-acoes"
                                             onClick={(e) => e.stopPropagation()}
-                                                                                 >
-                                            <button onClick={() => atualizarStatus(agendamentoDoSlot.id_agendamento, 'confirmado')}>Confirmar</button>
-                                            <button onClick={() => atualizarStatus(agendamentoDoSlot.id_agendamento, 'concluido')}>Concluir</button>
-                                            <button onClick={() => atualizarStatus(agendamentoDoSlot.id_agendamento, 'cancelado')}>Cancelar</button>
-                                            <button onClick={() => atualizarStatus(agendamentoDoSlot.id_agendamento, 'ausente')}>Registrar ausência</button>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
+                                        >
+                                            <button onClick={() => atualizarStatus(ag.id_agendamento, 'confirmado')}>Confirmar</button>
+                                            <button onClick={() => atualizarStatus(ag.id_agendamento, 'concluido')}>Concluir</button>
+                                            <button onClick={() => atualizarStatus(ag.id_agendamento, 'cancelado')}>Cancelar</button>
+                                            <button onClick={() => atualizarStatus(ag.id_agendamento, 'ausente')}>Registrar ausência</button>
+                                        </div>
+                                    )}
+                                    </div>
+                                    ))}
+                                    </div>
+                                    )}
                                     </td>
                                 )
                             })}
