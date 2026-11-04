@@ -2,11 +2,9 @@
     /* Ocupa o espaço que sobra ao lado da BarraLateral */
     flex: 1;
     min-width: 0;
-    height: 100vh;
-    border-radius: 25px;
+    height: 100dvh;
     border: 2px solid var(--borda-suave);
     background-color: transparent;
-    backdrop-filter: blur(10px);
     display: flex;
     overflow: hidden;
 }
@@ -85,8 +83,8 @@
     flex: 1;
     overflow-y: auto;
     border: 2px solid var(--borda-suave);
-    border-radius: 14px;
-    background: rgba(255,255,255,0.25);
+    border-radius: 16px;
+    background: var(--fundo-painel);
 }
 
 table.agenda-admin-grade {
@@ -98,28 +96,36 @@ table.agenda-admin-grade {
 table.agenda-admin-grade th {
     position: sticky;
     top: 0;
-    background: var(--fundo-pagina);
+    /* Mesmo cabeçalho da agenda dos clientes */
+    background: var(--color-azul-profundo);
     font-size: 0.76rem;
-    color: var(--texto);
+    color: var(--texto-invertido);
     font-weight: 700;
     padding: 10px 4px;
-    border-bottom: 2px solid var(--borda-suave);
+    border-bottom: 3px solid var(--color-ameixa);
     text-align: center;
     z-index: 2;
 }
 
 table.agenda-admin-grade td {
-    border: 1px solid var(--borda-suave);
+    border: 0;
+    border-top: 1px solid var(--borda-suave);
+    border-left: 1px solid var(--borda-suave);
     height: 62px;
     vertical-align: top;
     padding: 2px;
+}
+
+/* o th já desenha a linha embaixo do cabeçalho */
+table.agenda-admin-grade tbody tr:first-child td {
+    border-top: 0;
 }
 
 .agenda-admin-coluna-hora {
     width: 60px;
     font-size: 0.72rem;
     color: var(--texto);
-    opacity: 0.7;
+    opacity: 0.8;
     text-align: right;
     padding-right: 8px !important;
     border: none !important;
@@ -127,8 +133,8 @@ table.agenda-admin-grade td {
 }
 
 .agenda-admin-cartao {
-    background: var(--fundo-evento);
-    border-left: 3px solid var(--cor-primaria);
+    background: var(--fundo-cartao);
+    border-left: 3px solid var(--color-rosa-queimado);
     border-radius: 6px;
     padding: 4px 6px;
     font-size: 0.7rem;
@@ -263,10 +269,11 @@ table.agenda-admin-grade td {
     flex-direction: column;
     gap: 18px;
     overflow-y: auto;
+    background-color: var(--fundo-painel);
 }
 
 .agenda-admin-mini-calendario {
-    background: rgba(255,255,255,0.35);
+    background: var(--fundo-pagina);
     border: 2px solid var(--borda-suave);
     border-radius: 14px;
     padding: 14px;
@@ -311,7 +318,7 @@ table.agenda-admin-grade td {
 }
 
 .agenda-admin-dia {
-    background: rgba(255,255,255,0.6);
+    background: var(--fundo-pagina-listra);
     border-radius: 6px;
     padding: 5px 0;
     color: var(--texto);
@@ -319,7 +326,7 @@ table.agenda-admin-grade td {
 }
 
 .agenda-admin-dia.agenda-admin-hoje {
-    background: var(--cor-primaria);
+    background: var(--color-ameixa);
     color: var(--texto-invertido);
     font-weight: 700;
 }
