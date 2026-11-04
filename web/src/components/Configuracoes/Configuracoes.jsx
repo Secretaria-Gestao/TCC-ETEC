@@ -3,6 +3,7 @@ import { useState } from "react"
 import HeaderAbas from "./components/HeaderAbas/HeaderAbas"
 import Cliente from "./components/Abas/Clientes/Cliente"
 import Profissional from "./components/Abas/Profissionais/Profissional"
+import estilos from "./Configuracoes.module.css"
 
 // perfil é o tipo de quem está logado: "cliente", "profissional" ou "admin" (calculado na BarraLateral).
 // Ele decide quais abas existem: Perfil e Segurança para todos, e Salão só para o admin.
@@ -13,10 +14,10 @@ export default function Configuracoes({ perfil, setConfigAberto }) {
         // O painel é renderizado dentro da BarraLateral. O "absolute left-full" o encosta na borda direita dela e
         // a largura calc(100dvw - 100%) ocupa o resto da tela, cobrindo a página. Quem coloca o painel acima do
         // conteúdo da página é o z-40 da barra; o z-50 só o deixa acima dos itens da própria barra.
-        <div className="absolute top-0 left-full w-[calc(100dvw-100%)] p-5 bg-azul-profundo/60 h-full flex items-center justify-center z-50">
+        <div className={estilos["main-config"]}>
 
             {/* Box principal */}
-            <div className="w-2xl min-w-max flex flex-col p-5 rounded-2xl min-h-140 bg-white text-black border-cobre border-2 ">
+            <div className="w-2xl min-w-max flex flex-col p-5 min-h-140 rounded-2xl bg-white text-black border-cobre border-2 overflow-y-auto">
 
                 <HeaderAbas
                     abaAtual={abaAtual}

@@ -43,7 +43,7 @@ export default function Perfil({ setAbaAtual }) {
           />
 
           {!mudandoNome && (
-            <button type="button" className="py-1 px-3 rounded-lg bg-cobre text-black text-sm"
+            <button type="button" className="py-1 px-3 rounded-lg bg-cobre/50 hover:bg-cobre/40 text-black text-sm"
               onClick={() => setMudandoNome(true)} >
 
               Editar
@@ -73,7 +73,7 @@ export default function Perfil({ setAbaAtual }) {
 
         <div className="flex gap-5 mt-auto">
           <button type="submit" disabled={!mudandoNome}
-            className="p-2 rounded-lg bg-cobre/80 hover:bg-cobre/70 transition-colors text-black "
+            className="p-2 rounded-lg bg-cobre/50 hover:bg-cobre/40 transition-colors text-black "
 
           >
 
@@ -81,7 +81,7 @@ export default function Perfil({ setAbaAtual }) {
           </button>
 
           <button type="button" disabled={!mudandoNome}
-            className="p-2 rounded-lg bg-laranja text-white transition-colors "
+            className="p-2 rounded-lg bg-laranja hover:bg-laranja/90 text-white transition-colors "
             onClick={() => { reset(); setMudandoNome(false); }}>
 
             Cancelar

@@ -125,8 +125,8 @@ table.meus-agendamentos-grade tbody tr:first-child td {
 }
 
 .meus-agendamentos-cartao-agendamento {
-    background: var(--fundo-evento);
-    border-left: 3px solid var(--color-laranja);
+    background: var(--fundo-cartao);
+    border-left: 3px solid var(--color-rosa-queimado);
     border-radius: 6px;
     padding: 4px 6px;
     font-size: 0.7rem;

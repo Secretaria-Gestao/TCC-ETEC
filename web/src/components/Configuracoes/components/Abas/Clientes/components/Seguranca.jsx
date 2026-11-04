@@ -119,7 +119,7 @@ export default function Seguranca({ profissional, admin }) {
           <p> ************** </p>
 
           {temSenha ? (
-            <button type="button" className="py-1 px-3 rounded-lg bg-cobre text-black hover:bg-cobre/80 transition-colors text-sm" onClick={() => setMudandoSenha(true)}>
+            <button type="button" className="py-1 px-3 rounded-lg bg-cobre/50 text-black hover:bg-cobre/40  transition-colors text-sm" onClick={() => setMudandoSenha(true)}>
               Editar
             </button>
           ) : (
@@ -166,7 +166,7 @@ export default function Seguranca({ profissional, admin }) {
 
             <div className="flex gap-5 mt-2">
               <button type="submit"
-                className="p-1 rounded-lg bg-cobre/80 hover:bg-cobre/70 transition-colors text-black w-2/10">
+                className="p-1 rounded-lg bg-cobre/50 hover:bg-cobre/40 transition-colors text-black w-2/10">
 
                 Atualizar
               </button>
@@ -196,7 +196,7 @@ export default function Seguranca({ profissional, admin }) {
           />
 
           {!mudandoEmail && temSenha && (
-            <button type="button" className="py-1 px-3 rounded-lg bg-cobre text-black hover:bg-cobre/80 transition-colors text-sm" onClick={() => setMudandoEmail(true)}>
+            <button type="button" className="py-1 px-3 rounded-lg bg-cobre/50 text-black hover:bg-cobre/40 transition-colors text-sm" onClick={() => setMudandoEmail(true)}>
               Editar
             </button>
           )}
@@ -205,13 +205,13 @@ export default function Seguranca({ profissional, admin }) {
             <div className={estilos["cliente-perfil-email"]}>
 
               <button type="submit"
-                className="p-1.5 flex-1 rounded-lg bg-cobre/80 hover:bg-cobre/70 transition-colors text-black "
+                className="p-1.5 flex-1 rounded-lg bg-cobre/50 hover:bg-cobre/40 transition-colors "
                 onClick={() => console.log("a")}>
 
                 Atualizar
               </button>
 
-              <button type="button" className="p-1.5 rounded-lg bg-laranja/80 hover:bg-laranja/70 transition-colors text-black "
+              <button type="button" className="p-1.5 rounded-lg bg-laranja hover:bg-laranja/90 transition-colors text-white "
                 onClick={() => { reset(); setMudandoEmail(false); }}>
 
                 Cancelar
