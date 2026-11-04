@@ -348,7 +348,7 @@ const avisoHorario = motivoHorarioInvalido()
                 </div>
 
                 <div className="div_btn">
-                    <button id="btn-enviar" type="button" className="enviar solid" onClick={enviarDados} disabled={enviando || todosSaloes.length === 0 || Boolean(avisoHorario)}></button>
+                    <button id="btn-enviar" type="button" className="enviar solid" onClick={enviarDados} disabled={enviando || todosSaloes.length === 0 || Boolean(avisoHorario)}> {enviando ? 'Enviando...' : 'Enviar'} </button>
                     <button id="btn-resetar" type="reset" className="resetar solid" onClick={resetarDados}> Resetar </button>
                 </div>
 
