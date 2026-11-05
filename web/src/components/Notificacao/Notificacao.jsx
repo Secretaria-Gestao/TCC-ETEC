@@ -32,7 +32,7 @@ function Notificacao({ id, titulo, texto, mostrarBotao, lblBotao, textoBotao, fu
             {mostrarBotao && (
                 <>
                     {lblBotao && (<p className="text-[14px] "> {lblBotao} </p>)}
-                    <button type="button" className="bg-vinho text-laranja p-2! mt-1! rounded-sm" onClick={executarBotao}>{textoBotao}</button>
+                    <button type="button" className="bg-black/20 text-laranja p-2! mt-1! rounded-sm" onClick={executarBotao}>{textoBotao}</button>
                 </>
             )}
         </div>

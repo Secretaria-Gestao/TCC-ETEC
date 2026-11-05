@@ -60,7 +60,7 @@ export default function SalaoAdmin() {
           />
 
           {!mudandoNome && (
-            <button type="button" className="py-1 px-3 rounded-lg bg-cobre text-black text-sm"
+            <button type="button" className="py-1 px-3 rounded-lg bg-azul-ceu hover:bg-azul-ceu/90 text-white transition-colors text-sm"
               onClick={() => setMudandoNome(true)}>
 
               Editar
@@ -82,7 +82,7 @@ export default function SalaoAdmin() {
           />
 
           {!mudandoEndereco && (
-            <button type="button" className="py-1 px-3 rounded-lg bg-cobre text-black text-sm"
+            <button type="button" className="py-1 px-3 rounded-lg bg-azul-ceu hover:bg-azul-ceu/90 text-white transition-colors text-sm"
               onClick={() => setMudandoEndereco(true)}>
 
               Editar
@@ -92,13 +92,13 @@ export default function SalaoAdmin() {
 
         <div className="flex gap-5 mt-auto">
           <button type="submit" disabled={!editando}
-            className="p-2 rounded-lg bg-cobre/80 hover:bg-cobre/70 transition-colors text-black disabled:opacity-50">
+            className="p-2 rounded-lg bg-ameixa hover:bg-ameixa/90 text-white transition-colors disabled:opacity-50">
 
             Salvar
           </button>
 
           <button type="button" disabled={!editando}
-            className="p-2 rounded-lg bg-laranja/80 hover:bg-laranja/70 transition-colors text-black disabled:opacity-50"
+            className="p-2 rounded-lg bg-laranja hover:bg-laranja/90 text-white transition-colors disabled:opacity-50"
             onClick={() => { reset(); setMudandoNome(false); setMudandoEndereco(false) }}>
 
             Cancelar

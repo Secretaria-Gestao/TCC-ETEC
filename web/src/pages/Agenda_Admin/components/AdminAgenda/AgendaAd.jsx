@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { obterDomingoDaSemana, MESES } from './utils/AgendaHelpers.js'
 
-import AbasSecoes from './components/AbasSecoes'
 import NavegacaoSemana from './components/NavegacaoSemana'
 import GradeSemanal from './components/GradeSemanal'
 import MiniCalendario from './components/MiniCalendario'
@@ -12,13 +11,13 @@ import SecaoProfissionais from './components/SecaoProfissionais'
 
 import './AgendaAd.css'
 
-function AgendaAdmin() {
+// A seção vem da rota, e cada uma tem o seu item na BarraLateral: 'agenda', 'financeiro' ou 'profissionais'.
+function AgendaAdmin({ secaoAtiva = 'agenda' }) {
     const [agendamentos, setAgendamentos] = useState([])
     const [filtroProfissional, setFiltroProfissional] = useState('')
     const [dataReferenciaSemana, setDataReferenciaSemana] = useState(new Date())
     const [dataReferenciaMes, setDataReferenciaMes] = useState(new Date())
     const [mensagem, setMensagem] = useState('')
-    const [secaoAtiva, setSecaoAtiva] = useState('agenda')
 
     useEffect(() => {
         async function carregarAgendamentos() {
@@ -96,8 +95,6 @@ function AgendaAdmin() {
     return (
         <div className="agenda-admin-janela">
             <div className="agenda-admin-conteudo">
-                <AbasSecoes secaoAtiva={secaoAtiva} setSecaoAtiva={setSecaoAtiva} />
-
                 {secaoAtiva === 'agenda' && (
                     <>
                         <NavegacaoSemana tituloSemana={tituloSemana} mudarSemana={mudarSemana} />

@@ -71,7 +71,7 @@ export default function InfoResumidas({ profissionais, agendamentos, todosCargos
 
                     {ordemRecente.length > 0 && (
                       <button
-                        className="self-stretch flex items-center"
+                        className="self-stretch flex items-center text-(--texto-negrito)"
                         type="button"
                         aria-label="Editar profissional adicionado recentemente"
                         onClick={() => abrirEdicaoProfissional?.(ordemRecente[0])}
@@ -114,7 +114,7 @@ export default function InfoResumidas({ profissionais, agendamentos, todosCargos
 
 
           <p className="text-[14px] mt-2"> <b>{profissionalDestacado ? profissionalDestacado.totalAgendamentos : "" }</b> {profissionalDestacado ? "de agendamentos no mês" : ""}</p>
-            { profissionalDestacado && ( <p className="text-[18px]">  por enquanto </p> )}
+            { profissionalDestacado && ( <p className="text-[14px]">  por enquanto </p> )}
         </div>
       </div>
 

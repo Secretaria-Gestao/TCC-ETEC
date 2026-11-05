@@ -88,7 +88,7 @@ export default function GerenciadorServicos() {
                             className="GerenciadorServicos-editar border-2 border-cobre"
                             onSubmit={handleSubmit(salvarEdicao)}
                         >
-                            <p className="text-cobre bold">Editar {servicoEditando.nome_servico}</p>
+                            <p className="text-azul-gelo bold">Editar {servicoEditando.nome_servico}</p>
 
                             <label>
                                 Nome

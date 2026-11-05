@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router"
 import estilos from "./TabelaMembros.module.css"
 import { buscarServicos } from "../../../GerenciadorServicos/services/buscarServicos"
 
@@ -111,9 +112,21 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
 
                 </div>
 
-                {profissionais.length > 0 && (
-                    <p className="text-[14px]"> Mostrando: <b>{profissionaisFiltrados.length}</b> </p>
-                )}
+                <div className="flex flex-col items-end gap-2">
+                    {/* O cadastro de profissionais não está mais na BarraLateral: abre por aqui */}
+                    <Link to="/cadastro/colaborador"
+                        className="flex items-center gap-2 py-1.5 px-3 rounded-lg bg-ameixa hover:bg-ameixa/90 text-white transition-colors text-sm">
+                        <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75"
+                            strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <line x1="19" y1="8" x2="19" y2="14" />
+                            <line x1="16" y1="11" x2="22" y2="11" />
+                        </svg>
+                        Adicionar profissional
+                    </Link>
+
+                </div>
             </div>
 
             <hr className="mt-1" />
@@ -302,7 +315,7 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
                                     <td>{profissional.nivel_acesso}</td>
                                     <td>{profissional.status ? "Ativo" : "Inativo"}</td>
                                     <td>
-                                        <button type="button" className="flex items-center justify-center -ml-2" onClick={() => abrirEdicaoProfissional(profissional)}>
+                                        <button type="button" className="flex items-center justify-center -ml-2 text-(--texto-negrito)" onClick={() => abrirEdicaoProfissional(profissional)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                                                 <circle cx="12" cy="5" r="2" />
                                                 <circle cx="12" cy="12" r="2" />

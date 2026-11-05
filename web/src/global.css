@@ -72,7 +72,7 @@
 }
 
 input::placeholder {
-    color: var(--texto-placeholder);
+    color: var(--color-azul-po);
 }
 
 input[type="checkbox"] {

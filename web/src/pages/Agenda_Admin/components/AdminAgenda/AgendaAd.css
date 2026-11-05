@@ -9,39 +9,6 @@
     overflow: hidden;
 }
 
-/* Abas das seções do painel (Agenda, Financeiro, Profissionais) */
-.agenda-admin-abas {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 18px;
-}
-
-.agenda-admin-aba {
-    padding: 6px 16px;
-    border-radius: 999px;
-    border: 1px solid var(--borda-suave);
-    background: transparent;
-    color: var(--texto);
-    font-size: 0.8rem;
-    opacity: 0.7;
-    cursor: pointer;
-    transition: opacity 0.15s, background 0.15s;
-}
-
-.agenda-admin-aba:hover {
-    opacity: 1;
-    background: var(--fundo-cartao);
-}
-
-/* Aba ativa usa o mesmo fundo dos eventos da agenda */
-.agenda-admin-aba.ativa {
-    opacity: 1;
-    background: var(--fundo-evento);
-    font-weight: 600;
-}
-
 .agenda-admin-nav-rodape {
   margin-top: auto;
 }
@@ -85,15 +52,46 @@
 
 .agenda-admin-grade-wrapper {
     flex: 1;
-    overflow-y: auto;
+    overflow: hidden;
     border: 2px solid var(--borda-suave);
     border-radius: 16px;
     background: var(--fundo-painel);
+    min-height: 0;
+    max-height: max-content;
+}
+
+/* Como na agenda dos clientes: só o corpo da tabela rola, então a barra de rolagem
+   começa abaixo dos dias da semana (e só aparece se for preciso). */
+.agenda-admin-grade tbody,
+.agenda-admin-grade thead {
+    display: block;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-azul-ceu) var(--fundo-painel);
+}
+
+.agenda-admin-grade thead {
+    overflow-y: hidden;
+}
+
+.agenda-admin-grade tbody {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.agenda-admin-grade tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
 }
 
 table.agenda-admin-grade {
-    border-collapse: collapse;
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    height: 100%;
+    border-collapse: collapse;
     table-layout: fixed;
 }
 

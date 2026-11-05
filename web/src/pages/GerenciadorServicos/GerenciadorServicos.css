@@ -7,5 +7,5 @@
 
 /* Checkboxes conservam o tamanho padrão; somente os campos de texto ocupam a largura. */
 .GerenciadorServicos-editar > label > input:not([type="checkbox"]) {
-    @apply w-full text-cobre border border-laranja p-1;
+    @apply w-full text-azul-po border border-laranja p-1;
 }

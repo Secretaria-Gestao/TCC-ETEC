@@ -115,8 +115,7 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
 
         <>
 
-            <table className="tabela-padrao border  border-collapse w-full">
-
+            <table className="tabela-padrao border border-laranja border-collapse w-full">
 
                 <thead>
                     <tr className="">
@@ -169,13 +168,13 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
                     {estaAdicionando && (
                         //  Essa classe pega todos os TD e INPUT's dentro dela para aplicar o TailWind usando @apply para economizar linha
                         <tr className="GerenciadorServicos-adicionar">
-                            <td />
+                            <td className="border border-laranja border-b-laranja!"/>
                             <td> <input type="text" placeholder="ex: Barba" {...register("nome_servico")} required /> </td>
                             <td> <input type="number" min="0" step="0.01" placeholder='ex: "47" = R$ 47,00' {...register("preco_servico")} required />  </td>
                             <td> <input type="number" min="1" placeholder='ex: "60" = 60 minutos' {...register("duracao")} required /> </td>
                             <td className="relative">
                                 <div className="w-full h-full p-1.5">
-                                    <button type="button" className="w-full h-full text-cobre text-left" onClick={() => setDropDownAberto(!dropDownAberto)}>
+                                    <button type="button" className="w-full h-full text-azul-po text-left" onClick={() => setDropDownAberto(!dropDownAberto)}>
                                         Selecionar...
                                     </button>
 
@@ -226,7 +225,7 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
 
                     {servicos.map((servico) => (
                         <tr key={servico.id_servico}>
-                            <td>
+                            <td className="border-b-laranja!">
                                 <input type="checkbox"
                                     className="flex place-self-center"
                                     checked={servicosSelecionados.includes(servico.id_servico)}
@@ -239,16 +238,16 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
                                     }}
                                 />
                             </td>
-                            <td>
+                            <td className="border-b-laranja!">
                                 <p>{servico.nome_servico}</p>
                                 {/* Desativar mantém o serviço cadastrado, por isso ele continua visível. */}
                                 <small className={servico.em_funcionamento ? "text-green-700" : "text-red-700"}>
                                     {servico.em_funcionamento ? "Ativo" : "Desativado"}
                                 </small>
                             </td>
-                            <td>{servico.preco_servico}</td>
-                            <td>{servico.duracao}</td>
-                            <td className="py-1.5!">
+                            <td className="border-b-laranja!">{servico.preco_servico}</td>
+                            <td className="border-b-laranja!">{servico.duracao}</td>
+                            <td className="py-1.5! border-b-laranja!" >
                                 <div className="max-w-full overflow-x-auto">
 
                                     <p className="shrink-0 whitespace-nowrap">
@@ -260,10 +259,10 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
 
                                 </div>
                             </td>
-                            <td>
+                            <td className="border-b-laranja!">
                                 {!estaSelecionando && (
 
-                                    <button type="button" className="flex place-self-center ml-[-18px]!" onClick={() => abrirEdicaoServico(servico)}>
+                                    <button type="button" className="flex place-self-center ml-[-18px]! text-(--texto-negrito)" onClick={() => abrirEdicaoServico(servico)}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                                             <circle cx="12" cy="5" r="2" />
                                             <circle cx="12" cy="12" r="2" />

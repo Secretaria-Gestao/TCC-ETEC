@@ -119,7 +119,7 @@ export default function Seguranca({ profissional, admin }) {
           <p> ************** </p>
 
           {temSenha ? (
-            <button type="button" className="py-1 px-3 rounded-lg bg-cobre/50 text-black hover:bg-cobre/40  transition-colors text-sm" onClick={() => setMudandoSenha(true)}>
+            <button type="button" className="py-1 px-3 rounded-lg bg-azul-ceu hover:bg-azul-ceu/90 text-white transition-colors text-sm" onClick={() => setMudandoSenha(true)}>
               Editar
             </button>
           ) : (
@@ -166,12 +166,12 @@ export default function Seguranca({ profissional, admin }) {
 
             <div className="flex gap-5 mt-2">
               <button type="submit"
-                className="p-1 rounded-lg bg-cobre/50 hover:bg-cobre/40 transition-colors text-black w-2/10">
+                className="p-1 rounded-lg bg-ameixa hover:bg-ameixa/90 text-white transition-colors w-2/10">
 
                 Atualizar
               </button>
 
-              <button type="button" className="p-1 rounded-lg bg-laranja text-white transition-colors w-2/10"
+              <button type="button" className="p-1 rounded-lg bg-laranja hover:bg-laranja/90 text-white transition-colors w-2/10"
                 onClick={() => { reset(); setMudandoSenha(false); }}>
 
                 Cancelar
@@ -196,7 +196,7 @@ export default function Seguranca({ profissional, admin }) {
           />
 
           {!mudandoEmail && temSenha && (
-            <button type="button" className="py-1 px-3 rounded-lg bg-cobre/50 text-black hover:bg-cobre/40 transition-colors text-sm" onClick={() => setMudandoEmail(true)}>
+            <button type="button" className="py-1 px-3 rounded-lg bg-azul-ceu hover:bg-azul-ceu/90 text-white transition-colors text-sm" onClick={() => setMudandoEmail(true)}>
               Editar
             </button>
           )}
@@ -205,7 +205,7 @@ export default function Seguranca({ profissional, admin }) {
             <div className={estilos["cliente-perfil-email"]}>
 
               <button type="submit"
-                className="p-1.5 flex-1 rounded-lg bg-cobre/50 hover:bg-cobre/40 transition-colors "
+                className="p-1.5 flex-1 rounded-lg bg-ameixa hover:bg-ameixa/90 text-white transition-colors "
                 onClick={() => console.log("a")}>
 
                 Atualizar
@@ -288,7 +288,7 @@ export default function Seguranca({ profissional, admin }) {
               </button>
 
               <button type="button" disabled={excluindo}
-                className="p-2 rounded-lg bg-laranja/80 hover:bg-laranja/70 transition-colors text-black disabled:opacity-50"
+                className="p-2 rounded-lg bg-laranja hover:bg-laranja/90 text-white transition-colors disabled:opacity-50"
                 onClick={() => fecharExclusao()}
               >
 

@@ -61,7 +61,7 @@ function HorariosFuncionamento({ idSalao }) {
           </label>
         </div>
       ))}
-      <button type="button" onClick={salvar} className="p-2 rounded-lg bg-cobre/80 hover:bg-cobre/70 text-black">
+      <button type="button" onClick={salvar} className="p-2 rounded-lg bg-ameixa hover:bg-ameixa/90 text-white">
         Salvar horários
       </button>
       {mensagem && <p>{mensagem}</p>}
