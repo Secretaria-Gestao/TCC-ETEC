@@ -265,7 +265,7 @@ def mostrarMembros():
             supabase_admin.table("profissionais")
             .select(
                 "id_profissional, nome_profissional, email_profissional, "
-                "telefone_profissional, cargo, nivel_acesso, status, criado_em, foto_url"
+                "telefone_profissional, cargo, nivel_acesso, status, tipo_pagamento, valor_comissao, criado_em, foto_url"
             )
             .eq("salao_associado", remetente["salao_associado"])
             .eq("removido", False)
@@ -539,26 +539,57 @@ def agendamentos_profissional(id_profissional):
         if id_profissional_pelo_token != id_profissional: # Verificação do id_profissional
             return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"}), 403
         
-        # Traz os dados do cliente porque o profissional precisa saber quem vai atender.
+        # Traz os dados do cliente e os serviços porque o profissional precisa saber quem vai atender e o que vai fazer.
+        # Ordenado por horário para a tela mostrar os atendimentos da mesma hora na ordem certa.
         resultado = (
             supabase_admin.table("agendamentos")
-            .select("id_agendamento, horario, status, clientes(nome_cliente, email_cliente)")
+            .select(
+                "id_agendamento, horario, duracao_total, status, "
+                "clientes(nome_cliente, email_cliente), "
+                "agendamento_servicos(servicos(nome_servico))"
+            )
             .eq("id_profissional", id_profissional)
+            .order("horario")
             .execute()
         )
 
         agendamentos = []
-        for ag in resultado.data:
+        for ag in resultado.data or []:
             cliente = ag.get("clientes") or {}
+            # Cada agendamento pode ter vários serviços
+            servicos = [
+                (item.get("servicos") or {}).get("nome_servico")
+                for item in (ag.get("agendamento_servicos") or [])
+            ]
             agendamentos.append({
                 "id_agendamento": ag["id_agendamento"],
                 "horario": ag["horario"],
+                "duracao_total": ag.get("duracao_total"),
                 "status": ag["status"],
                 "cliente": cliente.get("nome_cliente"),
                 "email_cliente": cliente.get("email_cliente"),
+                "servicos": [s for s in servicos if s],  # descarta nomes vazios
             })
 
-        return jsonify({"sucesso": True, "agendamentos": agendamentos})
+        # Horário de funcionamento do salão do profissional: a grade da agenda usa para saber quais horas mostrar
+        horario_funcionamento = []
+        resposta_salao = (
+            supabase_admin.table("profissionais")
+            .select("salao_associado")
+            .eq("id_profissional", id_profissional)
+            .execute()
+        )
+        if resposta_salao.data and resposta_salao.data[0]["salao_associado"] is not None:
+            resposta_horarios = (
+                supabase_admin.table("horario_funcionamento_salao")
+                .select("dia_semana, hora_abertura, hora_fechamento, fechado")
+                .eq("id_salao", resposta_salao.data[0]["salao_associado"])
+                .order("dia_semana")
+                .execute()
+            )
+            horario_funcionamento = resposta_horarios.data or []
+
+        return jsonify({"sucesso": True, "agendamentos": agendamentos, "horario_funcionamento": horario_funcionamento})
     
     except Exception as e:
         return jsonify({"sucesso": False, "erro": str(e)}), 500
@@ -903,3 +934,70 @@ def salvar_horarios_salao():
     except Exception as erro:
         print("Erro ao salvar horários do salão:", erro)
         return jsonify({"sucesso": False, "erro": "Erro ao salvar horários"}), 500
+
+TIPOS_PAGAMENTO = {"salao_paga_profissional", "profissional_paga_salao"}
+
+def definir_acordo_financeiro():
+    # Só o administrador (nível 1) define o acordo, e só de profissionais do PRÓPRIO salão
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    id_usuario = autenticar(token)
+    if not id_usuario:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    info = request.get_json(silent=True) or {}
+    id_profissional = info.get("id_profissional")
+    tipo = info.get("tipo_pagamento")
+    valor = info.get("valor_comissao")
+
+    if not id_profissional or not tipo or valor is None or valor == "":
+        return jsonify({"sucesso": False, "erro": "Campos ausentes: id_profissional, tipo_pagamento, valor_comissao"}), 400
+    if tipo not in TIPOS_PAGAMENTO:
+        return jsonify({"sucesso": False, "erro": f"Tipo de pagamento inválido: {tipo}"}), 400
+
+    # O valor chega como texto ou número; converte e valida o intervalo
+    try:
+        valor = float(valor)
+    except (TypeError, ValueError):
+        return jsonify({"sucesso": False, "erro": "valor_comissao deve ser um número"}), 400
+    if not 0 <= valor <= 100:
+        return jsonify({"sucesso": False, "erro": "O percentual deve estar entre 0 e 100"}), 400
+
+    try:
+        # Quem está pedindo: precisa ser nível 1
+        resp_admin = (
+            supabase_admin.table("profissionais")
+            .select("nivel_acesso, salao_associado")
+            .eq("id_profissional", id_usuario)
+            .execute()
+        )
+        if not resp_admin.data:
+            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404
+        admin = resp_admin.data[0]
+        if int(admin["nivel_acesso"]) != 1:
+            return jsonify({"sucesso": False, "erro": "Somente administradores definem o acordo financeiro"}), 403
+
+        # O profissional alvo precisa ser do mesmo salão do admin
+        resp_alvo = (
+            supabase_admin.table("profissionais")
+            .select("salao_associado")
+            .eq("id_profissional", id_profissional)
+            .execute()
+        )
+        if not resp_alvo.data:
+            return jsonify({"sucesso": False, "erro": "Profissional não encontrado"}), 404
+        # str() nos dois lados evita falso 403 por diferença de tipo
+        if str(resp_alvo.data[0]["salao_associado"]) != str(admin["salao_associado"]):
+            return jsonify({"sucesso": False, "erro": "Este profissional não pertence ao seu salão"}), 403
+
+        supabase_admin.table("profissionais").update({
+            "tipo_pagamento": tipo,
+            "valor_comissao": valor,
+        }).eq("id_profissional", id_profissional).execute()
+
+        return jsonify({"sucesso": True})
+
+    except Exception as erro:
+        print("Erro ao definir acordo financeiro:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao salvar o acordo financeiro"}), 500   

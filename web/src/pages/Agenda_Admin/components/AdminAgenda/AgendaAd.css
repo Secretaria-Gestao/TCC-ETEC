@@ -42,6 +42,10 @@
     font-weight: 600;
 }
 
+.agenda-admin-nav-rodape {
+  margin-top: auto;
+}
+
 /* Área central */
 .agenda-admin-conteudo {
     flex: 1;

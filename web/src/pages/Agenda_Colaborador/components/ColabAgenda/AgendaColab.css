@@ -240,3 +240,24 @@ table.agenda-profissional-grade tbody tr:first-child td {
 @media (max-width: 900px) {
     .agenda-profissional-painel-direito { display: none; }
 }
+
+/* Vários atendimentos na mesma hora (ex.: 14:00 e 14:30) ficam empilhados na célula */
+.agenda-profissional-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 100%;
+}
+
+.agenda-profissional-slot .agenda-profissional-cartao {
+    height: auto;
+    flex: 1 0 auto;
+}
+
+.agenda-profissional-cartao-horario {
+    font-weight: 600;
+}
+
+.agenda-profissional-cartao-servicos {
+    opacity: 0.85;
+}

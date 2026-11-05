@@ -99,9 +99,7 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
             setConfirmacaoRemocaoAberta(false)
         }
     }
-
-    console.log("profissionais filtrados: ", profissionaisFiltrados)
-    console.log("filtros: ", filtros)
+    
 
     return (
         <div className="bg-azul-gelo/90 w-full min-h-170 mt-15 flex flex-col border border-collapse border-t-[3px] border-t-vermelho">
