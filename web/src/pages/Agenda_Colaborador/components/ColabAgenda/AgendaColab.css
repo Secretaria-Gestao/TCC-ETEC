@@ -254,8 +254,36 @@ table.agenda-profissional-grade tbody tr:first-child td {
     flex: 1 0 auto;
 }
 
+/* Relógio + horário exato + botão de status, como no cartão do cliente */
 .agenda-profissional-cartao-horario {
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+}
+
+.agenda-profissional-cartao-fim {
+    font-size: 0.65rem;
+    opacity: 0.8;
+    margin-top: -2px;
+}
+
+.agenda-profissional-botao-status {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border-radius: 4px;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.agenda-profissional-botao-status:hover,
+.agenda-profissional-botao-status[aria-expanded="true"] {
+    background: var(--fundo-evento);
 }
 
 .agenda-profissional-cartao-servicos {

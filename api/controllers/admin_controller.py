@@ -636,12 +636,13 @@ def agendamentos_salao():
             return jsonify({"sucesso": False, "erro": "O remetente não está associado a um salão"}), 404
         
         # Traz dados do cliente e do profissional, pois o admin ou gerente precisa ver
-        # "quem marcou" e "com quem marcou".
+        # "quem marcou" e "com quem marcou". A duração serve para a grade mostrar o horário de término.
 
         busca = (
             supabase_admin.table("agendamentos")
-            .select("id_agendamento, horario, status, preco, clientes(nome_cliente), profissionais(id_profissional, nome_profissional, cargo)")
+            .select("id_agendamento, horario, duracao_total, status, preco, clientes(nome_cliente), profissionais(id_profissional, nome_profissional, cargo)")
             .eq("salao_associado", salao_associado)
+            .order("horario")
         )
 
         if inicio:

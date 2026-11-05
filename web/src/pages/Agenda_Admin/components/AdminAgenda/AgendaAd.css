@@ -363,3 +363,30 @@ table.agenda-admin-grade tbody tr:first-child td {
 @media (max-width: 900px) {
     .agenda-admin-painel-direito { display: none; }
 }
+
+/* Vários atendimentos na mesma hora (profissionais diferentes) ficam empilhados na célula */
+.agenda-admin-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 100%;
+}
+
+.agenda-admin-slot .agenda-admin-cartao {
+    height: auto;
+    flex: 1 0 auto;
+}
+
+/* Relógio + horário exato, como no cartão do cliente */
+.agenda-admin-cartao-horario {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+}
+
+.agenda-admin-cartao-fim {
+    font-size: 0.65rem;
+    opacity: 0.8;
+    margin-top: -2px;
+}

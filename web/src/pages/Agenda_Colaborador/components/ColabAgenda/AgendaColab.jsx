@@ -48,16 +48,17 @@ function montarHorasDaGrade(horarioFuncionamento, agendamentosDaSemana) {
     return Array.from({ length: ultimaHora - primeiraHora + 1 }, (_, i) => primeiraHora + i)
 }
 
-// Horário do cartão: "14:30 – 15:15", ou só o início quando a duração não foi gravada.
-function formatarHorarioAtendimento(ag) {
+// Início e fim do atendimento ("14:30" e "15:15"). O fim fica null quando a duração não foi gravada.
+// Ficam separados porque, nas colunas estreitas da grade, "14:30 – 15:15" numa linha só quebrava em três.
+function horariosDoAtendimento(ag) {
     const opcoes = { hour: '2-digit', minute: '2-digit' }
     const inicio = new Date(ag.horario)
-    const textoInicio = inicio.toLocaleTimeString('pt-BR', opcoes)
+    const fim = ag.duracao_total ? new Date(inicio.getTime() + Number(ag.duracao_total) * 60000) : null
 
-    if (!ag.duracao_total) return textoInicio
-
-    const fim = new Date(inicio.getTime() + Number(ag.duracao_total) * 60000)
-    return `${textoInicio} – ${fim.toLocaleTimeString('pt-BR', opcoes)}`
+    return {
+        inicio: inicio.toLocaleTimeString('pt-BR', opcoes),
+        fim: fim ? fim.toLocaleTimeString('pt-BR', opcoes) : null,
+    }
 }
 
 function AgendaColaborador() {
@@ -248,13 +249,38 @@ async function atualizarStatus(idAgendamento, novoStatus) {
                                     <div
                                         key={ag.id_agendamento}
                                         className="agenda-profissional-cartao"
-                                        onClick={() => setAgendamentoSelecionado(
-                                        agendamentoSelecionado === ag.id_agendamento
-                                        ? null
-                                        : ag.id_agendamento
-                                        )}
                                     >
-                                        <span className="agenda-profissional-cartao-horario">{formatarHorarioAtendimento(ag)}</span>
+                                        {/* Linha do horário igual à do cartão do cliente: relógio, horário e o botão de status */}
+                                        <div className="agenda-profissional-cartao-horario">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0">
+                                                <circle cx="12" cy="12" r="9" />
+                                                <polyline points="12 7 12 12 15.5 14" />
+                                            </svg>
+                                            <span>{horariosDoAtendimento(ag).inicio}</span>
+
+                                            <button
+                                                type="button"
+                                                className="agenda-profissional-botao-status"
+                                                title="Mudar status do agendamento"
+                                                aria-label="Mudar status do agendamento"
+                                                aria-expanded={agendamentoSelecionado === ag.id_agendamento}
+                                                onClick={() => setAgendamentoSelecionado(
+                                                    agendamentoSelecionado === ag.id_agendamento
+                                                    ? null
+                                                    : ag.id_agendamento
+                                                )}
+                                            >
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                                    <circle cx="12" cy="5" r="2" />
+                                                    <circle cx="12" cy="12" r="2" />
+                                                    <circle cx="12" cy="19" r="2" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        {horariosDoAtendimento(ag).fim && (
+                                            <span className="agenda-profissional-cartao-fim">até {horariosDoAtendimento(ag).fim}</span>
+                                        )}
                                         <b>{ag.cliente || 'Cliente'}</b>
                                         {ag.servicos?.length > 0 && (
                                             <span className="agenda-profissional-cartao-servicos">{ag.servicos.join(', ')}</span>
@@ -262,12 +288,7 @@ async function atualizarStatus(idAgendamento, novoStatus) {
                                         <span>{ag.status}</span>
 
                                     {agendamentoSelecionado === ag.id_agendamento && (
-                                        // stopPropagation evita que o clique num botão também
-                                        // dispare o onClick do cartão e feche o menu antes da hora.
-                                        <div
-                                            className="agenda-profissional-menu-acoes"
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
+                                        <div className="agenda-profissional-menu-acoes">
                                             <button onClick={() => atualizarStatus(ag.id_agendamento, 'confirmado')}>Confirmar</button>
                                             <button onClick={() => atualizarStatus(ag.id_agendamento, 'concluido')}>Concluir</button>
                                             <button onClick={() => atualizarStatus(ag.id_agendamento, 'cancelado')}>Cancelar</button>
