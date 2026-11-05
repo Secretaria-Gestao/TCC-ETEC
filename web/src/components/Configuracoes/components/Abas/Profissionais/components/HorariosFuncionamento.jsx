@@ -50,10 +50,10 @@ function HorariosFuncionamento({ idSalao }) {
       {horarios.map((h, i) => (
         <div key={h.dia_semana} className="flex items-center gap-3">
           <span>{DIAS[h.dia_semana]}</span>
-          <input type="time" className="p-2 rounded-lg bg-white/10" value={h.hora_abertura} disabled={h.fechado}
+          <input type="time" className="p-2 rounded-lg bg-linho" value={h.hora_abertura} disabled={h.fechado}
             onChange={(e) => mudar(i, 'hora_abertura', e.target.value)} />
           <span>às</span>
-          <input type="time" value={h.hora_fechamento} disabled={h.fechado}
+          <input type="time" className="p-2 rounded-lg bg-linho" value={h.hora_fechamento} disabled={h.fechado}
             onChange={(e) => mudar(i, 'hora_fechamento', e.target.value)} />
           <label>
             <input type="checkbox" checked={h.fechado}
@@ -61,7 +61,7 @@ function HorariosFuncionamento({ idSalao }) {
           </label>
         </div>
       ))}
-      <button type="button" onClick={salvar} className="p-2 rounded-lg bg-amarelo/80 hover:bg-amarelo/70 text-black">
+      <button type="button" onClick={salvar} className="p-2 rounded-lg bg-ameixa hover:bg-ameixa/90 text-white">
         Salvar horários
       </button>
       {mensagem && <p>{mensagem}</p>}

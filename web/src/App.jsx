@@ -30,7 +30,9 @@ function App() {
   {/* Rota do admin/dono para ver todos os agendamentos do salão */}
         <Route path="/agendamento/historico" element={ <PageHistoricoAtendimentos /> } />
   
-      <Route path="/admin/agenda" element={ <PageAgendaAdmin /> } />
+      <Route path="/admin/agenda" element={ <PageAgendaAdmin secao="agenda" /> } />
+      <Route path="/admin/financeiro" element={ <PageAgendaAdmin secao="financeiro" /> } />
+      <Route path="/admin/atendimentos-por-profissional" element={ <PageAgendaAdmin secao="profissionais" /> } />
       <Route path="/admin/gerenciador-servicos" element={<GerenciadorServicos />} />
       <Route path="/admin/gerenciador-profissionais" element={<GerenciadorProfissionais />} />
   </Routes>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router"
 import estilos from "./TabelaMembros.module.css"
 import { buscarServicos } from "../../../GerenciadorServicos/services/buscarServicos"
 
@@ -102,25 +103,37 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
     
 
     return (
-        <div className="bg-blue-100/50 w-full min-h-170 mt-15 flex flex-col border border-collapse">
+        <div className="bg-azul-gelo/90 w-full min-h-170 mt-15 flex flex-col border border-collapse border-t-[3px] border-t-vermelho">
             <div className="flex justify-between w-full items-end p-5">
 
                 <div className="">
-                    <p className="text-[16px] text-laranja font-bold"> Profissionais</p>
+                    <p className="text-[16px] text-black font-bold"> Profissionais</p>
                     <p className="text-[18px] font-semibold"> Pessoas e permissões    </p>
 
                 </div>
 
-                {profissionais.length > 0 && (
-                    <p className="text-[14px]"> Mostrando: <b>{profissionaisFiltrados.length}</b> </p>
-                )}
+                <div className="flex flex-col items-end gap-2">
+                    {/* O cadastro de profissionais não está mais na BarraLateral: abre por aqui */}
+                    <Link to="/cadastro/colaborador"
+                        className="flex items-center gap-2 py-1.5 px-3 rounded-lg bg-ameixa hover:bg-ameixa/90 text-white transition-colors text-sm">
+                        <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75"
+                            strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <line x1="19" y1="8" x2="19" y2="14" />
+                            <line x1="16" y1="11" x2="22" y2="11" />
+                        </svg>
+                        Adicionar profissional
+                    </Link>
+
+                </div>
             </div>
 
             <hr className="mt-1" />
 
             {/* Filtros da lista: busca por nome, cargo e status. */}
-            <div className="bg-blue-600/25 p-5 flex gap-2">
-                <label htmlFor="pesquisa" className="relative flex p-2 border border-black text-laranja bg-amber-50 flex-2 rounded-md items-center">
+            <div className="bg-azul-po/45 p-5 flex gap-2">
+                <label htmlFor="pesquisa" className="relative flex p-2 border border-azul-ceu text-laranja bg-white flex-2 rounded-md items-center">
 
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -142,7 +155,7 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
                 </label>
 
                 <div className="relative flex-1 ">
-                    <select name="" id="" className="px-3 py-2 w-full h-full border"
+                    <select name="" id="" className="px-3 py-2 w-full h-full border border-azul-ceu"
                         value={filtros.cargoSelecionado}
                         onChange={(evento) => setFiltros(filtrosAntigos => ({
                             ...filtrosAntigos,
@@ -159,7 +172,7 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
                     </select>
                 </div>
 
-                <div className="relative flex-1 border">
+                <div className="relative flex-1 border border-azul-ceu">
                     <select
                         value={filtros.statusSelecionado}
                         onChange={(evento) => setFiltros(filtrosAntigos => ({
@@ -176,7 +189,7 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
             </div>
 
             {/* Tabela principal de profissionais e permissões. */}
-            <table className="tabela-padrao border-collapse w-full bg-blue-600/20">
+            <table className="tabela-padrao border-collapse w-full bg-azul-gelo/70">
                 <thead>
                     {/* Cabeçalho com seleção geral e nomes das colunas. */}
                     <tr>
@@ -206,7 +219,7 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
                         <th>Status</th>
                         <th className="p-0! relative">
                             {confirmacaoRemocaoAberta && (
-                                <div className="absolute top-full left-0 z-10 w-full bg-marrom text-white p-2 border-t border-black">
+                                <div className="absolute top-full left-0 z-10 w-full bg-vinho text-white p-2 border-t border-black">
                                     <p className="text-center text-sm  border-black">Certeza?</p>
                                     <div className="flex justify-center gap-5 pb-1">
                                         <button
@@ -236,7 +249,7 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
                                 <button
                                     type="button"
                                     disabled={estaRemovendo}
-                                    className="h-full w-full bg-marrom px-2 py-3 text-laranja transition-colors hover:bg-red-900 hover:text-white disabled:cursor-wait disabled:opacity-60"
+                                    className="h-full w-full bg-vinho px-2 py-3 text-laranja transition-colors hover:bg-red-900 hover:text-white disabled:cursor-wait disabled:opacity-60"
                                     onClick={() => setConfirmacaoRemocaoAberta(true)}
                                 >
                                     {estaRemovendo ? "Removendo..." : "Remover"}
@@ -302,7 +315,7 @@ export default function TabelaMembros({ profissionais, todosCargos, abrirEdicaoP
                                     <td>{profissional.nivel_acesso}</td>
                                     <td>{profissional.status ? "Ativo" : "Inativo"}</td>
                                     <td>
-                                        <button type="button" className="flex items-center justify-center -ml-2" onClick={() => abrirEdicaoProfissional(profissional)}>
+                                        <button type="button" className="flex items-center justify-center -ml-2 text-(--texto-negrito)" onClick={() => abrirEdicaoProfissional(profissional)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                                                 <circle cx="12" cy="5" r="2" />
                                                 <circle cx="12" cy="12" r="2" />

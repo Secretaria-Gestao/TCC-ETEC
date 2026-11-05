@@ -8,7 +8,7 @@ function SecaoProfissionais({ nomesUnicos, agendamentos }) {
     .sort((a, b) => b.total - a.total)
     return (
         <div className="agenda-admin-secao">
-            <h2>Profissionais (mês atual)</h2>
+            <h2>Atendimentos por profissional (mês atual)</h2>
             {nomesUnicos.length === 0
                 ? <p className="agenda-admin-vazio">Nenhum profissional com agendamentos ainda.</p>
                 : ranking.map(({ nome, total }) => (

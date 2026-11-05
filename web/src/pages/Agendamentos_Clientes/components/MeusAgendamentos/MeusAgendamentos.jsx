@@ -200,7 +200,7 @@ function MeusAgendamentos() {
 
                                 <div className='w-full h-full flex flex-col '>
 
-                                  <button type="button" className='w-6 self-end' aria-label="Ver detalhes do agendamento">
+                                  <button type="button" className='w-6 self-end text-(--texto-negrito)' aria-label="Ver detalhes do agendamento">
                                     <svg className="h-4/5 w-auto shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                       <circle cx="12" cy="5" r="2" />
                                       <circle cx="12" cy="12" r="2" />

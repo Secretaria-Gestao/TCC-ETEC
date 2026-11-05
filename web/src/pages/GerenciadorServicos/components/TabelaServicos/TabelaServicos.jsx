@@ -115,8 +115,7 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
 
         <>
 
-            <table className="tabela-padrao border-collapse w-full">
-
+            <table className="tabela-padrao border border-laranja border-collapse w-full">
 
                 <thead>
                     <tr className="">
@@ -140,8 +139,8 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
                         <th> Pessoas Associadas </th>
                         <th className="p-0! relative">
                             {dropUpAberto && (
-                                <div className="absolute top-full w-full h-10/12 bg-marrom text-white left-0">
-                                    <p className="-mt-0.5">certeza?</p>
+                                <div className="absolute top-full w-full h-10/12 bg-vinho text-white left-0">
+                                    <p className="-mt-0.5 text-center">certeza?</p>
                                     <div className="flex h-max! -m-1 place-self-center gap-5">
                                         <button type="button" className="hover:text-green-500" onClick={() => mandarDadosDeletar()}> Sim </button>
                                         <button type="button" className="hover:text-red-500" onClick={() => {
@@ -155,10 +154,10 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
                             <button type="button"
                                 className={`${estaSelecionando ? "hover:bg-red-600 text-white bg-red-700/75" : estaAdicionando
                                     ? "hover:bg-red-600 text-white bg-red-700/75"
-                                    : "bg-marrom text-green-400 hover:bg-green-900 hover:text-white"} transition-colors py-3 w-full flex}`}
+                                    : "bg-vinho text-green-400 hover:bg-green-900 hover:text-white"} transition-colors py-3 w-full h-full flex}`}
                                 onClick={() => estaSelecionando ? setDropUpAberto(true) : setEstaAdicionando(!estaAdicionando)}
                             >
-                                {estaSelecionando ? <p className="ml-3">- Remover</p> : <p className="ml-3">{estaAdicionando ? "X Todas as estruturasCancelar" : "+ Adicionar"}</p>}
+                                {estaSelecionando ? "- Remover" : estaAdicionando ? "X Cancelar" : "+ Adicionar"}
                             </button>
                         </th>
                     </tr>
@@ -169,19 +168,19 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
                     {estaAdicionando && (
                         //  Essa classe pega todos os TD e INPUT's dentro dela para aplicar o TailWind usando @apply para economizar linha
                         <tr className="GerenciadorServicos-adicionar">
-                            <td />
+                            <td className="border border-laranja border-b-laranja!"/>
                             <td> <input type="text" placeholder="ex: Barba" {...register("nome_servico")} required /> </td>
                             <td> <input type="number" min="0" step="0.01" placeholder='ex: "47" = R$ 47,00' {...register("preco_servico")} required />  </td>
                             <td> <input type="number" min="1" placeholder='ex: "60" = 60 minutos' {...register("duracao")} required /> </td>
                             <td className="relative">
                                 <div className="w-full h-full p-1.5">
-                                    <button type="button" className="w-full h-full text-amarelo text-left" onClick={() => setDropDownAberto(!dropDownAberto)}>
+                                    <button type="button" className="w-full h-full text-azul-po text-left" onClick={() => setDropDownAberto(!dropDownAberto)}>
                                         Selecionar...
                                     </button>
 
                                     {dropDownAberto && (
 
-                                        <div className="border-laranja border text-amarelo absolute overflow-y-auto top-full bg-marrom w-full h-max py-0 left-0">
+                                        <div className="border-laranja border text-cobre absolute overflow-y-auto top-full bg-vinho w-full h-max py-0 left-0">
                                             {profissionais && (
                                                 profissionais.map((profissional) => (
                                                     <label className="flex  gap-2 text-md py-1" key={profissional.id_profissional} >
@@ -199,17 +198,17 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
 
                             <td className="p-0!">
                                 <button type="button"
-                                    className="text-white bg-green-500 hover:bg-green-600 transition-colors w-full py-3 flex"
+                                    className="text-white bg-green-500 hover:bg-green-600 transition-colors w-full py-3 flex justify-center"
                                     onClick={handleSubmit(onSubmit)}
                                 >
-                                    <div className="flex items-center ml-2.5 gap-1">
+                                    <div className="flex items-center gap-1 text-center">
 
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"
                                             strokeLinecap="round" strokeLinejoin="round">
                                             <polyline points="20 6 9 17 4 12" />
                                         </svg>
-                                        <strong>Confirmar</strong>
+                                        <strong className="text-white">Confirmar</strong>
                                     </div>
                                 </button>
                             </td>
@@ -225,56 +224,56 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
                     )}
 
                     {servicos.map((servico) => (
-                            <tr key={servico.id_servico}>
-                                <td>
-                                    <input type="checkbox"
-                                        className="flex place-self-center"
-                                        checked={servicosSelecionados.includes(servico.id_servico)}
-                                        onChange={() => {
-                                            setSelecionouTudo(false)
-                                            setServicosSelecionados((atuais) => (
-                                                atuais.includes(servico.id_servico) ? atuais.filter(id => id !== servico.id_servico)
-                                                    : [...atuais, servico.id_servico]
-                                            ))
-                                        }}
-                                    />
-                                </td>
-                                <td>
-                                    <p>{servico.nome_servico}</p>
-                                    {/* Desativar mantém o serviço cadastrado, por isso ele continua visível. */}
-                                    <small className={servico.em_funcionamento ? "text-green-700" : "text-red-700"}>
-                                        {servico.em_funcionamento ? "Ativo" : "Desativado"}
-                                    </small>
-                                </td>
-                                <td>{servico.preco_servico}</td>
-                                <td>{servico.duracao}</td>
-                                <td className="py-1.5!">
-                                    <div className="max-w-full overflow-x-auto">
+                        <tr key={servico.id_servico}>
+                            <td className="border-b-laranja!">
+                                <input type="checkbox"
+                                    className="flex place-self-center"
+                                    checked={servicosSelecionados.includes(servico.id_servico)}
+                                    onChange={() => {
+                                        setSelecionouTudo(false)
+                                        setServicosSelecionados((atuais) => (
+                                            atuais.includes(servico.id_servico) ? atuais.filter(id => id !== servico.id_servico)
+                                                : [...atuais, servico.id_servico]
+                                        ))
+                                    }}
+                                />
+                            </td>
+                            <td className="border-b-laranja!">
+                                <p>{servico.nome_servico}</p>
+                                {/* Desativar mantém o serviço cadastrado, por isso ele continua visível. */}
+                                <small className={servico.em_funcionamento ? "text-green-700" : "text-red-700"}>
+                                    {servico.em_funcionamento ? "Ativo" : "Desativado"}
+                                </small>
+                            </td>
+                            <td className="border-b-laranja!">{servico.preco_servico}</td>
+                            <td className="border-b-laranja!">{servico.duracao}</td>
+                            <td className="py-1.5! border-b-laranja!" >
+                                <div className="max-w-full overflow-x-auto">
 
-                                        <p className="shrink-0 whitespace-nowrap">
-                                            {associacoes.filter(associacao => associacao.id_servico === servico.id_servico)
-                                                .map(associacao => associacao.profissionais.nome_profissional)
-                                                .join(" - ")
-                                            }
-                                        </p>
+                                    <p className="shrink-0 whitespace-nowrap">
+                                        {associacoes.filter(associacao => associacao.id_servico === servico.id_servico)
+                                            .map(associacao => associacao.profissionais.nome_profissional)
+                                            .join(" - ")
+                                        }
+                                    </p>
 
-                                    </div>
-                                </td>
-                                <td>
-                                    {!estaSelecionando && (
+                                </div>
+                            </td>
+                            <td className="border-b-laranja!">
+                                {!estaSelecionando && (
 
-                                        <button type="button" className="flex place-self-center ml-[-18px]!" onClick={() => abrirEdicaoServico(servico)}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                                <circle cx="12" cy="5" r="2" />
-                                                <circle cx="12" cy="12" r="2" />
-                                                <circle cx="12" cy="19" r="2" />
-                                            </svg>
-                                            Editar
-                                        </button>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
+                                    <button type="button" className="flex place-self-center ml-[-18px]! text-(--texto-negrito)" onClick={() => abrirEdicaoServico(servico)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                            <circle cx="12" cy="5" r="2" />
+                                            <circle cx="12" cy="12" r="2" />
+                                            <circle cx="12" cy="19" r="2" />
+                                        </svg>
+                                        Editar
+                                    </button>
+                                )}
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table >
         </>

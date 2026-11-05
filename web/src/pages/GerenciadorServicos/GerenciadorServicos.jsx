@@ -9,7 +9,6 @@ import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 
 import "./GerenciadorServicos.css"
-import { menuAdmin } from "@/BarraLateral/listaMenus"
 
 export default function GerenciadorServicos() {
 
@@ -78,17 +77,18 @@ export default function GerenciadorServicos() {
     }
 
     return (
-        <div className="w-full h-full flex ">
-            <BarraLateral menu={menuAdmin}/>
+        <main className="main-principal">
+        <div className="w-full h-full flex">
+            <BarraLateral />
 
-            <main className="relative w-full min-h-dvh h-max bg-blue-200 flex flex-col flex-1 min-w-0">
+            <div className="relative w-full min-h-dvh h-max flex flex-col flex-1 min-w-0">
                 {estaEditando && servicoEditando && (
                     <div className="absolute inset-0 backdrop-blur-md text-white z-10 flex justify-center items-center">
                         <form
-                            className="GerenciadorServicos-editar"
+                            className="GerenciadorServicos-editar border-2 border-cobre"
                             onSubmit={handleSubmit(salvarEdicao)}
                         >
-                            <p className="text-amarelo bold">Editar {servicoEditando.nome_servico}</p>
+                            <p className="text-azul-gelo bold">Editar {servicoEditando.nome_servico}</p>
 
                             <label>
                                 Nome
@@ -137,10 +137,10 @@ export default function GerenciadorServicos() {
 
                 <Header titulo="Serviços do salão" subtitulo={nomeSalao} />
 
-                <hr className=' w-10/12 place-self-center mt-[-36px]' />
+                <hr className=' w-10/12 place-self-center mt-[-36px] border-azul-ceu' />
 
-                <div className="flex w-11/12 md:w-10/12 xl:w-8/12 flex-col justify-center my-9 mx-auto md:items-center">
-                    <div>
+                <div className="relative flex w-11/12 md:w-10/12 xl:w-8/12 flex-col justify-center my-18.5 mx-auto md:items-center">
+                    <div className="absolute -top-5.5 left-0 w-100">
                         Total de serviços: <b>{quantidadeServicos}</b>
                     </div>
 
@@ -152,7 +152,8 @@ export default function GerenciadorServicos() {
                             />
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
+        </main>
     )
 }

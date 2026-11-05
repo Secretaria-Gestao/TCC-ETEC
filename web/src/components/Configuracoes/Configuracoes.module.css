@@ -1,0 +1,11 @@
+@reference "../../global.css";
+
+.main-config {
+    @apply absolute top-0 left-full w-[calc(100dvw-100%)] p-5 bg-azul-profundo/60 h-full justify-center flex z-50 overflow-y-auto;
+}
+
+@media (min-height: 826px) {
+    .main-config {
+        @apply items-center;
+    }
+}

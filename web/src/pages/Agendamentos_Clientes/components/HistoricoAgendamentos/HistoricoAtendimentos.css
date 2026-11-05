@@ -12,13 +12,13 @@
 .historico-atendimentos-titulo {
     font-size: 1.05rem;
     font-weight: 700;
-    color: var(--font-color);
+    color: var(--texto);
     margin-bottom: 18px;
 }
 
 .historico-atendimentos-aviso {
     text-align: center;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.7;
     font-size: 0.85rem;
     padding: 40px 12px;
@@ -36,15 +36,15 @@
     gap: 4px;
     padding: 14px 16px;
     background: rgba(255,255,255,0.4);
-    border: 2px solid var(--border-transparent);
+    border: 2px solid var(--borda-suave);
     border-radius: 12px;
-    color: var(--font-color);
+    color: var(--texto);
     font-size: 0.85rem;
 }
 
 .historico-atendimentos-preco {
     font-weight: 700;
-    color: var(--background-button);
+    color: var(--cor-primaria);
 }
 
 .historico-atendimentos-nav-icone {

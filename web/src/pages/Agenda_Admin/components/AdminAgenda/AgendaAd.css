@@ -1,61 +1,12 @@
 .agenda-admin-janela {
-    --quadrado-claro: rgba(255,255,255,0.7);
-    width: 100vw;
-    max-width: none;
-    height: 100vh;
-    border-radius: 25px;
-    border: 2px solid var(--border-transparent);
-    background-color: var(--background-transparent);
-    backdrop-filter: blur(10px);
+    /* Ocupa o espaço que sobra ao lado da BarraLateral */
+    flex: 1;
+    min-width: 0;
+    height: 100dvh;
+    border: 2px solid var(--borda-suave);
+    background-color: transparent;
     display: flex;
     overflow: hidden;
-}
-
-/* Sidebar esquerda */
-.agenda-admin-sidebar {
-    width: 84px;
-    border-right: 2px solid var(--border-transparent);
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    align-items: center;
-    padding: 28px 0;
-}
-
-
-
-.agenda-admin-logo {
-    font-weight: 700;
-    font-size: 0.85rem;
-    margin-bottom: 36px;
-    color: var(--font-color);
-    text-align: center;
-}
-
-.agenda-admin-nav-icone {
-    width: 42px;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    margin-bottom: 14px;
-    color: var(--font-color);
-    opacity: 0.55;
-    cursor: pointer;
-    transition: opacity 0.15s, background 0.15s;
-    font-size: 1.15rem;
-}
-
-.agenda-admin-nav-icone:hover {
-    opacity: 1;
-    background: var(--background-transparent);
-}
-
-/* Ícone ativo fica com fundo amarelo, igual ao padrão das outras páginas */
-.agenda-admin-nav-icone.ativo {
-    opacity: 1;
-    background: var(--quadrado-claro);
 }
 
 .agenda-admin-nav-rodape {
@@ -80,14 +31,14 @@
     margin-bottom: 20px;
     font-size: 0.92rem;
     font-weight: 600;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .agenda-admin-navegacao-semana button {
     background: none;
     border: none;
     font-size: 1.1rem;
-    color: var(--font-color);
+    color: var(--texto);
     cursor: pointer;
     padding: 4px 10px;
     border-radius: 8px;
@@ -96,48 +47,87 @@
 
 .agenda-admin-navegacao-semana button:hover {
     opacity: 1;
-    background: var(--background-transparent);
+    background: var(--fundo-cartao);
 }
 
 .agenda-admin-grade-wrapper {
     flex: 1;
+    overflow: hidden;
+    border: 2px solid var(--borda-suave);
+    border-radius: 16px;
+    background: var(--fundo-painel);
+    min-height: 0;
+    max-height: max-content;
+}
+
+/* Como na agenda dos clientes: só o corpo da tabela rola, então a barra de rolagem
+   começa abaixo dos dias da semana (e só aparece se for preciso). */
+.agenda-admin-grade tbody,
+.agenda-admin-grade thead {
+    display: block;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-azul-ceu) var(--fundo-painel);
+}
+
+.agenda-admin-grade thead {
+    overflow-y: hidden;
+}
+
+.agenda-admin-grade tbody {
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
-    border: 2px solid var(--border-transparent);
-    border-radius: 14px;
-    background: rgba(255,255,255,0.25);
+}
+
+.agenda-admin-grade tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
 }
 
 table.agenda-admin-grade {
-    border-collapse: collapse;
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    height: 100%;
+    border-collapse: collapse;
     table-layout: fixed;
 }
 
 table.agenda-admin-grade th {
     position: sticky;
     top: 0;
-    background: var(--background-gradient-color-light);
+    /* Mesmo cabeçalho da agenda dos clientes */
+    background: var(--color-azul-profundo);
     font-size: 0.76rem;
-    color: var(--font-color);
+    color: var(--texto-invertido);
     font-weight: 700;
     padding: 10px 4px;
-    border-bottom: 2px solid var(--border-transparent);
+    border-bottom: 3px solid var(--color-ameixa);
     text-align: center;
     z-index: 2;
 }
 
 table.agenda-admin-grade td {
-    border: 1px solid var(--border-transparent);
+    border: 0;
+    border-top: 1px solid var(--borda-suave);
+    border-left: 1px solid var(--borda-suave);
     height: 62px;
     vertical-align: top;
     padding: 2px;
 }
 
+/* o th já desenha a linha embaixo do cabeçalho */
+table.agenda-admin-grade tbody tr:first-child td {
+    border-top: 0;
+}
+
 .agenda-admin-coluna-hora {
     width: 60px;
     font-size: 0.72rem;
-    color: var(--font-color);
-    opacity: 0.7;
+    color: var(--texto);
+    opacity: 0.8;
     text-align: right;
     padding-right: 8px !important;
     border: none !important;
@@ -145,12 +135,12 @@ table.agenda-admin-grade td {
 }
 
 .agenda-admin-cartao {
-    background: var(--quadrado-claro);
-    border-left: 3px solid var(--background-button);
+    background: var(--fundo-cartao);
+    border-left: 3px solid var(--color-rosa-queimado);
     border-radius: 6px;
     padding: 4px 6px;
     font-size: 0.7rem;
-    color: var(--background-button);
+    color: var(--cor-primaria);
     line-height: 1.3;
     overflow: hidden;
     height: 100%;
@@ -164,7 +154,7 @@ table.agenda-admin-grade td {
 
 .agenda-admin-mensagem {
     text-align: center;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.7;
     font-size: 0.82rem;
     padding: 20px;
@@ -180,20 +170,20 @@ table.agenda-admin-grade td {
 .agenda-admin-secao h2 {
     font-size: 1.1rem;
     font-weight: 700;
-    color: var(--font-color);
+    color: var(--texto);
     margin-bottom: 8px;
 }
 
 .agenda-admin-card-financeiro {
     background: rgba(255,255,255,0.4);
-    border: 2px solid var(--border-transparent);
+    border: 2px solid var(--borda-suave);
     border-radius: 14px;
     padding: 20px 24px;
 }
 
 .agenda-admin-label {
     font-size: 0.8rem;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.7;
     margin-bottom: 6px;
 }
@@ -201,13 +191,13 @@ table.agenda-admin-grade td {
 .agenda-admin-valor {
     font-size: 1.8rem;
     font-weight: 700;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .agenda-admin-titulo-lista {
     font-size: 0.78rem;
     font-weight: 700;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.65;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -223,16 +213,16 @@ table.agenda-admin-grade td {
     display: flex;
     justify-content: space-between;
     background: rgba(255,255,255,0.35);
-    border: 1px solid var(--border-transparent);
+    border: 1px solid var(--borda-suave);
     border-radius: 10px;
     padding: 10px 14px;
     font-size: 0.8rem;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .agenda-admin-vazio {
     font-size: 0.82rem;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.6;
 }
 
@@ -241,7 +231,7 @@ table.agenda-admin-grade td {
     align-items: center;
     gap: 12px;
     background: rgba(255,255,255,0.4);
-    border: 2px solid var(--border-transparent);
+    border: 2px solid var(--borda-suave);
     border-radius: 10px;
     padding: 12px 14px;
 }
@@ -250,8 +240,8 @@ table.agenda-admin-grade td {
     width: 36px;
     height: 36px;
     border-radius: 10px;
-    background: var(--quadrado-claro);
-    color: var(--background-button);
+    background: var(--fundo-evento);
+    color: var(--cor-primaria);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -263,29 +253,30 @@ table.agenda-admin-grade td {
 .agenda-admin-nome-prof {
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .agenda-admin-qtd-agend {
     font-size: 0.74rem;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.6;
 }
 
 /* Sidebar direita */
 .agenda-admin-painel-direito {
     width: 270px;
-    border-left: 2px solid var(--border-transparent);
+    border-left: 2px solid var(--borda-suave);
     padding: 26px 18px;
     display: flex;
     flex-direction: column;
     gap: 18px;
     overflow-y: auto;
+    background-color: var(--fundo-painel);
 }
 
 .agenda-admin-mini-calendario {
-    background: rgba(255,255,255,0.35);
-    border: 2px solid var(--border-transparent);
+    background: var(--fundo-pagina);
+    border: 2px solid var(--borda-suave);
     border-radius: 14px;
     padding: 14px;
 }
@@ -297,14 +288,14 @@ table.agenda-admin-grade td {
     font-weight: 700;
     font-size: 0.82rem;
     margin-bottom: 10px;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .agenda-admin-mini-calendario-cabecalho button {
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--font-color);
+    color: var(--texto);
     font-size: 0.9rem;
     opacity: 0.7;
 }
@@ -322,23 +313,23 @@ table.agenda-admin-grade td {
 }
 
 .agenda-admin-dia-semana {
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.6;
     font-weight: 700;
     padding-bottom: 4px;
 }
 
 .agenda-admin-dia {
-    background: rgba(255,255,255,0.6);
+    background: var(--fundo-pagina-listra);
     border-radius: 6px;
     padding: 5px 0;
-    color: var(--font-color);
+    color: var(--texto);
     cursor: pointer;
 }
 
 .agenda-admin-dia.agenda-admin-hoje {
-    background: var(--background-button);
-    color: var(--font-color-transparent);
+    background: var(--color-ameixa);
+    color: var(--texto-invertido);
     font-weight: 700;
 }
 
@@ -351,41 +342,49 @@ table.agenda-admin-grade td {
     width: 100%;
     padding: 10px 12px;
     border-radius: 10px;
-    border: 2px solid var(--border-transparent);
+    border: 2px solid var(--borda-suave);
     font-size: 0.82rem;
-    color: var(--font-color);
+    color: var(--texto);
     background: rgba(255,255,255,0.5);
 }
 
 .agenda-admin-titulo-secao {
     font-size: 0.76rem;
     font-weight: 700;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.65;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     margin-bottom: 4px;
 }
 
-.agenda-admin-nav-icone {
-    flex-direction: column; /* empilha emoji e nome */
-    width: 68px;            /* mais largo para caber "Profissionais" */
-    height: auto;           /* a altura passa a depender do conteúdo */
-    padding: 8px 4px;
-    gap: 3px;
-}
-
-.agenda-admin-nav-emoji {
-    font-size: 1.15rem;
-}
-
-.agenda-admin-nav-nome {
-    font-size: 0.62rem;
-    line-height: 1.1;
-    text-align: center;
-    overflow-wrap: anywhere; /* quebra "Profissionais" se ainda não couber */
-}
-
 @media (max-width: 900px) {
     .agenda-admin-painel-direito { display: none; }
+}
+
+/* Vários atendimentos na mesma hora (profissionais diferentes) ficam empilhados na célula */
+.agenda-admin-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 100%;
+}
+
+.agenda-admin-slot .agenda-admin-cartao {
+    height: auto;
+    flex: 1 0 auto;
+}
+
+/* Relógio + horário exato, como no cartão do cliente */
+.agenda-admin-cartao-horario {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+}
+
+.agenda-admin-cartao-fim {
+    font-size: 0.65rem;
+    opacity: 0.8;
+    margin-top: -2px;
 }

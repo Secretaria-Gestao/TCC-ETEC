@@ -1,14 +1,15 @@
 import MeusAgendamentosComponente from './components/MeusAgendamentos/MeusAgendamentos.jsx'
 
 import BarraLateral from '@/BarraLateral/BarraLateral.jsx'
-import { menuCliente } from '@/BarraLateral/listaMenus.jsx'
 
 function PageMeusAgendamentos() {
     return (
-        <div className="main-principal flex">
-            <BarraLateral menu={menuCliente}/>
-            <MeusAgendamentosComponente />
-        </div>
+        <main className="main-principal">
+            <div className="w-full h-full flex">
+                <BarraLateral />
+                <MeusAgendamentosComponente />
+            </div>
+        </main>
     )
 }
 
