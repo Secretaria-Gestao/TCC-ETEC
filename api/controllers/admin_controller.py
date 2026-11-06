@@ -116,7 +116,6 @@ def agendamentos_cliente():
     except Exception as e:
         return jsonify({"sucesso": False, "erro": str(e)}), 500
 
-
 def buscar_profissional_email():
     email_destinatario = (request.headers.get("X-Email") or "").lower() # Email do profissional que será buscado
     if not email_destinatario:
@@ -226,7 +225,6 @@ def buscar_Todosprofissionais(): # Busca todos os profissionais, todos
     except Exception as e:
         return jsonify({"sucesso": False, "erro": "Falha ao encontrar o usuário remetente no banco de dados"}), 500
 
-
 def mostrarMembros():
     # Esta rota abastece a tabela e os resumos da página de gerenciamento.
     # Busca os profissionais do mesmo salão do administrador ou gerente logado.
@@ -280,7 +278,6 @@ def mostrarMembros():
     except Exception as erro:
         print("Erro ao buscar membros:", erro)
         return jsonify({"sucesso": False, "erro": "Falha ao buscar os membros"}), 500
-
 
 def remover_profissional():
     # A remoção é lógica: o registro e o histórico continuam no banco, mas deixam de aparecer.
@@ -356,7 +353,6 @@ def remover_profissional():
     except Exception as erro:
         print("Erro ao remover profissional:", erro)
         return jsonify({"sucesso": False, "erro": "Erro ao remover o profissional"}), 500
-
 
 def editar_profissional():
     # A edição valida o nível de acesso e o salão do remetente antes de atualizar a linha.
@@ -668,7 +664,7 @@ def agendamentos_salao():
         return jsonify({"sucesso": False, "erro": str(e)}), 500
 
 def atualizar_status_agendamento():
-    STATUS_PERMITIDOS = {"confirmado", "concluido", "cancelado", "ausente"}
+    STATUS_PERMITIDOS = {"confirmado", "concluido", "cancelado", "ausente", "pendente"}
     # Usado pelo profissional para confirmar, concluir, cancelar ou marcar
     # ausência em um dos próprios atendimentos.
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
@@ -694,7 +690,7 @@ def atualizar_status_agendamento():
         # pra impedir que ele altere o atendimento de outra pessoa.
         resultado_agendamento = (
             supabase_admin.table("agendamentos")
-            .select("id_agendamento, id_profissional, status")
+            .select("id_agendamento, id_profissional, status, horario")
             .eq("id_agendamento", id_agendamento)
             .execute()
         )
@@ -706,6 +702,17 @@ def atualizar_status_agendamento():
 
         if agendamento["id_profissional"] != id_profissional:
             return jsonify({"sucesso": False, "erro": "Este agendamento não pertence a este profissional"}), 403
+
+        if agendamento["status"] == novo_status:
+            return jsonify({"sucesso": False, "erro": "A requisição selecionou o status atual do agendamento, apenas outros status são permitidos"}), 400
+
+        horario_atual = datetime.now()
+
+        if horario_atual < agendamento["horario"] and novo_status in ["concluido", "ausente"]:
+            return jsonify({"sucesso": False, "erro": f"O agendamento ainda não aconteceu para estar como ${novo_status}."}), 400
+        
+        if agendamento["status"] == "cancelado" and novo_status == "concluido":
+            return jsonify({"sucesso": False, "erro": "Você não pode mudar um agendamento de cancelado para concluído"}), 400
 
         resposta = (
             supabase_admin.table("agendamentos")
@@ -760,7 +767,7 @@ def cancelar_agendamento_cliente():
             return jsonify({"sucesso": False, "erro": "Este agendamento não pertence a este cliente"}), 403
 
         # O status pode vir como "Pendente" ou "pendente", por isso o lower()
-        if (agendamento["status"] or "").lower() not in STATUS_CANCELAVEIS:
+        if (agendamento["status"] or "") not in STATUS_CANCELAVEIS:
             return jsonify({"sucesso": False, "erro": "Só agendamentos pendentes ou confirmados podem ser cancelados"}), 400
 
         horario = datetime.fromisoformat(agendamento["horario"].replace("Z", "+00:00"))

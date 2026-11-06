@@ -172,10 +172,13 @@ function Agendamento() {
         })
     }
 
+    console.log(todosServicos)
+
     async function enviarDados() {
         if (enviando) return // evita clique duplo
 
         // Só aceita serviços que pertencem ao profissional selecionado
+
         const idsPermitidos = todosServicos.map(s => Number(s.id_servico))
         const servicosOk = dados.servicos.length > 0 &&
             dados.servicos.every(id => idsPermitidos.includes(Number(id)))
@@ -187,6 +190,8 @@ function Agendamento() {
             })
             return
         }
+
+        
 
         setEnviando(true)
         try {
