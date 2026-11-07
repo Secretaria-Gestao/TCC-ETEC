@@ -699,6 +699,10 @@ def atualizar_status_agendamento():
             return jsonify({"sucesso": False, "erro": "Agendamento não encontrado"}), 404
 
         agendamento = resultado_agendamento.data[0]
+        
+        horarioBruto = agendamento["horario"]
+        
+        horario_agendamento = datetime.fromisoformat(str(horarioBruto.replace("Z", "+00:00")))
 
         if agendamento["id_profissional"] != id_profissional:
             return jsonify({"sucesso": False, "erro": "Este agendamento não pertence a este profissional"}), 403
@@ -706,9 +710,9 @@ def atualizar_status_agendamento():
         if agendamento["status"] == novo_status:
             return jsonify({"sucesso": False, "erro": "A requisição selecionou o status atual do agendamento, apenas outros status são permitidos"}), 400
 
-        horario_atual = datetime.now()
+        horario_atual = datetime.now(timezone.utc)
 
-        if horario_atual < agendamento["horario"] and novo_status in ["concluido", "ausente"]:
+        if horario_atual < horario_agendamento and novo_status in ["concluido", "ausente"]:
             return jsonify({"sucesso": False, "erro": f"O agendamento ainda não aconteceu para estar como ${novo_status}."}), 400
         
         if agendamento["status"] == "cancelado" and novo_status == "concluido":

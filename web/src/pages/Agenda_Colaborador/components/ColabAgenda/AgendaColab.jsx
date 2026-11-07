@@ -110,6 +110,14 @@ function AgendaColaborador() {
         }
 
         setAgendamentos(resultado.agendamentos || [])
+        
+        setAgendamentos(antigos => antigos.map(ag => {
+          const horarioFormatado = new Date(ag.horario).getTime();
+          ag["horario"] = horarioFormatado
+
+          return ag
+        }))
+
         setHorarioFuncionamento(resultado.horario_funcionamento || [])
 
       } catch (erro) {
@@ -195,6 +203,12 @@ function AgendaColaborador() {
   // Quadradinhos vazios antes do dia 1 (ex: se o mês começa numa quarta, ficam 3 vazios antes).
   const vaziosMes = Array(primeiroDiaMes.getDay()).fill(null)
   const diasMes = Array.from({ length: ultimoDiaMes.getDate() }, (_, i) => i + 1)
+
+  const horarioAgora = Date.now()
+
+  console.log(agendamentos)
+
+  
 
   return (
     <div className="agenda-profissional-janela">
@@ -289,10 +303,10 @@ function AgendaColaborador() {
 
                                 {agendamentoSelecionado === ag.id_agendamento && (
                                   <div className="agenda-profissional-menu-acoes">
-                                    <button onClick={() => atualizarStatus(ag.id_agendamento, 'confirmado')}>Confirmar</button>
-                                    <button onClick={() => atualizarStatus(ag.id_agendamento, 'concluido')}>Concluir</button>
-                                    <button onClick={() => atualizarStatus(ag.id_agendamento, 'cancelado')}>Cancelar</button>
-                                    <button onClick={() => atualizarStatus(ag.id_agendamento, 'ausente')}>Registrar ausência</button>
+                                    { horarioAgora < new Date(ag.horario).getTime() && ( <button onClick={() => atualizarStatus(ag.id_agendamento, 'confirmado')}>Confirmar</button> )}
+                                    { horarioAgora > new Date(ag.horario).getTime() && ( <button onClick={() => atualizarStatus(ag.id_agendamento, 'concluido')}>Concluir</button> )}
+                                    { horarioAgora < new Date(ag.horario).getTime() && ( <button onClick={() => atualizarStatus(ag.id_agendamento, 'cancelado')}>Cancelar</button>)}
+                                    { horarioAgora > new Date(ag.horario).getTime() && ( <button onClick={() => atualizarStatus(ag.id_agendamento, 'ausente')}>Registrar ausência</button> )}
                                   </div>
                                 )}
                               </div>
