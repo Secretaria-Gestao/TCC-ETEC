@@ -148,6 +148,22 @@ table.agenda-admin-grade tbody tr:first-child td {
     flex-direction: column;
 }
 
+/* Cancelado: fundo avermelhado. Ausente: fundo alaranjado. Concluído: fundo esverdeado (iguais aos da agenda do profissional). */
+.agenda-admin-cartao-concluido {
+    background: color-mix(in srgb, var(--color-verde) 10%, var(--fundo-painel));
+    border-left-color: var(--color-verde);
+}
+
+.agenda-admin-cartao-cancelado {
+    background: color-mix(in srgb, var(--cor-perigo) 18%, var(--fundo-painel));
+    border-left-color: var(--cor-perigo);
+}
+
+.agenda-admin-cartao-ausente {
+    background: color-mix(in srgb, var(--cor-erro) 18%, var(--fundo-painel));
+    border-left-color: var(--cor-erro);
+}
+
 .agenda-admin-cartao b {
     font-size: 0.72rem;
 }

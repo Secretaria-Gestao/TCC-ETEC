@@ -664,7 +664,7 @@ def agendamentos_salao():
         return jsonify({"sucesso": False, "erro": str(e)}), 500
 
 def atualizar_status_agendamento():
-    STATUS_PERMITIDOS = {"confirmado", "concluido", "cancelado", "ausente", "pendente"}
+    STATUS_PERMITIDOS = {"confirmado", "concluido", "cancelado", "ausente"}
     # Usado pelo profissional para confirmar, concluir, cancelar ou marcar
     # ausência em um dos próprios atendimentos.
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
@@ -713,10 +713,17 @@ def atualizar_status_agendamento():
         horario_atual = datetime.now(timezone.utc)
 
         if horario_atual < horario_agendamento and novo_status in ["concluido", "ausente"]:
-            return jsonify({"sucesso": False, "erro": f"O agendamento ainda não aconteceu para estar como ${novo_status}."}), 400
+            return jsonify({"sucesso": False, "erro": f"O agendamento ainda não aconteceu para estar como {novo_status}."}), 400
         
-        if agendamento["status"] == "cancelado" and novo_status == "concluido":
-            return jsonify({"sucesso": False, "erro": "Você não pode mudar um agendamento de cancelado para concluído"}), 400
+        status_atual = agendamento["status"]
+
+        # Concluído, cancelado e ausente são finais: não mudam mais
+        if status_atual in ["concluido", "cancelado", "ausente"]:
+            return jsonify({"sucesso": False, "erro": f"Um agendamento {status_atual} não pode mais mudar de status"}), 400
+
+        # Pendente só pode ser confirmado ou cancelado
+        if status_atual == "pendente" and novo_status not in ["confirmado", "cancelado"]:
+            return jsonify({"sucesso": False, "erro": "Um agendamento pendente só pode ser confirmado ou cancelado"}), 400
 
         resposta = (
             supabase_admin.table("agendamentos")
@@ -770,7 +777,6 @@ def cancelar_agendamento_cliente():
         if str(agendamento["id_cliente"]) != str(id_cliente):
             return jsonify({"sucesso": False, "erro": "Este agendamento não pertence a este cliente"}), 403
 
-        # O status pode vir como "Pendente" ou "pendente", por isso o lower()
         if (agendamento["status"] or "") not in STATUS_CANCELAVEIS:
             return jsonify({"sucesso": False, "erro": "Só agendamentos pendentes ou confirmados podem ser cancelados"}), 400
 

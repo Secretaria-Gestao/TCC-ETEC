@@ -172,8 +172,6 @@ function Agendamento() {
         })
     }
 
-    console.log(todosServicos)
-
     async function enviarDados() {
         if (enviando) return // evita clique duplo
 
