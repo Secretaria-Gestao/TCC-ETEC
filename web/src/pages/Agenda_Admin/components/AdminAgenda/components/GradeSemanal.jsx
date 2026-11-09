@@ -76,7 +76,15 @@ function GradeSemanal({ domingo, agendamentos, campoPrincipal, campoSecundario }
                                         {agendamentosDoSlot.length > 0 && (
                                             <div className="agenda-admin-slot">
                                                 {agendamentosDoSlot.map((ag) => (
-                                                    <div key={ag.id_agendamento} className="agenda-admin-cartao">
+                                                    <div
+                                                        key={ag.id_agendamento}
+                                                        className={`agenda-admin-cartao${
+                                                            ag.status === 'cancelado' ? ' agenda-admin-cartao-cancelado'
+                                                            : ag.status === 'ausente' ? ' agenda-admin-cartao-ausente'
+                                                            : ag.status === 'concluido' ? ' agenda-admin-cartao-concluido'
+                                                            : ''
+                                                        }`}
+                                                    >
                                                         <div className="agenda-admin-cartao-horario">
                                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                                 strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0">

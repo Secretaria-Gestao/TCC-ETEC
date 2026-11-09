@@ -189,7 +189,7 @@ def agendar():
             "endereco": endereco_salao,
             "preco": valor_total,
             "duracao_total": duracao_total,
-            "status": "Pendente"
+            "status": "pendente"
         }
 
         resultado = supabase.table("agendamentos").insert(novo_agendamento).execute()

@@ -110,6 +110,14 @@ function AgendaColaborador() {
         }
 
         setAgendamentos(resultado.agendamentos || [])
+
+        setAgendamentos(antigos => antigos.map(ag => {
+          const horarioFormatado = new Date(ag.horario).getTime();
+          ag["horario"] = horarioFormatado
+
+          return ag
+        }))
+
         setHorarioFuncionamento(resultado.horario_funcionamento || [])
 
       } catch (erro) {
@@ -196,6 +204,8 @@ function AgendaColaborador() {
   const vaziosMes = Array(primeiroDiaMes.getDay()).fill(null)
   const diasMes = Array.from({ length: ultimoDiaMes.getDate() }, (_, i) => i + 1)
 
+  const horarioAgora = Date.now()
+
   return (
     <div className="agenda-profissional-janela">
 
@@ -248,7 +258,12 @@ function AgendaColaborador() {
                               // Mostra o horário, o cliente, os serviços e o status do agendamento.
                               <div
                                 key={ag.id_agendamento}
-                                className="agenda-profissional-cartao"
+                                className={`agenda-profissional-cartao${
+                                  ag.status === 'cancelado' ? ' agenda-profissional-cartao-cancelado'
+                                  : ag.status === 'ausente' ? ' agenda-profissional-cartao-ausente'
+                                  : ag.status === 'concluido' ? ' agenda-profissional-cartao-concluido'
+                                  : ''
+                                }`}
                               >
                                 {/* Linha do horário igual à do cartão do cliente: relógio, horário e o botão de status */}
                                 <div className="agenda-profissional-cartao-horario flex">
@@ -285,15 +300,17 @@ function AgendaColaborador() {
                                 {ag.servicos?.length > 0 && (
                                   <span className="agenda-profissional-cartao-servicos">{ag.servicos.join(', ')}</span>
                                 )}
-                                <span>{ag.status}</span>
+                                <span className="capitalize">{ag.status}</span>
 
                                 {agendamentoSelecionado === ag.id_agendamento && (
-                                  <div className="agenda-profissional-menu-acoes">
-                                    <button onClick={() => atualizarStatus(ag.id_agendamento, 'confirmado')}>Confirmar</button>
-                                    <button onClick={() => atualizarStatus(ag.id_agendamento, 'concluido')}>Concluir</button>
-                                    <button onClick={() => atualizarStatus(ag.id_agendamento, 'cancelado')}>Cancelar</button>
-                                    <button onClick={() => atualizarStatus(ag.id_agendamento, 'ausente')}>Registrar ausência</button>
-                                  </div>
+                                  ["confirmado", "pendente"].includes(ag.status) && (
+                                    <div className="agenda-profissional-menu-acoes">
+                                      {horarioAgora < new Date(ag.horario).getTime() && ag.status != "confirmado" && (<button onClick={() => atualizarStatus(ag.id_agendamento, 'confirmado')}>Confirmar</button>)}
+                                      {horarioAgora > new Date(ag.horario).getTime() && ag.status === "confirmado" && (<button onClick={() => atualizarStatus(ag.id_agendamento, 'concluido')}>Concluir</button>)}
+                                      <button onClick={() => atualizarStatus(ag.id_agendamento, 'cancelado')}>Cancelar</button>
+                                      {horarioAgora > new Date(ag.horario).getTime() && ag.status === "confirmado" && (<button onClick={() => atualizarStatus(ag.id_agendamento, 'ausente')}>Registrar ausência</button>)}
+                                    </div>
+                                  )
                                 )}
                               </div>
                             ))}
