@@ -43,6 +43,7 @@ const tiposPorNivel = {
     3: 'colaborador'
 }
 
+//py
 async function buscarTipoUsuario(idUsuario) { // Procura o usuário nas duas tabelas
     const [cliente, profissional] = await Promise.all([
         supabase.from('clientes').select('id_cliente').eq('id_cliente', idUsuario).maybeSingle(),
@@ -53,6 +54,7 @@ async function buscarTipoUsuario(idUsuario) { // Procura o usuário nas duas tab
     if (profissional.data) return tiposPorNivel[profissional.data.nivel_acesso] ?? 'colaborador'
     return null
 }
+//py
 
 export async function buscarTipoDoUsuarioLogado() { // Tipo de quem está logado, ou null
     const { data } = await supabase.auth.getUser()
@@ -60,6 +62,7 @@ export async function buscarTipoDoUsuarioLogado() { // Tipo de quem está logado
     return buscarTipoUsuario(data.user.id)
 }
 
+//py
 export async function buscarDestinoDoUsuario() { // Rota certa para quem está logado
     const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
 
@@ -91,3 +94,4 @@ export async function buscarDestinoDoUsuario() { // Rota certa para quem está l
 
     return rotasPorTipo[tipo]
 }
+//py
