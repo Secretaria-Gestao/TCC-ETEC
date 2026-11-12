@@ -7,12 +7,52 @@
     w-max px-4 sticky shrink-0 top-0 h-dvh;
 }
 
-
-
 .barraLateral > hr {
     margin: 24px
 }
 
 .barraLateral svg {
     color: var(--color-laranja);
+}
+
+.card-minha-renda { 
+display:grid; 
+gap:6px; 
+padding:10px; 
+border-radius:12px;
+background: var(--quadrado-claro, rgba(255,255,255,0.7)); 
+color: var(--font-color); 
+font-size:.75rem; 
+}
+
+.card-minha-renda-nav { 
+display:flex; 
+justify-content:space-between; 
+align-items:center; 
+}
+
+.card-minha-renda-nav button { 
+background:none; 
+border:none; 
+cursor:pointer; 
+color:inherit; 
+}
+
+.agenda-admin-acertos-totais { 
+display:flex; 
+gap:16px; 
+margin:8px 0; 
+flex-wrap:wrap; 
+}
+
+.agenda-admin-tabela-acertos { 
+width:100%; 
+border-collapse:collapse; 
+font-size:.8rem; 
+}
+.agenda-admin-tabela-acertos th, .agenda-admin-tabela-acertos td
+  { 
+padding:6px 8px; 
+text-align:left; 
+border-bottom:1px solid var(--border-transparent); 
 }

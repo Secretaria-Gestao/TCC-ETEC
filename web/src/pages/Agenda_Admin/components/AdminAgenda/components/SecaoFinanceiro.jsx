@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import SecaoAcertos from './SecaoAcertos.jsx'
 
 function SecaoFinanceiro({ totalSemana, agendamentos }) {
     const  [mesRef, setMesRef] = useState(() => {
@@ -45,9 +46,11 @@ const formatarReal = (v) =>
         {semPreco} atendimento(s) sem preço registrado não entraram na soma.
          </p>
 )}
+        <SecaoAcertos mes={mesRef} />
+
             <div className="agenda-admin-card-financeiro">
                 <p className="agenda-admin-label">Receita desta semana</p>
-                <p className="agenda-admin-valor">R$ {formatarReal(totalSemana)}</p>
+                <p className="agenda-admin-valor">{formatarReal(totalSemana)}</p>
             </div>
 
             <div className="agenda-admin-lista-transacoes">

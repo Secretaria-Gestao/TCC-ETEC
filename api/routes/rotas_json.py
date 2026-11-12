@@ -2,7 +2,7 @@ from flask import Flask, Blueprint
 from controllers.login_controller import cadastroUserCliente
 from controllers.login_controller import cadastroUserGerente
 from controllers.agendamento_controller import agendar
-from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento, historico_cliente, buscar_horarios_salao, salvar_horarios_salao, definir_acordo_financeiro 
+from controllers.admin_controller import cadastrar_profissional, editar_profissional, minha_renda, relatorio_acertos, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento, historico_cliente, buscar_horarios_salao, salvar_horarios_salao, definir_acordo_financeiro 
 from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento, cancelar_agendamento_cliente, historico_cliente, buscar_horarios_salao, salvar_horarios_salao
 from controllers.buscar_salao import buscar_salao, buscar_servicos_fornecidos, criar_servicos_fornecidos, editar_servicos_fornecidos, deletar_servicos_fornecidos
 from controllers.buscar_saloes import buscar_saloes
@@ -156,3 +156,11 @@ def editar_horarios_salao():
 def acordo_financeiro():
     # Nome diferente da função importada, para não chamar a si mesma
     return definir_acordo_financeiro()
+
+@rotas_json.route("/api/financeiro/acertos", methods=["GET"])
+def rota_acertos():
+    return relatorio_acertos()
+
+@rotas_json.route("/api/financeiro/minha-renda", methods=["GET"])
+def rota_minha_renda():
+    return minha_renda()

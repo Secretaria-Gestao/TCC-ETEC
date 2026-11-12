@@ -4,6 +4,7 @@ import './BarraLateral.css'
 import Configuracoes from '@/Configuracoes/Configuracoes'
 import { useState } from 'react'
 import { useMeuPerfil } from '../../services/pegarMeuPerfil'
+import CardMinhaRenda from '../BarraLateral/CardMinhaRenda.jsx'
 
 function BarraLateral({ menu = [] }) {
 
@@ -39,6 +40,8 @@ function BarraLateral({ menu = [] }) {
                 </NavLink>
             ))}
 
+<div className="mt-auto flex flex-col">
+{tipoPerfil !== 'cliente' && <CardMinhaRenda />}
             <button type="button" className='flex bg-[#1a2431] mt-auto mb-5 p-3 rounded-md gap-2 items-center justify-center' onClick={() => setConfigAberto(!configAberto)}>
                 <svg
                     className="w-5 h-5 shrink-0"
@@ -51,6 +54,7 @@ function BarraLateral({ menu = [] }) {
                 </svg>
                 Configurações
             </button>
+          </div>
 
             {/* O painel é filho da barra (por isso ele se posiciona a partir dela). O z-40 da barra é o que mantém
                 tudo isso, painel incluso, por cima do conteúdo da página. */}
