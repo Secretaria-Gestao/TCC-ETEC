@@ -1018,4 +1018,128 @@ def definir_acordo_financeiro():
 
     except Exception as erro:
         print("Erro ao definir acordo financeiro:", erro)
-        return jsonify({"sucesso": False, "erro": "Erro ao salvar o acordo financeiro"}), 500   
+        return jsonify({"sucesso": False, "erro": "Erro ao salvar o acordo financeiro"}), 500
+
+
+def relatorio_acertos():
+    # US 20: totais do mês por colaborador. Só administrador (nível 1).
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    id_remetente = autenticar(token)
+    if not id_remetente:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    # O front manda o mês como intervalo ISO (início inclusive, fim exclusivo).
+    # Assim o fuso horário é resolvido no navegador, igual ao faturamento.
+    inicio = request.args.get("inicio")
+    fim = request.args.get("fim")
+    if not inicio or not fim:
+        return jsonify({"sucesso": False, "erro": "Campos ausentes: inicio, fim"}), 400
+
+    try:
+        resp = (
+            supabase_admin.table("profissionais")
+            .select("nivel_acesso, salao_associado")
+            .eq("id_profissional", id_remetente)
+            .execute()
+        )
+        if not resp.data:
+            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404
+        remetente = resp.data[0]
+
+        # Só o administrador vê o acordo financeiro de todo mundo
+        if int(remetente["nivel_acesso"]) != 1:
+            return jsonify({"sucesso": False, "erro": "Acesso negado"}), 403
+
+        # Todos os colaboradores do salão (mesmo desativados, que podem ter
+        # atendimentos no mês), só ficam de fora os removidos.
+        profs = (
+            supabase_admin.table("profissionais")
+            .select("id_profissional, nome_profissional, tipo_pagamento, valor_comissao")
+            .eq("salao_associado", remetente["salao_associado"])
+            .eq("removido", False)
+            .execute()
+        ).data or []
+
+        ids = [p["id_profissional"] for p in profs]
+        totais = {}
+        if ids:
+            ags = (
+                supabase_admin.table("agendamentos")
+                .select("id_profissional, preco")
+                .in_("id_profissional", ids)
+                .gte("horario", inicio)
+                .lt("horario", fim)
+                .ilike("status", "conclu%")  # só concluídos
+                .execute()
+            ).data or []
+            for ag in ags:
+                t = totais.setdefault(ag["id_profissional"], {"qtd": 0, "total": 0.0})
+                t["qtd"] += 1
+                t["total"] += float(ag.get("preco") or 0)  # preço gravado no agendamento
+
+        relatorio = [{
+            "id_profissional": p["id_profissional"],
+            "nome": p["nome_profissional"],
+            "tipo_pagamento": p.get("tipo_pagamento"),
+            "valor_comissao": p.get("valor_comissao"),
+            "qtd": totais.get(p["id_profissional"], {}).get("qtd", 0),
+            "total": round(totais.get(p["id_profissional"], {}).get("total", 0.0), 2),
+        } for p in profs]
+
+        return jsonify({"sucesso": True, "relatorio": relatorio})
+
+    except Exception as erro:
+        print("Erro no relatório de acertos:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao gerar o relatório"}), 500
+
+
+def minha_renda():
+    # US 24/25: renda do próprio profissional (admin, gerente ou profissional)
+    # no intervalo pedido. O id vem do token, nunca do front.
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    id_profissional = autenticar(token)
+    if not id_profissional:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    inicio = request.args.get("inicio")
+    fim = request.args.get("fim")
+    if not inicio or not fim:
+        return jsonify({"sucesso": False, "erro": "Campos ausentes: inicio, fim"}), 400
+
+    try:
+        resp = (
+            supabase_admin.table("profissionais")
+            .select("tipo_pagamento, valor_comissao")
+            .eq("id_profissional", id_profissional)
+            .execute()
+        )
+        # Cliente não tem linha em profissionais: não tem renda
+        if not resp.data:
+            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404
+        acordo = resp.data[0]
+
+        ags = (
+            supabase_admin.table("agendamentos")
+            .select("preco")
+            .eq("id_profissional", id_profissional)
+            .gte("horario", inicio)
+            .lt("horario", fim)
+            .ilike("status", "conclu%")
+            .execute()
+        ).data or []
+
+        return jsonify({
+            "sucesso": True,
+            "qtd": len(ags),
+            "total": round(sum(float(a.get("preco") or 0) for a in ags), 2),
+            "tipo_pagamento": acordo.get("tipo_pagamento"),
+            "valor_comissao": acordo.get("valor_comissao"),
+        })
+
+    except Exception as erro:
+        print("Erro ao calcular a renda:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao calcular a renda"}), 500

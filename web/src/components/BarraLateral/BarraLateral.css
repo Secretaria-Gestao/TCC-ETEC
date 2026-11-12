@@ -21,3 +21,14 @@
 .barraLateral > button svg {
     color: var(--color-azul-ceu);
 }
+
+.card-minha-renda { 
+display:grid; 
+gap:6px; 
+padding:10px; 
+margin-bottom:12px; 
+border-radius:12px;
+background:rgba(255,255,255,0.12); 
+color:#fff; 
+font-size:.75rem; 
+}

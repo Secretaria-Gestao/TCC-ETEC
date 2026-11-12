@@ -5,6 +5,7 @@ import Configuracoes from '@/Configuracoes/Configuracoes'
 import { useState } from 'react'
 import { useMeuPerfil } from '../../services/pegarMeuPerfil'
 import { menuDoPerfil } from './listaMenus'
+import CardMinhaRenda from './CardMinhaRenda.jsx'
 
 // Única barra de navegação do sistema: cada página só renderiza <BarraLateral />
 // e a própria barra escolhe o menu de acordo com quem está logado.
@@ -51,6 +52,16 @@ function BarraLateral() {
                 </NavLink>
             ))}
 
+             <div className="mt-auto flex flex-col">
+
+            {/* US 24/25: qualquer profissional (admin, gerente e profissional) vê a renda.
+                hidden md:block: no celular a barra só tem ícones, então o card não cabe */}
+            {tipoUsuario !== 'cliente' && !isPending && (
+                <div className="hidden md:block">
+                    <CardMinhaRenda />
+                </div>
+            )}
+
             <button type="button" title="Configurações" className='flex bg-white/12 mt-auto mb-5 p-3 rounded-md gap-2 items-center justify-center' onClick={() => setConfigAberto(!configAberto)}>
                 <svg
                     className="w-5 h-5 shrink-0"
@@ -63,6 +74,7 @@ function BarraLateral() {
                 </svg>
                 <span className="hidden md:inline">Configurações</span>
             </button>
+           </div> 
 
             {/* O painel é filho da barra (por isso ele se posiciona a partir dela). O z-40 da barra é o que mantém
                 tudo isso, painel incluso, por cima do conteúdo da página. */}
