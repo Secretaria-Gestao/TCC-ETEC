@@ -1,6 +1,6 @@
 .login-page {
-    background: repeating-linear-gradient(to top right, var(--background-gradient-color-dark) 10% 35%, var(--background-gradient-color-light) 35% 40%, var(--background-gradient-color-dark) 40% 65%, var(--border-transparent) 65% 70%) no-repeat fixed center;
-    color: var(--font-color);
+    background: repeating-linear-gradient(to top right, var(--fundo-pagina-listra) 10% 35%, var(--fundo-pagina) 35% 40%, var(--fundo-pagina-listra) 40% 65%, var(--borda-suave) 65% 70%) no-repeat fixed center;
+    color: var(--texto);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,8 +10,8 @@
     display: grid;
     grid-column: 1fr;
     border-radius: 25px;
-    border: 2px solid var(--border-transparent);
-    background-color: var(--background-transparent);
+    border: 2px solid var(--borda-suave);
+    background-color: var(--fundo-cartao);
     backdrop-filter: blur(10px);
     text-align: center;
 }
@@ -19,5 +19,5 @@
 .login-form hr {
     border: none;
     height: 2px;
-    background-color: var(--border-color);
+    background-color: var(--borda-campo);
 }

@@ -2,9 +2,9 @@
 
 /* Estilos exclusivos da linha temporária de criação de serviço. */
 .GerenciadorServicos-adicionar > td:not(:first-child):not(:last-child) {
-    @apply p-0 bg-marrom;
+    @apply p-0 bg-vinho border-2! border-laranja;
 }
 
 .GerenciadorServicos-adicionar input:not([type="checkbox"]) {
-    @apply bg-marrom p-1.5 w-full h-full text-amarelo;
+    @apply bg-vinho w-full h-full p-0! m-0! text-azul-po opacity-100;
 }

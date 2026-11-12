@@ -33,7 +33,7 @@ function Formulario({dados, setDados}) {
     }
 
     return (
-        <form className="h-160 w-full max-w-[980px] rounded-2xl border-2 border-amber-950 bg-azulClaro p-4! sm:p-5! md:w-9/10 md:p-6! lg:w-8/10 xl:w-6/10 xl:p-8!">
+        <form className="h-160 w-full max-w-[980px] rounded-2xl border-2 border-vinho bg-linho p-4! sm:p-5! md:w-9/10 md:p-6! lg:w-8/10 xl:w-6/10 xl:p-8!">
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
 
                 <input name="nome" className="cadastroProfInput" type="text" placeholder="Nome" onChange={mudarValor} />

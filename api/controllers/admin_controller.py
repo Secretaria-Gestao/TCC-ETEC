@@ -116,7 +116,6 @@ def agendamentos_cliente():
     except Exception as e:
         return jsonify({"sucesso": False, "erro": str(e)}), 500
 
-
 def buscar_profissional_email():
     email_destinatario = (request.headers.get("X-Email") or "").lower() # Email do profissional que será buscado
     if not email_destinatario:
@@ -226,7 +225,6 @@ def buscar_Todosprofissionais(): # Busca todos os profissionais, todos
     except Exception as e:
         return jsonify({"sucesso": False, "erro": "Falha ao encontrar o usuário remetente no banco de dados"}), 500
 
-
 def mostrarMembros():
     # Esta rota abastece a tabela e os resumos da página de gerenciamento.
     # Busca os profissionais do mesmo salão do administrador ou gerente logado.
@@ -280,7 +278,6 @@ def mostrarMembros():
     except Exception as erro:
         print("Erro ao buscar membros:", erro)
         return jsonify({"sucesso": False, "erro": "Falha ao buscar os membros"}), 500
-
 
 def remover_profissional():
     # A remoção é lógica: o registro e o histórico continuam no banco, mas deixam de aparecer.
@@ -356,7 +353,6 @@ def remover_profissional():
     except Exception as erro:
         print("Erro ao remover profissional:", erro)
         return jsonify({"sucesso": False, "erro": "Erro ao remover o profissional"}), 500
-
 
 def editar_profissional():
     # A edição valida o nível de acesso e o salão do remetente antes de atualizar a linha.
@@ -539,26 +535,57 @@ def agendamentos_profissional(id_profissional):
         if id_profissional_pelo_token != id_profissional: # Verificação do id_profissional
             return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"}), 403
         
-        # Traz os dados do cliente porque o profissional precisa saber quem vai atender.
+        # Traz os dados do cliente e os serviços porque o profissional precisa saber quem vai atender e o que vai fazer.
+        # Ordenado por horário para a tela mostrar os atendimentos da mesma hora na ordem certa.
         resultado = (
             supabase_admin.table("agendamentos")
-            .select("id_agendamento, horario, status, clientes(nome_cliente, email_cliente)")
+            .select(
+                "id_agendamento, horario, duracao_total, status, "
+                "clientes(nome_cliente, email_cliente), "
+                "agendamento_servicos(servicos(nome_servico))"
+            )
             .eq("id_profissional", id_profissional)
+            .order("horario")
             .execute()
         )
 
         agendamentos = []
-        for ag in resultado.data:
+        for ag in resultado.data or []:
             cliente = ag.get("clientes") or {}
+            # Cada agendamento pode ter vários serviços
+            servicos = [
+                (item.get("servicos") or {}).get("nome_servico")
+                for item in (ag.get("agendamento_servicos") or [])
+            ]
             agendamentos.append({
                 "id_agendamento": ag["id_agendamento"],
                 "horario": ag["horario"],
+                "duracao_total": ag.get("duracao_total"),
                 "status": ag["status"],
                 "cliente": cliente.get("nome_cliente"),
                 "email_cliente": cliente.get("email_cliente"),
+                "servicos": [s for s in servicos if s],  # descarta nomes vazios
             })
 
-        return jsonify({"sucesso": True, "agendamentos": agendamentos})
+        # Horário de funcionamento do salão do profissional: a grade da agenda usa para saber quais horas mostrar
+        horario_funcionamento = []
+        resposta_salao = (
+            supabase_admin.table("profissionais")
+            .select("salao_associado")
+            .eq("id_profissional", id_profissional)
+            .execute()
+        )
+        if resposta_salao.data and resposta_salao.data[0]["salao_associado"] is not None:
+            resposta_horarios = (
+                supabase_admin.table("horario_funcionamento_salao")
+                .select("dia_semana, hora_abertura, hora_fechamento, fechado")
+                .eq("id_salao", resposta_salao.data[0]["salao_associado"])
+                .order("dia_semana")
+                .execute()
+            )
+            horario_funcionamento = resposta_horarios.data or []
+
+        return jsonify({"sucesso": True, "agendamentos": agendamentos, "horario_funcionamento": horario_funcionamento})
     
     except Exception as e:
         return jsonify({"sucesso": False, "erro": str(e)}), 500
@@ -605,12 +632,13 @@ def agendamentos_salao():
             return jsonify({"sucesso": False, "erro": "O remetente não está associado a um salão"}), 404
         
         # Traz dados do cliente e do profissional, pois o admin ou gerente precisa ver
-        # "quem marcou" e "com quem marcou".
+        # "quem marcou" e "com quem marcou". A duração serve para a grade mostrar o horário de término.
 
         busca = (
             supabase_admin.table("agendamentos")
-            .select("id_agendamento, horario, status, preco, clientes(nome_cliente), profissionais(id_profissional, nome_profissional, cargo)")
+            .select("id_agendamento, horario, duracao_total, status, preco, clientes(nome_cliente), profissionais(id_profissional, nome_profissional, cargo)")
             .eq("salao_associado", salao_associado)
+            .order("horario")
         )
 
         if inicio:
@@ -662,7 +690,7 @@ def atualizar_status_agendamento():
         # pra impedir que ele altere o atendimento de outra pessoa.
         resultado_agendamento = (
             supabase_admin.table("agendamentos")
-            .select("id_agendamento, id_profissional, status")
+            .select("id_agendamento, id_profissional, status, horario")
             .eq("id_agendamento", id_agendamento)
             .execute()
         )
@@ -671,9 +699,31 @@ def atualizar_status_agendamento():
             return jsonify({"sucesso": False, "erro": "Agendamento não encontrado"}), 404
 
         agendamento = resultado_agendamento.data[0]
+        
+        horarioBruto = agendamento["horario"]
+        
+        horario_agendamento = datetime.fromisoformat(str(horarioBruto.replace("Z", "+00:00")))
 
         if agendamento["id_profissional"] != id_profissional:
             return jsonify({"sucesso": False, "erro": "Este agendamento não pertence a este profissional"}), 403
+
+        if agendamento["status"] == novo_status:
+            return jsonify({"sucesso": False, "erro": "A requisição selecionou o status atual do agendamento, apenas outros status são permitidos"}), 400
+
+        horario_atual = datetime.now(timezone.utc)
+
+        if horario_atual < horario_agendamento and novo_status in ["concluido", "ausente"]:
+            return jsonify({"sucesso": False, "erro": f"O agendamento ainda não aconteceu para estar como {novo_status}."}), 400
+        
+        status_atual = agendamento["status"]
+
+        # Concluído, cancelado e ausente são finais: não mudam mais
+        if status_atual in ["concluido", "cancelado", "ausente"]:
+            return jsonify({"sucesso": False, "erro": f"Um agendamento {status_atual} não pode mais mudar de status"}), 400
+
+        # Pendente só pode ser confirmado ou cancelado
+        if status_atual == "pendente" and novo_status not in ["confirmado", "cancelado"]:
+            return jsonify({"sucesso": False, "erro": "Um agendamento pendente só pode ser confirmado ou cancelado"}), 400
 
         resposta = (
             supabase_admin.table("agendamentos")
@@ -727,8 +777,7 @@ def cancelar_agendamento_cliente():
         if str(agendamento["id_cliente"]) != str(id_cliente):
             return jsonify({"sucesso": False, "erro": "Este agendamento não pertence a este cliente"}), 403
 
-        # O status pode vir como "Pendente" ou "pendente", por isso o lower()
-        if (agendamento["status"] or "").lower() not in STATUS_CANCELAVEIS:
+        if (agendamento["status"] or "") not in STATUS_CANCELAVEIS:
             return jsonify({"sucesso": False, "erro": "Só agendamentos pendentes ou confirmados podem ser cancelados"}), 400
 
         horario = datetime.fromisoformat(agendamento["horario"].replace("Z", "+00:00"))

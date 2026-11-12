@@ -74,10 +74,10 @@ export default function EditarProfissional({
     }
 
     return (
-        <aside className="editar-profissional w-full max-w-lg shrink-0 border border-slate-500 bg-blue-50 p-5 top-0 right-0 h-dvh fixed flex flex-col">
+        <aside className="editar-profissional w-full max-w-lg shrink-0 border border-areia bg-white p-5 top-0 right-0 h-dvh fixed flex flex-col">
             <form onSubmit={handleSubmit(salvarDados)} className="flex h-full flex-col">
                 {/* Identificação do profissional e botão para fechar o painel. */}
-                <header className="border-b border-slate-400 pb-4 flex justify-between">
+                <header className="border-b border-areia pb-4 flex justify-between">
                 <div>
                     <p className="text-lg">Editando</p>
                     <h2 className="text-2xl font-semibold">
@@ -90,7 +90,7 @@ export default function EditarProfissional({
 
                 {/* Foto e dados básicos editáveis. */}
                 <div className="mt-5 flex gap-5">
-                <div className="flex h-45 w-35 shrink-0 items-center justify-center border border-slate-400 bg-slate-200">
+                <div className="flex h-45 w-35 shrink-0 items-center justify-center border border-areia bg-linho">
                     <img
                         src={profissional?.foto_url || FOTO_PADRAO}
                         alt={`Foto de ${nomeProfissional}`}
@@ -139,7 +139,7 @@ export default function EditarProfissional({
                 </div>
 
                 {/* Nível de acesso e descrição das permissões. */}
-                <section className="mt-6 min-h-24  border-slate-400 pt-4">
+                <section className="mt-6 min-h-24  border-areia pt-4">
 
                 <div className="flex w-full justify-between">
 
@@ -175,7 +175,7 @@ export default function EditarProfissional({
                 )}
 
                 {/* Status do profissional. */}
-                <section className="flex flex-1 w-full items-end gap-3 border-slate-400 pt-4 self-end ">
+                <section className="flex flex-1 w-full items-end gap-3 border-areia pt-4 self-end ">
                 <div className="w-full">
 
                     <p className="text-[20px]">Status</p>
@@ -194,13 +194,13 @@ export default function EditarProfissional({
                 </section>
 
                 {/* Ações finais: remoção, cancelamento e salvamento. */}
-                <footer className="flex w-full items-center justify-between gap-3 border-slate-400 pt-4 self-end ">
+                <footer className="flex w-full items-center justify-between gap-3 border-areia pt-4 self-end ">
                 <button
                     type="button"
                     disabled={ehProprioPerfil}
                     title={ehProprioPerfil ? "Você não pode remover o próprio perfil" : "Remover profissional"}
                     onClick={removerProfissional}
-                    className="bg-marrom text-laranja p-2 rounded-lg "
+                    className="bg-vinho text-laranja p-2 rounded-lg "
                 >
                     Remover profissional
                 </button>
