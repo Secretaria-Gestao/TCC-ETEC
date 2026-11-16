@@ -26,7 +26,7 @@ function AcordoFinanceiro({ profissional, aoSalvar }) {
 
   return (
     <div className="flex flex-col gap-2">
-      <h4>Acordo financeiro</h4>
+      <b>Acordo financeiro</b>
 
       <select value={tipo} onChange={(e) => setTipo(e.target.value)}
         className="border rounded-sm p-1">

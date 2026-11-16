@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 from flask import request, jsonify
 from database import supabase, supabase_admin
 from controllers.autenticacao import autenticar
+from controllers.horarios_padrao import gravar_horarios_padrao_profissional
 
 def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e já vincula também no mesmo salão do gerente
     info = request.get_json(silent=True) or {}
@@ -64,9 +65,13 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
             "cargo": info["cargo"],
             "telefone_profissional": info["telefone_profissional"],
             "nivel_acesso": int(info["nivel_acesso"]),
-            "salao_associado": remetente["salao_associado"]
+            "salao_associado": remetente["salao_associado"],
+            "status": True  # profissional novo já nasce ativo
         }).execute()
-        
+
+        # Horário de trabalho padrão (seg a sáb, 08:00 às 18:00, intervalo 12:00 às 13:00, domingo de folga)
+        gravar_horarios_padrao_profissional(id_profissional)
+
         return jsonify({"sucesso": True, "resultado": "Profissional cadastrado com sucesso!"})
 
     except Exception as e:
@@ -216,6 +221,13 @@ def buscar_Todosprofissionais(): # Busca todos os profissionais, todos
                         .eq("status", True)
                         .execute()
                     )
+
+                # O cliente só enxerga quem tem horário de trabalho cadastrado (quem não tem não pode ser agendado)
+                if resultado.data:
+                    ids = [profissional["id_profissional"] for profissional in resultado.data]
+                    com_horario = supabase_admin.table("horarios_trabalho").select("id_profissional").in_("id_profissional", ids).execute()
+                    ids_com_horario = [linha["id_profissional"] for linha in com_horario.data]
+                    resultado.data = [profissional for profissional in resultado.data if profissional["id_profissional"] in ids_com_horario]
 
         if not resultado or not resultado.data:
             return jsonify({"sucesso": False, "erro": "Falha ao encontrar profissionais"}), 404
@@ -951,6 +963,123 @@ def salvar_horarios_salao():
 
     except Exception as erro:
         print("Erro ao salvar horários do salão:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao salvar horários"}), 500
+
+DIAS_SEMANA = ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"]
+
+def buscar_horarios_profissional(id_profissional):
+    # Qualquer usuário logado pode ler (o cliente precisa disso no formulário de agendamento)
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    if not autenticar(token):
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    try:
+        resposta = (
+            supabase_admin.table("horarios_trabalho")
+            .select("dia_semana, hora_inicio, hora_fim, ativo, intervalo_inicio, intervalo_fim")
+            .eq("id_profissional", id_profissional)
+            .order("dia_semana")
+            .execute()
+        )
+        # Lista vazia NÃO é erro: profissional que ainda não configurou os horários
+        return jsonify({"sucesso": True, "horarios": resposta.data or []})
+    except Exception as erro:
+        print("Erro ao buscar horários de trabalho:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao buscar horários"}), 500
+
+def salvar_horarios_profissional():
+    # Cada profissional (qualquer nível) altera só os PRÓPRIOS horários: o id vem do token, nunca do front
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    id_usuario = autenticar(token)
+    if not id_usuario:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    try:
+        perfil = (
+            supabase_admin.table("profissionais")
+            .select("id_profissional, salao_associado")
+            .eq("id_profissional", id_usuario)
+            .execute()
+        )
+        if not perfil.data:
+            return jsonify({"sucesso": False, "erro": "Somente profissionais têm horários de trabalho"}), 403
+
+        info = request.get_json(silent=True) or {}
+        horarios = info.get("horarios")
+        if not isinstance(horarios, list) or not horarios:
+            return jsonify({"sucesso": False, "erro": "Campo ausente: horarios"}), 400
+
+        # Funcionamento do salão do profissional (sem nada salvo para o dia = sem restrição, igual no agendamento)
+        funcionamento = (
+            supabase_admin.table("horario_funcionamento_salao")
+            .select("dia_semana, hora_abertura, hora_fechamento, fechado")
+            .eq("id_salao", perfil.data[0]["salao_associado"])
+            .execute()
+        )
+
+        linhas = []
+        dias_vistos = set()
+        for h in horarios:
+            dia = h.get("dia_semana")
+            if dia not in range(0, 7) or dia in dias_vistos:
+                return jsonify({"sucesso": False, "erro": f"Dia da semana inválido ou repetido: {dia}"}), 400
+            dias_vistos.add(dia)
+
+            if not h.get("hora_inicio") or not h.get("hora_fim"):
+                return jsonify({"sucesso": False, "erro": f"Informe início e fim ({DIAS_SEMANA[dia]})"}), 400
+
+            # Compara só "HH:MM" (os 5 primeiros caracteres): texto nesse formato ordena certo
+            inicio = str(h["hora_inicio"])[:5]
+            fim = str(h["hora_fim"])[:5]
+            if inicio >= fim:
+                return jsonify({"sucesso": False, "erro": f"O início deve ser antes do fim ({DIAS_SEMANA[dia]})"}), 400
+
+            # Nos dias em que atende, o expediente precisa ficar dentro do funcionamento do salão
+            if h.get("ativo"):
+                for regra in funcionamento.data:
+                    if regra["dia_semana"] != dia:
+                        continue
+                    if regra["fechado"]:
+                        return jsonify({"sucesso": False, "erro": f"O salão não funciona neste dia ({DIAS_SEMANA[dia]})"}), 400
+                    abertura = str(regra["hora_abertura"])[:5]
+                    fechamento = str(regra["hora_fechamento"])[:5]
+                    if inicio < abertura or fim > fechamento:
+                        return jsonify({"sucesso": False, "erro": f"O salão funciona das {abertura} às {fechamento} ({DIAS_SEMANA[dia]})"}), 400
+
+            # O intervalo é opcional, mas se vier precisa estar completo e dentro do expediente
+            if h.get("intervalo_inicio") or h.get("intervalo_fim"):
+                if not h.get("intervalo_inicio") or not h.get("intervalo_fim"):
+                    return jsonify({"sucesso": False, "erro": f"Informe início e fim do intervalo ({DIAS_SEMANA[dia]})"}), 400
+
+                pausa_inicio = str(h["intervalo_inicio"])[:5]
+                pausa_fim = str(h["intervalo_fim"])[:5]
+                if pausa_inicio <= inicio or pausa_fim <= pausa_inicio or pausa_fim >= fim:
+                    return jsonify({"sucesso": False, "erro": f"O intervalo deve começar antes de terminar e ficar dentro do expediente ({DIAS_SEMANA[dia]})"}), 400
+
+            linhas.append({
+                "id_profissional": id_usuario,
+                "dia_semana": dia,
+                "hora_inicio": inicio,
+                "hora_fim": fim,
+                "ativo": bool(h.get("ativo")),
+                # Sem intervalo grava NULL nos dois campos
+                "intervalo_inicio": h.get("intervalo_inicio") or None,
+                "intervalo_fim": h.get("intervalo_fim") or None,
+            })
+
+        # upsert = insere se não existe, atualiza se já existe (usa a restrição única id_profissional + dia_semana)
+        supabase_admin.table("horarios_trabalho").upsert(
+            linhas, on_conflict="id_profissional,dia_semana"
+        ).execute()
+
+        return jsonify({"sucesso": True})
+
+    except Exception as erro:
+        print("Erro ao salvar horários de trabalho:", erro)
         return jsonify({"sucesso": False, "erro": "Erro ao salvar horários"}), 500
 
 TIPOS_PAGAMENTO = {"salao_paga_profissional", "profissional_paga_salao"}

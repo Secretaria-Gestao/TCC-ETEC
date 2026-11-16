@@ -78,7 +78,7 @@ export default function GerenciadorServicos() {
 
     return (
         <main className="main-principal">
-        <div className="w-full h-full flex">
+        <div className="w-full h-full flex flex-col md:flex-row">
             <BarraLateral />
 
             <div className="relative w-full min-h-dvh h-max flex flex-col flex-1 min-w-0">

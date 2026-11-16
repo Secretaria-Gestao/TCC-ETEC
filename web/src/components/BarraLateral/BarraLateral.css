@@ -3,8 +3,10 @@
 .barraLateral {
     /* sticky mantém a barra visível durante a rolagem sem retirá-la do layout. */
     @apply text-white
-    flex flex-col
-    w-max px-4 sticky shrink-0 top-0 h-dvh;
+    flex md:flex-col
+    gap-5 md:gap-0 md:px-4 sticky shrink-0 top-0 
+    h-20 md:h-dvh w-dvw md:w-max
+    ;
     background-color: var(--fundo-barra-lateral);
 }
 
@@ -18,6 +20,8 @@
 
 /* Ícones do menu em nude rosé. Os ícones do painel de Configurações, que fica dentro da barra, continuam laranja. */
 .barraLateral > a svg,
-.barraLateral > button svg {
+.barraLateral > button svg,
+.barraLateral > nav a svg,
+.barraLateral > nav button svg {
     color: var(--color-azul-ceu);
 }

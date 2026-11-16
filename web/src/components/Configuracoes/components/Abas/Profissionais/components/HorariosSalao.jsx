@@ -11,7 +11,7 @@ const padrao = DIAS.map((_, i) => ({
   fechado: i === 0,
 }))
 
-function HorariosFuncionamento({ idSalao }) {
+export default function HorariosSalao({ idSalao }) {
   const [horarios, setHorarios] = useState(padrao)
   const [mensagem, setMensagem] = useState('')
 
@@ -68,5 +68,3 @@ function HorariosFuncionamento({ idSalao }) {
     </div>
   )
 }
-
-export default HorariosFuncionamento

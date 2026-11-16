@@ -7,7 +7,7 @@ function CardAcesso() {
 	return (
 		<main className="homepage-main">
 			<div className="homepage-CardAcesso">
-				<p>Bem-te-vi</p>
+				<p>Secretária Gestão</p>
 
 				<p>Deseja agendar um horário?</p> <br />
 

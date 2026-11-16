@@ -22,7 +22,7 @@ def buscar_servicos_agendamento():
     try:
         resposta = (
             supabase.table("profissionais_servicos")
-            .select("id_servico, servicos(nome_servico, preco_servico)")
+            .select("id_servico, servicos(nome_servico, preco_servico, duracao)")
             .eq("id_profissional", profissional_selecionado)
             .eq("servicos.em_funcionamento", True)
             .eq("servicos.removido", False)

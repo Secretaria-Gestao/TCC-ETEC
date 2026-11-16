@@ -152,7 +152,6 @@ button[disabled] {
     width: 55%;
 }
  
-
 .Voltar {
     position: absolute;
     top: 0;
@@ -187,11 +186,6 @@ button[disabled] {
 
 .tabela-padrao tbody tr:hover {
     background-color: color-mix(in srgb, var(--color-ameixa) 8%, transparent);
-}
-
-.tabela-padrao th:first-child,
-.tabela-padrao td:first-child {
-    width: 40px;
 }
 
 .tabela-padrao thead th:last-child {

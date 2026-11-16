@@ -1,0 +1,135 @@
+// DER do Secretária Gestão. Gerado a partir do esquema real do Supabase.
+// horarios_trabalho já inclui as colunas novas (ativo, intervalo_inicio, intervalo_fim) e o índice único.
+
+Table agendamento_servicos {
+  id integer [pk]
+  id_agendamento integer
+  id_servicos integer
+}
+
+Table agendamentos {
+  id_agendamento integer [pk]
+  horario timestamptz
+  id_cliente uuid
+  status text
+  preco numeric
+  id_profissional uuid
+  endereco text
+  salao_associado integer
+  duracao_total numeric
+}
+
+Table clientes {
+  email_cliente text [not null]
+  nome_cliente text
+  id_cliente uuid [pk]
+  removido boolean [not null, default: "False"]
+}
+
+Table horario_funcionamento_salao {
+  id integer [pk]
+  id_salao integer [not null]
+  dia_semana smallint [not null]
+  hora_abertura time
+  hora_fechamento time
+  fechado boolean [not null, default: "False"]
+}
+
+Table horarios_trabalho {
+  id integer [pk]
+  id_profissional uuid [not null]
+  dia_semana smallint [not null]
+  hora_inicio time [not null]
+  hora_fim time [not null]
+  ativo boolean [not null, default: true, note: 'false = folga neste dia']
+  intervalo_inicio time [note: 'inicio do intervalo; nulo = sem intervalo']
+  intervalo_fim time [note: 'fim do intervalo; nulo = sem intervalo']
+
+  indexes {
+    (id_profissional, dia_semana) [unique]
+  }
+}
+
+Table indisponibilidades_profissional {
+  id integer [pk]
+  id_profissional uuid [not null]
+  data_inicio timestamptz [not null]
+  data_fim timestamptz [not null]
+  motivo text
+}
+
+Table portfolio_profissional {
+  id integer [pk]
+  id_profissional uuid [not null]
+  url_imagem text [not null]
+  titulo text [not null]
+  ordem integer [not null, default: 0]
+  criado_em timestamptz [not null, default: `now()`]
+}
+
+Table profissionais {
+  id_profissional uuid [pk, default: `gen_random_uuid()`]
+  email_profissional text [not null]
+  nome_profissional text
+  salao_associado integer
+  cargo text
+  telefone_profissional text
+  nivel_acesso integer
+  status boolean
+  criado_em timestamptz [default: `now()`]
+  removido boolean [not null, default: "False"]
+  foto_url text
+  bio text
+  tipo_pagamento text
+  valor_comissao numeric
+}
+
+Table profissionais_servicos {
+  id integer [pk]
+  id_profissional uuid
+  id_servico integer
+}
+
+Table saloes {
+  id_salao integer [pk]
+  nome_salao text [not null]
+  endereco_salao text
+  categoria_salao text
+  removido boolean [not null, default: "False"]
+  slug text [not null]
+  id_dono uuid
+}
+
+Table servicos {
+  id_servico integer [pk]
+  nome_servico text [not null]
+  preco_servico numeric
+  salao_associado integer
+  duracao numeric
+  removido boolean
+  em_funcionamento boolean
+}
+
+Table visualizacoes_salao {
+  id integer [pk]
+  id_salao integer [not null]
+  id_cliente uuid [not null]
+  visitado_em timestamptz [not null, default: `now()`]
+}
+
+Ref: agendamento_servicos.id_agendamento > agendamentos.id_agendamento
+Ref: agendamento_servicos.id_servicos > servicos.id_servico
+Ref: agendamentos.id_cliente > clientes.id_cliente
+Ref: agendamentos.id_profissional > profissionais.id_profissional
+Ref: agendamentos.salao_associado > saloes.id_salao
+Ref: horario_funcionamento_salao.id_salao > saloes.id_salao
+Ref: horarios_trabalho.id_profissional > profissionais.id_profissional
+Ref: indisponibilidades_profissional.id_profissional > profissionais.id_profissional
+Ref: portfolio_profissional.id_profissional > profissionais.id_profissional
+Ref: profissionais.salao_associado > saloes.id_salao
+Ref: profissionais_servicos.id_profissional > profissionais.id_profissional
+Ref: profissionais_servicos.id_servico > servicos.id_servico
+Ref: saloes.id_dono > profissionais.id_profissional
+Ref: servicos.salao_associado > saloes.id_salao
+Ref: visualizacoes_salao.id_salao > saloes.id_salao
+Ref: visualizacoes_salao.id_cliente > clientes.id_cliente

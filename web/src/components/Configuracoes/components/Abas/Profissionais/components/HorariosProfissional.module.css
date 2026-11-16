@@ -1,0 +1,49 @@
+@reference "../../../../../../global.css";
+
+/* O cabeçalho e cada linha usam esta mesma definição de colunas, por isso ficam alinhadas. */
+.cabecalho,
+.linha {
+    /* card estreito (sem prefixo): cartões com 2 colunas iguais */
+    @apply grid-cols-2
+    /* card com 672px ou mais: 4 colunas. O intervalo leva mais espaço porque tem dois campos de hora e o X */
+    @2xl:grid-cols-[minmax(0,24fr)_minmax(0,17fr)_minmax(0,17fr)_minmax(0,42fr)]
+    /* espaço entre colunas */
+    gap-x-2;
+}
+
+.cabecalho {
+    /* CARTÕES: some. Cada campo já tem o próprio rótulo */
+    @apply hidden
+    /* card largo: aparece e vira grid (hidden + @2xl:grid = "só na tabela") */
+    @2xl:grid
+    /* respiro interno */
+    px-2 py-2
+    /* cantos de cima arredondados */
+    rounded-t-md
+    /* cor do cabeçalho das tabelas do sistema, com texto claro sobre o fundo escuro */
+    bg-ameixa text-white font-medium
+    @2xl:border-b-[3px] @2xl:border-azul-ceu
+    
+    /* Reserva o mesmo espaço da barra de rolagem das linhas, para as colunas do cabeçalho não ficarem desalinhadas.
+       overflow-hidden nos dois eixos: o cabeçalho não ganha barra nenhuma */
+    overflow-hidden scrollbar-gutter-stable scrollbar-thin
+    /* o cabeçalho nunca encolhe: quem cede espaço é o corpo que rola */
+    shrink-0;
+}
+
+.linha {
+    /* liga o CSS Grid (sem isso as colunas acima não fazem nada) */
+    @apply grid relative
+    /* espaço entre linhas. O vertical só aparece nos cartões */
+    gap-y-3
+
+    /* aparência de CARTÃO (card estreito ou celular) */
+    p-3 rounded-xl border border-azul-po bg-white hover:bg-ameixa/8
+
+    /* no card largo o cartão "desaparece" e vira linha de tabela */
+    @2xl:px-2 @2xl:py-1.5     /* menos espaço interno */
+    @2xl:rounded-none         /* sem cantos arredondados */
+    @2xl:border-0             /* tira a borda dos 4 lados... */
+    @2xl:border-b             /* ...e deixa só a de baixo, como no .tabela-padrao */
+    @2xl:items-center;         /* centraliza as células na vertical (nos cartões não precisa) */
+}
