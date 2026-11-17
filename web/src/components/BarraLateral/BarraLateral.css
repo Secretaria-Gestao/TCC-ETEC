@@ -21,6 +21,7 @@
 /* Ícones do menu em nude rosé. Os ícones do painel de Configurações, que fica dentro da barra, continuam laranja. */
 .barraLateral > a svg,
 .barraLateral > button svg,
+.barraLateral > div > button svg,
 .barraLateral > nav a svg,
 .barraLateral > nav button svg {
     color: var(--color-azul-ceu);
