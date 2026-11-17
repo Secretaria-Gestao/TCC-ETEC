@@ -68,7 +68,7 @@
 | 31   | Alta       | Como usuário, quero recuperar minha senha por e-mail caso eu esqueça, para não perder o acesso à minha conta                                                                                                  | 3          | 5 | Não implementado |
 | 32   | Média      | Como usuário, quero entrar com minha conta do Google para agilizar o acesso ao sistema                                                                                                                        | 2          | | Completo |
 | 33   | Alta       | Como administrador, quero excluir permanentemente o salão e minha própria conta de acesso quando decidir encerrar o uso da plataforma, sendo essa uma ação exclusiva minha (o gerente não pode realizá-la), para manter o controle sobre decisões irreversíveis do negócio | 5          |        | Completo |
-| 34   | Média      | Como usuário, quero acessar as configurações da minha conta para alterar meu e-mail, senha e nome, e, caso eu seja um profissional, também minha foto de perfil, para manter meus dados atualizados          | 5          | 5 | Incompleto |
+| 34   | Média      | Como usuário, quero acessar as configurações da minha conta para alterar meu e-mail, senha e nome, e, caso eu seja um profissional, também minha foto de perfil, para manter meus dados atualizados          | 5          | 5 | Completo |
 
 ### Observações
 
