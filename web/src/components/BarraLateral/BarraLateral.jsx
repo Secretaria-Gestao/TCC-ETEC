@@ -5,6 +5,7 @@ import Configuracoes from '@/Configuracoes/Configuracoes'
 import { useState } from 'react'
 import { useMeuPerfil } from '../../services/pegarMeuPerfil'
 import { menuDoPerfil } from './listaMenus'
+import CardMinhaRenda from './CardMinhaRenda.jsx'
 
 // Ícone da engrenagem, usado no botão de Configurações do desktop e no menu do celular.
 const IconeEngrenagem = () => (
@@ -15,7 +16,7 @@ const IconeEngrenagem = () => (
         strokeLinecap="round" strokeLinejoin="round"
     >
         <circle cx="12" cy="12" r="3" />
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.820 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
     </svg>
 )
 
@@ -122,10 +123,18 @@ function BarraLateral() {
                 </NavLink>
             ))}
 
-            <button type="button" title="Configurações" className='max-md:hidden flex bg-white/12 mt-auto mb-5 p-3 rounded-md gap-2 items-center justify-center' onClick={() => setConfigAberto(!configAberto)}>
-                <IconeEngrenagem />
-                <span className="hidden md:inline">Configurações</span>
-            </button>
+            {/* Desktop: rodapé da coluna com o card de renda e o botão de Configurações.
+                No celular esse bloco some, porque a barra vira o topo com o menu de hambúrguer. */}
+            <div className="max-md:hidden mt-auto flex flex-col">
+
+                {/* US 24/25: qualquer profissional (admin, gerente e profissional) vê a renda */}
+                {tipoUsuario !== 'cliente' && !isPending && <CardMinhaRenda />}
+
+                <button type="button" title="Configurações" className='flex bg-white/12 mb-5 p-3 rounded-md gap-2 items-center justify-center' onClick={() => setConfigAberto(!configAberto)}>
+                    <IconeEngrenagem />
+                    <span>Configurações</span>
+                </button>
+            </div>
 
             {/* Celular: lista que abre embaixo da barra com os mesmos itens e as Configurações */}
             {menuAberto && (
