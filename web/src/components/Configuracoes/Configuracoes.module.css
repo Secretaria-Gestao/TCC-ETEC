@@ -7,7 +7,7 @@
     overscroll-behavior: contain;
 }
 
-@media (min-height: 826px) {
+@media (min-height: 580px) {
     .main-config {
         @apply items-center;
     }
