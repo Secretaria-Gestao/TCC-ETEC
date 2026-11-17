@@ -101,6 +101,8 @@ function Agendamento() {
         }
         return ''
     }
+
+    // O horário de trabalho do profissional (folga, expediente e intervalo) só é conferido pela API, ao enviar
     const avisoHorario = motivoHorarioInvalido()
 
     useEffect(() => {
@@ -189,7 +191,11 @@ function Agendamento() {
             return
         }
 
-        
+        // Bloqueia horário fora do funcionamento do salão, antes de enviar
+        if (avisoHorario) {
+            mostrarNotificacao({ titulo: 'Horário indisponível', texto: avisoHorario })
+            return
+        }
 
         setEnviando(true)
         try {
@@ -202,12 +208,6 @@ function Agendamento() {
                 dados.endereco,
                 dados.preco
             )
-
-            // Bloqueia horário fora do funcionamento do salão
-            if (avisoHorario) {
-                mostrarNotificacao({ titulo: 'Horário indisponível', texto: avisoHorario })
-                return
-            }
 
             if (!respostaFetch) return
 
@@ -263,7 +263,7 @@ function Agendamento() {
     return (
         <main className="main-principal">
 
-            <div className="w-full h-full flex">
+            <div className="w-full h-full flex flex-col md:flex-row">
 
                 <BarraLateral />
 

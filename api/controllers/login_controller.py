@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from database import supabase
+from controllers.horarios_padrao import gravar_horarios_padrao_profissional, gravar_horarios_padrao_salao
 import re
 import unicodedata
 import uuid
@@ -155,6 +156,10 @@ def cadastroUserGerente():
 
         if not resposta_dono.data:
             raise RuntimeError("Falha ao gravar o dono do salão")
+
+        # Horários padrão (seg a sáb, 08:00 às 18:00, domingo fechado/de folga). Se falharem, o cadastro continua valendo.
+        gravar_horarios_padrao_salao(id_salao)
+        gravar_horarios_padrao_profissional(usuario.id)
 
         return jsonify({'sucesso': True, 'resultado': 'Profissional cadastrado com sucesso!'})
 

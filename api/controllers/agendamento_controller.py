@@ -49,6 +49,49 @@ def validar_horario_funcionamento(id_salao, data_hora_iso):
 
     return None
 
+def validar_horario_trabalho(id_profissional, inicio, fim):
+    # "inicio" e "fim" são o começo e o término do atendimento (datetime).
+    # Devolve o texto do problema, ou None se o profissional atende nesse horário.
+    inicio = inicio.astimezone(FUSO_SALAO)
+    fim = fim.astimezone(FUSO_SALAO)
+
+    # weekday(): segunda=0 ... domingo=6. No banco: domingo=0 ... sábado=6
+    dia_semana = (inicio.weekday() + 1) % 7
+
+    resposta = (
+        supabase_admin.table("horarios_trabalho")
+        .select("hora_inicio, hora_fim, ativo, intervalo_inicio, intervalo_fim")
+        .eq("id_profissional", id_profissional)
+        .eq("dia_semana", dia_semana)
+        .execute()
+    )
+
+    # Sem horário salvo para o dia = o profissional não atende (quem não tem horário cadastrado não pode ser agendado)
+    if not resposta.data:
+        return "O profissional não atende neste dia."
+
+    regra = resposta.data[0]
+    if not regra["ativo"]:
+        return "O profissional não atende neste dia."
+
+    hora_inicio = inicio.strftime("%H:%M")
+    hora_fim = fim.strftime("%H:%M")
+    abertura = str(regra["hora_inicio"])[:5]
+    fechamento = str(regra["hora_fim"])[:5]
+
+    # Texto "HH:MM" compara certo com < e >. O atendimento inteiro precisa caber no expediente e não pode virar o dia
+    if hora_inicio < abertura or hora_inicio >= fechamento or hora_fim > fechamento or fim.date() != inicio.date():
+        return f"Neste dia o profissional atende das {abertura} às {fechamento}, e o atendimento precisa terminar até lá."
+
+    if regra["intervalo_inicio"] and regra["intervalo_fim"]:
+        pausa_inicio = str(regra["intervalo_inicio"])[:5]
+        pausa_fim = str(regra["intervalo_fim"])[:5]
+        # Encostar no intervalo pode: terminar às 12:00 ou começar às 13:00 não conflita com 12:00 às 13:00
+        if hora_inicio < pausa_fim and hora_fim > pausa_inicio:
+            return f"O profissional está em intervalo das {pausa_inicio} às {pausa_fim}."
+
+    return None
+
 def agendar():
     # Endpoint usado pela tela de agendamento para gravar o horario no Supabase.
     info = request.get_json()
@@ -163,6 +206,11 @@ def agendar():
 
         inicio_novo = datetime.fromisoformat(info["data_hora"].replace("Z", "+00:00")) # "Novo" seria sobre o novo hoário que estão querendo agendar
         fim_novo = inicio_novo + timedelta(minutes=duracao_total)
+
+        # O profissional precisa estar trabalhando (e fora do intervalo) durante o atendimento inteiro
+        problema_trabalho = validar_horario_trabalho(id_profissional, inicio_novo, fim_novo)
+        if problema_trabalho:
+            return jsonify({"sucesso": False, "erro": problema_trabalho}), 400
 
         agendamentos_vizinhos = (
             supabase.table("agendamentos")

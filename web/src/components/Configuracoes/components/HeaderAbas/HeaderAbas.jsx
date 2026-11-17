@@ -1,6 +1,6 @@
-export default function HeaderAbas({abaAtual, setAbaAtual, setConfigAberto, perfil}) {
+export default function HeaderAbas({ abaAtual, setAbaAtual, setConfigAberto, perfil }) {
     return (
-        <div className="relative flex gap-[1.5rem] border-b border-black/90 text-[18px]">
+        <div className="relative flex gap-[1.5rem] border-b border-black/90  md:text-[18px] items-center overflow-x-auto overflow-y-hidden">
 
             <button type="button"
                 className={`border-b ${abaAtual == "perfil" ? "border-laranja border-b-2" : "border-transparent"} -mb-px px-1 pb-2`}
@@ -17,6 +17,14 @@ export default function HeaderAbas({abaAtual, setAbaAtual, setConfigAberto, perf
                 Segurança
             </button>
 
+            <button type="button"
+                className={`border-b ${abaAtual == "horariosProfissional" ? "border-laranja border-b-2" : "border-transparent"} -mb-px px-1 pb-2`}
+                onClick={() => setAbaAtual("horariosProfissional")}
+
+            >
+                Horários
+            </button>
+
             {perfil == "admin" && (
                 <button type="button"
                     className={`border-b ${abaAtual == "salao" ? "border-laranja border-b-2" : "border-transparent"} -mb-px px-1 pb-2`}
@@ -26,13 +34,15 @@ export default function HeaderAbas({abaAtual, setAbaAtual, setConfigAberto, perf
                 </button>
             )}
 
-            <button
-                type="button"
-                className="absolute right-2 -top-2 z-10 text-laranja text-3xl"
-                onClick={() => setConfigAberto(false)}
-            >
-                X
-            </button>
+            <div className="flex-1 text-right">
+                <button
+                    type="button"
+                    className="text-laranja text-3xl"
+                    onClick={() => setConfigAberto(false)}
+                >
+                    X
+                </button>
+            </div>
 
 
         </div>

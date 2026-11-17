@@ -17,7 +17,7 @@ export default function Configuracoes({ perfil, setConfigAberto }) {
         <div className={estilos["main-config"]}>
 
             {/* Box principal */}
-            <div className="w-2xl min-w-max flex flex-col p-5 min-h-140 rounded-2xl bg-white text-black border-cobre border-2 overflow-y-auto">
+            <div className={`${abaAtual == "horariosProfissional" ? "w-[50rem] md:h-8/10!" : "w-2xl"} min-w-0 flex flex-col p-3 md:p-5 min-h-140 h-10/10 md:h-5/10 md:rounded-2xl bg-white text-black border-cobre border-2`}>
 
                 <HeaderAbas
                     abaAtual={abaAtual}
@@ -26,16 +26,20 @@ export default function Configuracoes({ perfil, setConfigAberto }) {
                     perfil={perfil}
                 />
 
-                {perfil == "cliente" && (
-                    <Cliente abaAtual={abaAtual} setAbaAtual={setAbaAtual}/>
-                )}
+                {/* Na aba de Horários, no desktop, quem rola são só as linhas da tabela (o cabeçalho fica parado), então
+                    aqui o conteúdo não rola e só repassa a altura para baixo. No celular, e nas outras abas, a área
+                    toda rola. */}
+                <div className={`w-full h-full ${abaAtual == "horariosProfissional" ? "overflow-y-auto md:flex md:flex-col md:overflow-hidden" : "overflow-y-auto"} bg`}>
 
-                {(perfil == "profissional" || perfil == "admin") && (
-                    <Profissional abaAtual={abaAtual} setAbaAtual={setAbaAtual} admin={perfil == "admin"} />
-                )}
+                    {perfil == "cliente" && (
+                        <Cliente abaAtual={abaAtual} setAbaAtual={setAbaAtual} />
+                    )}
 
+                    {(perfil == "profissional" || perfil == "admin") && (
+                        <Profissional abaAtual={abaAtual} setAbaAtual={setAbaAtual} admin={perfil == "admin"} />
+                    )}
+                </div>
             </div>
-
         </div>
     )
 }

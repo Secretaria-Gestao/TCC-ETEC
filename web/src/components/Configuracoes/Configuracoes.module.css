@@ -1,10 +1,13 @@
 @reference "../../global.css";
 
 .main-config {
-    @apply absolute top-0 left-full w-[calc(100dvw-100%)] p-5 bg-azul-profundo/60 h-full justify-center flex z-50 overflow-y-auto;
+    @apply  z-50 flex justify-center overflow-y-auto bg-azul-profundo/60
+            fixed inset-x-0 bottom-0 top-20
+            md:absolute md:top-0 md:left-full md:w-[calc(100dvw-100%)] md:h-full;
+    overscroll-behavior: contain;
 }
 
-@media (min-height: 826px) {
+@media (min-height: 580px) {
     .main-config {
         @apply items-center;
     }

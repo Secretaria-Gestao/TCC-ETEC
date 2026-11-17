@@ -8,7 +8,7 @@ function PageAgendaColaborador() {
     return (
 
         <main className="main-principal">
-            <div className="w-full min-h-dvh flex">
+            <div className="w-full min-h-dvh flex flex-col md:flex-row">
                 <BarraLateral />
                 <AgendaColaborador />
             </div>

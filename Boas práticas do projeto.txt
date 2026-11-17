@@ -25,7 +25,22 @@ documentadas aqui, é interessante que toda a equipe tente segui-las.
     Deixar requisições em arquivos separados de componentes. Por exemplo, em um componente que se chama TabelaProfissionais,
     é mais fácil de entender tudo, e modificar algo, caso a requisição dos profissionais estejam em outro arquivo, como buscarProfissionais.js,
     e depois só chamar a função de buscarProfissionais na TabelaProfissionais
-    
+
+
+- Deixar no componente só o que é da tela
+    Conversões de dados (do formato do banco para o da tela e o contrário), comparações e outras regras que
+    não desenham nada ficam no arquivo do services, junto com a requisição. Por exemplo, o horariosProfissional.js
+    já entrega os horários prontos para a tela e recebe eles do mesmo jeito para salvar, então o componente
+    HorariosProfissional fica só com os estados, os eventos e o JSX.
+
+
+- Não criar constante sem necessidade
+    Um valor curto usado uma ou duas vezes, como 'Segunda-feira', pode ficar escrito direto onde é usado.
+    Constante vale a pena quando evita repetir algo grande em vários lugares, e mesmo assim é melhor uma só
+    do que várias dizendo quase a mesma coisa.
+        (Uma exceção: um componente pequeno, como um campo, fica fora do componente principal, porque se for
+        declarado dentro dele o React recria o campo a cada renderização e o input perde o foco a cada tecla)
+
 
 - Dividir componentes apenas quando ajudar
     Extrair partes extensas que tenham uma função clara e independente. Por exemplo, um formulário,

@@ -7,7 +7,7 @@ import BarraLateral from '@/BarraLateral/BarraLateral.jsx'
 function PageAgendaAdmin({ secao }) {
     return (
         <main className="main-principal">
-            <div className="w-full min-h-dvh flex">
+            <div className="w-full min-h-dvh flex flex-col md:flex-row">
                 <BarraLateral />
                 <AdminAgenda secaoAtiva={secao} />
             </div>

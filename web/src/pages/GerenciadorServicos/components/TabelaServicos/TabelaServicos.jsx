@@ -119,7 +119,8 @@ export default function TabelaServicos({ setQuantidadeServicos, onEditar, atuali
 
                 <thead>
                     <tr className="">
-                        <th className="text-center!">
+                        {/* A largura da coluna do checkbox é definida aqui: em table-layout fixed ela vem da primeira linha. */}
+                        <th className="w-10 text-center!">
                             {/* Marca ou desmarca todos os serviços de uma vez. */}
                             <input type="checkbox" checked={selecionouTudo} onChange={() => {
                                 const deveSelecionarTudo = servicosSelecionados.length !== servicos.length

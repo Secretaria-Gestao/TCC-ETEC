@@ -81,7 +81,7 @@ function CadastroColaborador() {
 
     return (
         <main className='main-principal flex'>
-            <div className='w-full h-full flex'>
+            <div className='w-full h-full flex flex-col md:flex-row'>
                 <div className='flex'>
                     <BarraLateral />
                 </div>
