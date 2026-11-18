@@ -44,7 +44,7 @@ export default function EditarProfissional({
             email_profissional: "",
             cargo: "",
             nivel_acesso: "",
-            status: ""
+            status: "true"
         }
     })
 
@@ -55,7 +55,7 @@ export default function EditarProfissional({
             email_profissional: profissional?.email_profissional ?? "",
             cargo: profissional?.cargo ?? "",
             nivel_acesso: profissional?.nivel_acesso ?? "",
-            status: profissional?.status ?? ""
+            status: String(profissional?.status ?? "true")
         })
     }, [profissional, reset])
 
@@ -63,7 +63,8 @@ export default function EditarProfissional({
     const acessoSelecionado = niveisAcesso[nivelAcessoSelecionado] || niveisAcesso[3]
 
     function salvarDados(dadosFormulario) {
-        onSalvar?.(dadosFormulario)
+        console.log('1 clicou em Salvar', dadosFormulario)
+        onSalvar?.({ ...dadosFormulario, status: dadosFormulario.status === "true" })
     }
 
     function removerProfissional() {
@@ -75,7 +76,7 @@ export default function EditarProfissional({
 
     return (
         <aside className="editar-profissional w-full max-w-lg shrink-0 border border-areia bg-white p-5 top-0 right-0 h-dvh fixed flex flex-col">
-            <form onSubmit={handleSubmit(salvarDados)} className="flex h-full flex-col">
+            <form onSubmit={handleSubmit(salvarDados, (erros) => console.log('2 formulário inválido', erros))} className="flex h-full flex-col">
                 {/* Identificação do profissional e botão para fechar o painel. */}
                 <header className="border-b border-areia pb-4 flex justify-between">
                 <div>
@@ -128,7 +129,7 @@ export default function EditarProfissional({
                             </option>
 
                             {Object.keys(todosCargos).map((cargo) => (
-                                <option value={cargo}>
+                                <option key={cargo} value={cargo}>
                                     {cargo}
                                 </option>
                             ))}
@@ -182,9 +183,7 @@ export default function EditarProfissional({
 
                     <select
                         className="border rounded-sm max-w-62 w-2/5 flex-1 p-1"
-                        {...register("status", {
-                            setValueAs: (valor) => valor === "true"
-                        })}
+                        {...register("status")}
                     >
                         <option value="true"> Ativado </option>
                         <option value="false"> Inativo </option>

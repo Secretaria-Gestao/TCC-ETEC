@@ -29,9 +29,6 @@ export default function InfoResumidas({ profissionais, agendamentos, todosCargos
 
   const profissionalDestacado = maisOcupado?.totalAgendamentos > 0 ? maisOcupado : null
 
-  console.log(maisOcupado)
-  console.log(profissionalDestacado)
-
   return (
     <div className=" w-8/12 flex min-w-max gap-10 ">
 

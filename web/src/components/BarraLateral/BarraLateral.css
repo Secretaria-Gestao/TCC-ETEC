@@ -37,3 +37,8 @@ background:rgba(255,255,255,0.12);
 color:#fff; 
 font-size:.75rem; 
 }
+
+.card-minha-renda b,
+.card-minha-renda-nav button { 
+      color: #fff; 
+}

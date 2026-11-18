@@ -3,6 +3,7 @@ import { useNotificacaoStore } from "@/Notificacao"
 
 // Estas funções fazem a ponte entre o painel de edição e as rotas protegidas do Flask.
 export async function editarProfissional(data) {
+     console.log('3 service chamado', data)
     const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
     const sessao = await pegarSessao()
 
