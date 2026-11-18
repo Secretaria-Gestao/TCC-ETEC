@@ -9,6 +9,7 @@ function AcordoFinanceiro({ profissional, aoSalvar }) {
   const [mensagem, setMensagem] = useState('')
 
   async function salvar() {
+    console.log('A clicou em Salvar acordo', tipo, valor)
     if (!tipo || valor === '') {
       setMensagem('Escolha o tipo de acordo e o percentual.')
       return

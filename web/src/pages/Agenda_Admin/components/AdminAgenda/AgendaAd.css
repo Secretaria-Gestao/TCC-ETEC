@@ -404,3 +404,37 @@ table.agenda-admin-grade tbody tr:first-child td {
     opacity: 0.8;
     margin-top: -2px;
 }
+
+.agenda-admin-acertos { 
+    margin: 20px 0; 
+}
+
+.agenda-admin-acertos-totais { 
+    display: flex; 
+    gap: 12px; 
+    flex-wrap: wrap; 
+    margin: 8px 0 14px; 
+}
+
+.agenda-admin-acertos-totais span {
+  padding: 8px 14px; border-radius: 10px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--border-transparent);
+}
+
+.agenda-admin-tabela-acertos {
+  width: 100%; border-collapse: collapse; 
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.7); 
+  border-radius: 12px; 
+  overflow: hidden;
+}
+
+.agenda-admin-tabela-acertos th,
+.agenda-admin-tabela-acertos td {
+  padding: 10px 14px; 
+  text-align: left;
+  border-bottom: 1px solid var(--border-transparent);
+}
+
+.agenda-admin-tabela-acertos th { font-size: 0.75rem; text-transform: uppercase; opacity: 0.7; }
