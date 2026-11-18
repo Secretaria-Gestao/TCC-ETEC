@@ -5,39 +5,40 @@ import Header from '../../../../components/Header/Header.jsx'
 import Formulario from './components/Formulario/Formulario.jsx'
 
 import { useState, useEffect } from 'react'
+import { useForm, useFormContext } from 'react-hook-form'
 import { useNotificacaoStore } from "@/Notificacao/notificacaoStore.js"
 import { buscarSalao } from '../../../../services/BuscarSalao.js'
-import { buscarServicos } from '../../../Agendamento/services/buscarServicos'
+import { buscarServicos } from '../../../GerenciadorServicos/services/buscarServicos'
 import { cadastrarColaborador } from '../../services/CadastroColaborador'
 
 
 function CadastroColaborador() {
     const mostrarNotificacao = useNotificacaoStore((state) => state.mostrarNotificacao)
 
-    const [formulario, setFormulario] = useState({
-        nome: "",
-        sobrenome: "",
+    const [nomeSalao, setNomeSalao] = useState("")
+    const [servicos, setServicos] = useState([])
 
-        cargo: "",
-        telefone: "",
+    const metodos = useForm({
+        defaultValues: {
+            nome: "", sobrenome: "",
+            cargo: "", telefone: "",
 
-        email: "",
-        senha: "",
-        nivelAcesso: "1"
+            email: "", senha: "",
+            nivelAcesso: "1", servicosEscolhido: []
+        }
     })
 
-    const [servicos, setServicos] = useState([])
-    const [associacoes, setAssociacoes] = useState([])
+    const { register, watch, getValues } = useFormContext()
 
-    const nomeUsuario = `${formulario.nome} ${formulario.sobrenome}`;
-
-    const [nomeSalao, setNomeSalao] = useState("")
+    const nomeUsuario = `${watch("nome")} ${watch("sobrenome")}`;
 
     async function mandarFormulario() {
 
         var camposFaltando = false
 
-        Object.entries(formulario).forEach((valor) => {
+        const valores = getValues()
+
+        Object.entries(valores).forEach((valor) => {
             if (camposFaltando == true) return
 
             if (valor[1] == "") {
@@ -76,9 +77,8 @@ function CadastroColaborador() {
         async function pegarDados() {
             const respostaSalao = await buscarSalao()
             const respostaServicos = await buscarServicos()
-            
-            console.log(respostaServicos)
 
+            if (respostaServicos) setServicos(respostaServicos.servicos)
             if (respostaSalao) setNomeSalao(respostaSalao.nome_salao)
 
         }
@@ -103,7 +103,9 @@ function CadastroColaborador() {
                     </Header>
                     <hr className='w-10/12 place-self-center mt-[-36px] border-azul-ceu' />
                     <div className='flex justify-center h-160 my-[2%]!'>
-                        <Formulario dados={formulario} setDados={setFormulario} servicos={servicos} setServicos={setServicos}/>
+                        <FormProvider {...metodos}>
+                            <Formulario servicos={servicos} setServicos={setServicos} />
+                        </FormProvider>
                     </div>
                 </div>
             </div>

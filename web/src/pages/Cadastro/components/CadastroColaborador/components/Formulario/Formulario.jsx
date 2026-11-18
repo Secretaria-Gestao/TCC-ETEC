@@ -3,6 +3,8 @@ import './Formulario.css'
 
 function Formulario({ dados, setDados, servicos, setServicos }) {
 
+    const [adicionandoServico, setAdicionandoServico] = useState(false)
+
     const niveisAcesso = {
         1: {
             titulo: "Administrador",
@@ -31,6 +33,8 @@ function Formulario({ dados, setDados, servicos, setServicos }) {
             [nomeCampo]: valorCampo
         })
     }
+
+    console.log(servicos)
 
     return (
         <form className="min-h-max h-160 w-full max-w-[880px] rounded-2xl border-2 border-vinho bg-linho p-4! sm:p-5! md:w-9/10 md:p-6! lg:w-8/10 xl:w-6/10 xl:p-8!">
@@ -99,15 +103,37 @@ function Formulario({ dados, setDados, servicos, setServicos }) {
 
                 </div>
 
-                <div>
+                <div className="relative h-max">
 
                     <p>Serviços que realiza</p>
 
-                    <select>
-                        <option value="" disabled selected hidden>
+                    <button className="border w-full text-left p-2 rounded-md flex justify-between"
+                        onClick={() => setAdicionandoServico(!adicionandoServico)}
+                        type="button"
+                    >
+                        {dados.servicos.length} Serviços selecionados
+                        <svg xmlns="http://w3.org" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        >
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
 
-                        </option>
-                    </select>
+                    </button>
+
+                    {adicionandoServico && (
+                        <div className="absolute rounded-md top-full w-full h-max border bg-azul-medio flex flex-col gap-1">
+                            {
+                                servicos?.map(s => (
+                                    <label className="p-2 flex  gap-1 text-white">
+                                        <input type="checkbox" value={s.id_servico} key={s.id_servico} />
+                                        {s.nome_servico}
+                                    </label>
+                                ))
+                            }
+                        </div>
+                    )}
+
                 </div>
 
 

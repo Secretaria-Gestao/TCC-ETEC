@@ -28,8 +28,6 @@ export async function buscarServicos() {
 
         const resultado = await resposta.json()
 
-        console.log(resultado)
-
         // resposta.ok verifica o status HTTP e resultado.sucesso verifica a
         // resposta criada pelo nosso próprio back-end.
         if (!resposta.ok || !resultado.sucesso) {
