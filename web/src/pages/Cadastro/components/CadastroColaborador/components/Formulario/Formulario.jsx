@@ -1,14 +1,14 @@
 import { useState } from "react"
 import './Formulario.css'
 
-function Formulario({dados, setDados}) {
+function Formulario({ dados, setDados, servicos, setServicos }) {
 
     const niveisAcesso = {
         1: {
             titulo: "Administrador",
             descricao: "tem acesso total ao salão. Cadastra profissionais, altera dados do salão, gerencia agenda, serviços, pagamentos e pode excluir usuários."
         },
-        
+
         2: {
             titulo: "Gerente",
             descricao: "gerencia a agenda, cadastra clientes e profissionais, altera horários e serviços, mas não pode mexer nas configurações críticas do salão (plano, exclusão do salão, etc.)."
@@ -21,11 +21,11 @@ function Formulario({dados, setDados}) {
     }
 
     const acessoSelecionado = niveisAcesso[dados.nivelAcesso]
-    
+
     function mudarValor(evento) {
         const nomeCampo = evento.target.name
         const valorCampo = evento.target.value
-        
+
         setDados({
             ...dados,
             [nomeCampo]: valorCampo
@@ -33,7 +33,7 @@ function Formulario({dados, setDados}) {
     }
 
     return (
-        <form className="h-160 w-full max-w-[980px] rounded-2xl border-2 border-vinho bg-linho p-4! sm:p-5! md:w-9/10 md:p-6! lg:w-8/10 xl:w-6/10 xl:p-8!">
+        <form className="min-h-max h-160 w-full max-w-[880px] rounded-2xl border-2 border-vinho bg-linho p-4! sm:p-5! md:w-9/10 md:p-6! lg:w-8/10 xl:w-6/10 xl:p-8!">
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
 
                 <input name="nome" className="cadastroProfInput" type="text" placeholder="Nome" onChange={mudarValor} />
@@ -65,12 +65,12 @@ function Formulario({dados, setDados}) {
                 <hr className="w-full" />
             </div>
 
-            <h1 className="text-2xl mb-2!"> Nível de acesso </h1>
+            <p className="text-lg mb-2! font-bold"> Nível de acesso </p>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="grid grid-cols-1  md:grid-cols-2">
                 <div>
                     <div>
-                        <p> Determina os níveis de acesso no sistema </p>
+                        <p className="font-light"> Determina os níveis de acesso no sistema </p>
                     </div>
 
                     <select name="nivelAcesso" className="cadastroProfInput w-full! md:w-8/12!" onChange={mudarValor}>
@@ -84,6 +84,35 @@ function Formulario({dados, setDados}) {
                     <p> Alguém com o acesso de <b> {acessoSelecionado.titulo} </b> {acessoSelecionado.descricao} </p>
                 </div>
             </div>
+
+            <div className="flex justify-center my-5!">
+                <hr className="w-full" />
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                    <div>
+                        <p className="text-lg mb-2! font-bold"> Serviços </p>
+
+                        <p className="font-light"> O profissional só aparece no <br /> agendamento dos serviços marcados </p>
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <p>Serviços que realiza</p>
+
+                    <select>
+                        <option value="" disabled selected hidden>
+
+                        </option>
+                    </select>
+                </div>
+
+
+            </div>
+
         </form>
     )
 }

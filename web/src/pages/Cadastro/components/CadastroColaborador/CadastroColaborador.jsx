@@ -7,6 +7,7 @@ import Formulario from './components/Formulario/Formulario.jsx'
 import { useState, useEffect } from 'react'
 import { useNotificacaoStore } from "@/Notificacao/notificacaoStore.js"
 import { buscarSalao } from '../../../../services/BuscarSalao.js'
+import { buscarServicos } from '../../../Agendamento/services/buscarServicos'
 import { cadastrarColaborador } from '../../services/CadastroColaborador'
 
 
@@ -25,6 +26,9 @@ function CadastroColaborador() {
         nivelAcesso: "1"
     })
 
+    const [servicos, setServicos] = useState([])
+    const [associacoes, setAssociacoes] = useState([])
+
     const nomeUsuario = `${formulario.nome} ${formulario.sobrenome}`;
 
     const [nomeSalao, setNomeSalao] = useState("")
@@ -33,28 +37,28 @@ function CadastroColaborador() {
 
         var camposFaltando = false
 
-        Object.entries(formulario).forEach( (valor) => {
-            if ( camposFaltando == true ) return
+        Object.entries(formulario).forEach((valor) => {
+            if (camposFaltando == true) return
 
             if (valor[1] == "") {
-                mostrarNotificacao({titulo: "Preencha todos os campos"})
+                mostrarNotificacao({ titulo: "Preencha todos os campos" })
                 camposFaltando = true
 
                 return
             }
         })
 
-        if ( camposFaltando == true ) return
+        if (camposFaltando == true) return
 
         if (!/\S+@\S+\.\S+/.test(formulario.email)) {
-            mostrarNotificacao({titulo: "Email incorreto"})
-            
+            mostrarNotificacao({ titulo: "Email incorreto" })
+
             return
         }
 
         if (formulario.senha.length < 6) {
-            mostrarNotificacao({titulo: "Erro ao cadastrar", texto: "A senha deve conter pelo menos 6 caracteres"})
-            
+            mostrarNotificacao({ titulo: "Erro ao cadastrar", texto: "A senha deve conter pelo menos 6 caracteres" })
+
             return
         }
 
@@ -69,15 +73,21 @@ function CadastroColaborador() {
     }
 
     useEffect(() => { // Precisa disso para fazer a busca do nome do salão usando o React
-        async function pegarNomeSalao() {
-            const salao = await buscarSalao()
-            if (salao) setNomeSalao(salao.nome_salao)
+        async function pegarDados() {
+            const respostaSalao = await buscarSalao()
+            const respostaServicos = await buscarServicos()
+            
+            console.log(respostaServicos)
+
+            if (respostaSalao) setNomeSalao(respostaSalao.nome_salao)
 
         }
 
-        pegarNomeSalao()
+        pegarDados()
 
     }, []) // [] = roda só uma vez quando o componente aparecer na tela, para não re-renderizar a tela várias vezes causando lentidão
+
+    console.log(servicos)
 
     return (
         <main className='main-principal flex'>
@@ -93,7 +103,7 @@ function CadastroColaborador() {
                     </Header>
                     <hr className='w-10/12 place-self-center mt-[-36px] border-azul-ceu' />
                     <div className='flex justify-center h-160 my-[2%]!'>
-                        <Formulario dados={formulario} setDados={setFormulario} />
+                        <Formulario dados={formulario} setDados={setFormulario} servicos={servicos} setServicos={setServicos}/>
                     </div>
                 </div>
             </div>
