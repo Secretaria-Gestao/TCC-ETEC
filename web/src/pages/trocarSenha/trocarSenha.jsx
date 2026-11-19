@@ -1,13 +1,13 @@
 import './trocarSenha.css'
-import formularioTrocarSenha from "./components/formularioTrocarSenha.jsx";
-import { Link } from 'react-router';
+import FormularioTrocarSenha from './components/formularioTrocarSenha.jsx'
+import { Link } from 'react-router'
 
-function trocarSenha() {
+function TrocarSenha() {
     return (
         <div className='trocar-senha-page min-h-dvh px-3! py-6!'>
-            <Link className='Voltar' to={'/'}>voltar</Link>
-            <formularioTrocarSenha />
+            <Link className='Voltar' to='/'>voltar</Link>
+            <FormularioTrocarSenha />
         </div>
     )
 }
-export default trocarSenha
+export default TrocarSenha

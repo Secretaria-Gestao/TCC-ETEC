@@ -10,6 +10,7 @@ import GerenciadorServicos from './pages/GerenciadorServicos/GerenciadorServicos
 import GerenciadorProfissionais from './pages/GerenciadorProfissionais/GerenciadorProfissionais.jsx'
 import Login from './pages/Login/Login.jsx'
 import PageHistoricoAtendimentos from './pages/Agendamentos_Clientes/PageHistoricoAtendimentos.jsx'
+import TrocarSenha from './pages/trocarSenha/trocarSenha.jsx'
 
 import { NotificacaoContainer } from '@/Notificacao'
 
@@ -22,6 +23,7 @@ function App() {
       <Route path="/cadastro/*" element={ <Cadastro /> } />
       <Route path="/login/*" element={ <Login /> } />
       <Route path="/agendamento/*" element={ <Agendamento /> } />
+      <Route path="/trocar-senha/*" element={ <TrocarSenha /> } />
 
   {/* Rota do colaborador para ver a própria agenda */}    
       <Route path="/colaborador/agenda" element={ <PageAgendaColaborador /> } />
