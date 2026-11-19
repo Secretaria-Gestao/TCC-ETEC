@@ -47,14 +47,15 @@ export default function InfoResumidas({ profissionais, agendamentos, todosCargos
                 </div>
 
                 {/* Profissional adicionado recentemente. */}
-                <div className="min-w-max w-full h-full  p-2">
-                  <div className=" border p-4 h-9/10 flex items-end justify-between min-w-max gap-2">
+                <div className="min-w-max w-full p-2">
+                  {/* Altura pelo conteúdo: com altura fixa, um nome em duas linhas vazava pela borda */}
+                  <div className=" border p-4 flex items-center justify-between min-w-max gap-3">
                     <img
                       src={ordemRecente[0]?.foto_url || FOTO_PADRAO}
                       alt={`Foto de ${ordemRecente[0]?.nome_profissional || "profissional"}`}
-                      className="h-15 w-15 self-center object-cover"
+                      className="h-15 w-15 shrink-0 object-cover"
                     />
-                    <div>
+                    <div className="whitespace-nowrap">
                       {
                         ordemRecente.length > 0 ? (
                           <>
@@ -68,12 +69,12 @@ export default function InfoResumidas({ profissionais, agendamentos, todosCargos
 
                     {ordemRecente.length > 0 && (
                       <button
-                        className="self-stretch flex items-center text-(--texto-negrito)"
+                        className="shrink-0 flex items-center text-(--texto-negrito)"
                         type="button"
                         aria-label="Editar profissional adicionado recentemente"
                         onClick={() => abrirEdicaoProfissional?.(ordemRecente[0])}
                       >
-                        <svg className="h-4/5 w-auto shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                           <circle cx="12" cy="5" r="2" />
                           <circle cx="12" cy="12" r="2" />
                           <circle cx="12" cy="19" r="2" />

@@ -1,10 +1,13 @@
 .notificacao-comum {
-    position: absolute;
-    justify-self: center;
+    /* fixed + left 50%: fica no centro da tela em qualquer página e mesmo com a página rolada.
+       O justify-self dependia do pai ser grid, o que não vale em todas as telas. */
+    position: fixed;
+    left: 50%;
     top: -200px;
     z-index: 1000;
-    transform: translateY(196px);
+    transform: translate(-50%, 196px);
     width: 25%;
+    min-width: min(360px, calc(100vw - 32px));
     text-align: center;
     padding: 16px 0 16px 0;
 
@@ -18,15 +21,15 @@
 }
 
 .notificacao-comum-fechando {
-    transform: translateY(0);
+    transform: translate(-50%, 0);
 }
 
 @keyframes entrar {
     from {
-        transform: translateY(0);
+        transform: translate(-50%, 0);
     }
 
     to {
-        transform: translateY(196px);
-    }    
+        transform: translate(-50%, 196px);
+    }
 }

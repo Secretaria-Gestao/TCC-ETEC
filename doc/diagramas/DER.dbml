@@ -50,14 +50,6 @@ Table horarios_trabalho {
   }
 }
 
-Table indisponibilidades_profissional {
-  id integer [pk]
-  id_profissional uuid [not null]
-  data_inicio timestamptz [not null]
-  data_fim timestamptz [not null]
-  motivo text
-}
-
 Table portfolio_profissional {
   id integer [pk]
   id_profissional uuid [not null]
@@ -124,7 +116,6 @@ Ref: agendamentos.id_profissional > profissionais.id_profissional
 Ref: agendamentos.salao_associado > saloes.id_salao
 Ref: horario_funcionamento_salao.id_salao > saloes.id_salao
 Ref: horarios_trabalho.id_profissional > profissionais.id_profissional
-Ref: indisponibilidades_profissional.id_profissional > profissionais.id_profissional
 Ref: portfolio_profissional.id_profissional > profissionais.id_profissional
 Ref: profissionais.salao_associado > saloes.id_salao
 Ref: profissionais_servicos.id_profissional > profissionais.id_profissional
