@@ -1,6 +1,8 @@
 export default function HeaderAbas({ abaAtual, setAbaAtual, setConfigAberto, perfil }) {
     return (
-        <div className="relative flex gap-[1.5rem] border-b border-black/90  md:text-[18px] items-center overflow-x-auto overflow-y-hidden">
+        // shrink-0: sem ele, a área de conteúdo (h-full) espreme o cabeçalho e o overflow-y-hidden corta a
+        // borda laranja de baixo da aba ativa.
+        <div className="relative shrink-0 flex gap-[1.5rem] border-b border-black/90  md:text-[18px] items-center overflow-x-auto overflow-y-hidden">
 
             <button type="button"
                 className={`border-b ${abaAtual == "perfil" ? "border-laranja border-b-2" : "border-transparent"} -mb-px px-1 pb-2`}
