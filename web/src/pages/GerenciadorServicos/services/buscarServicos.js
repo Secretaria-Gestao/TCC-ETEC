@@ -14,7 +14,7 @@ export async function buscarServicos() {
             textoBotao: "Voltar",
             funcaoBotao: () => (window.location.href = "/")
         })
-        return null
+        return ["opa, deu ruim 1"]
     }
 
     try {
@@ -35,7 +35,7 @@ export async function buscarServicos() {
                 titulo: "Falha ao carregar os serviços",
                 texto: resultado.erro || "Tente novamente"
             })
-            return null
+            return ["opa, deu ruim 2"]
         }
 
         return resultado
@@ -46,6 +46,6 @@ export async function buscarServicos() {
             titulo: "Falha ao carregar os serviços",
             texto: "Não foi possível se comunicar com o servidor"
         })
-        return null
+        return ["opa, deu ruim 3"]
     }
 }
