@@ -1,7 +1,7 @@
 import { pegarSessao } from '../../../services/pegarSessao.js';
 import notificarErro from './NotificacaoCadastro.js';
 
-export async function cadastrarColaborador(email, senha, nome_profissional, cargo, telefone_profissional, nivel_acesso) {
+export async function cadastrarColaborador(email, senha, nome_profissional, cargo, telefone_profissional, nivel_acesso, servicos = []) {
     try {
         const token = await pegarSessao();
 
@@ -22,7 +22,8 @@ export async function cadastrarColaborador(email, senha, nome_profissional, carg
                 nome_profissional,
                 cargo,
                 telefone_profissional,
-                nivel_acesso
+                nivel_acesso,
+                servicos
             })
         });
 

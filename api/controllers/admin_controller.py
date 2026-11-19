@@ -50,6 +50,33 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
         if int(info["nivel_acesso"]) < 1 or int(info["nivel_acesso"]) > 3:
             return jsonify({"sucesso": False, "erro": "Nível de acesso inexistente"}), 400
 
+        # Serviços que o profissional realiza. São opcionais e repetidos são ignorados.
+        servicos = info.get("servicos") or []
+
+        if not isinstance(servicos, list):
+            return jsonify({"sucesso": False, "erro": "Lista de serviços inválida"}), 400
+
+        # Os checkboxes do formulário mandam os ids como texto
+        try:
+            servicos = list(dict.fromkeys(int(id_servico) for id_servico in servicos))
+        except (TypeError, ValueError):
+            return jsonify({"sucesso": False, "erro": "Lista de serviços inválida"}), 400
+
+        if servicos:
+            # Confere antes de criar o usuário, para não sobrar conta pela metade
+            # se alguém mandar o id de um serviço de outro salão.
+            resposta_servicos_salao = (
+                supabase_admin.table("servicos")
+                .select("id_servico")
+                .eq("salao_associado", remetente["salao_associado"])
+                .eq("removido", False)
+                .in_("id_servico", servicos)
+                .execute()
+            )
+
+            if len(resposta_servicos_salao.data or []) != len(servicos):
+                return jsonify({"sucesso": False, "erro": "Há serviços que não pertencem a este salão"}), 400
+
         resposta_auth = supabase_admin.auth.admin.create_user({    # Cria o usuário no Supabase Auth
             "email": email_profissional,
             "password": info["senha"],
@@ -71,6 +98,12 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
 
         # Horário de trabalho padrão (seg a sáb, 08:00 às 18:00, intervalo 12:00 às 13:00, domingo de folga)
         gravar_horarios_padrao_profissional(id_profissional)
+
+        if servicos:
+            supabase_admin.table("profissionais_servicos").insert([
+                {"id_profissional": id_profissional, "id_servico": id_servico}
+                for id_servico in servicos
+            ]).execute()
 
         return jsonify({"sucesso": True, "resultado": "Profissional cadastrado com sucesso!"})
 
