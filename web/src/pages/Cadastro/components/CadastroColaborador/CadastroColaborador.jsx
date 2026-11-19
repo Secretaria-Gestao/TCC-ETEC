@@ -6,6 +6,8 @@ import Formulario from './components/Formulario/Formulario.jsx'
 
 import { useState, useEffect } from 'react'
 import { useForm, useFormContext } from 'react-hook-form'
+import { FormProvider } from 'react-hook-form'
+
 import { useNotificacaoStore } from "@/Notificacao/notificacaoStore.js"
 import { buscarSalao } from '../../../../services/BuscarSalao.js'
 import { buscarServicos } from '../../../GerenciadorServicos/services/buscarServicos'
@@ -24,11 +26,11 @@ function CadastroColaborador() {
             cargo: "", telefone: "",
 
             email: "", senha: "",
-            nivelAcesso: "1", servicosEscolhido: []
+            nivelAcesso: "1", servicosEscolhidos: []
         }
     })
 
-    const { register, watch, getValues } = useFormContext()
+    const { getValues, watch } = metodos
 
     const nomeUsuario = `${watch("nome")} ${watch("sobrenome")}`;
 
@@ -51,19 +53,19 @@ function CadastroColaborador() {
 
         if (camposFaltando == true) return
 
-        if (!/\S+@\S+\.\S+/.test(formulario.email)) {
+        if (!/\S+@\S+\.\S+/.test(valores.email)) {
             mostrarNotificacao({ titulo: "Email incorreto" })
 
             return
         }
 
-        if (formulario.senha.length < 6) {
+        if (valores.senha.length < 6) {
             mostrarNotificacao({ titulo: "Erro ao cadastrar", texto: "A senha deve conter pelo menos 6 caracteres" })
 
             return
         }
 
-        const resposta = await cadastrarColaborador(formulario.email, formulario.senha, nomeUsuario, formulario.cargo, formulario.telefone, formulario.nivelAcesso);
+        const resposta = await cadastrarColaborador(valores.email, valores.senha, nomeUsuario, valores.cargo, valores.telefone, formulario.nivelAcesso);
 
         if (resposta) {
             mostrarNotificacao({
