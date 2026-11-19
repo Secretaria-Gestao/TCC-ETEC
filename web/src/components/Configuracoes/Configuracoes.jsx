@@ -28,8 +28,9 @@ export default function Configuracoes({ perfil, setConfigAberto }) {
 
                 {/* Na aba de Horários, no desktop, quem rola são só as linhas da tabela (o cabeçalho fica parado), então
                     aqui o conteúdo não rola e só repassa a altura para baixo. No celular, e nas outras abas, a área
-                    toda rola. */}
-                <div className={`w-full h-full ${abaAtual == "horariosProfissional" ? "overflow-y-auto md:flex md:flex-col md:overflow-hidden" : "overflow-y-auto"} bg`}>
+                    toda rola. Nas outras abas o flex-col deixa o conteúdo ocupar a altura toda, para o mt-auto
+                    levar os botões de salvar/cancelar para o fim da janela. */}
+                <div className={`w-full h-full ${abaAtual == "horariosProfissional" ? "overflow-y-auto md:flex md:flex-col md:overflow-hidden" : "flex flex-col overflow-y-auto"} bg`}>
 
                     {perfil == "cliente" && (
                         <Cliente abaAtual={abaAtual} setAbaAtual={setAbaAtual} />

@@ -60,7 +60,10 @@ export default function Perfil({ setAbaAtual }) {
 
           <p>Email:</p>
 
-          <p> {perfil ? watch("email") : "Carregando..."}  </p>
+          {/* Email grande corta com "..." em vez de criar rolagem lateral; o title mostra ele inteiro no hover. */}
+          <p className="truncate" title={perfil ? watch("email") : undefined}>
+            {perfil ? watch("email") : "Carregando..."}
+          </p>
 
         </div>
 

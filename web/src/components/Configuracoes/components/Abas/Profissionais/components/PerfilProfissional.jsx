@@ -101,7 +101,7 @@ export default function PerfilProfissional({ setAbaAtual }) {
             </div>
           </div>
 
-          <div className="flex flex-col flex-1 gap-5">
+          <div className="flex flex-col flex-1 min-w-0 gap-5">
             <div className={estilos["cliente-perfil-grid"]}>
               <svg className="w-6 h-6 shrink-0 text-laranja" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <circle cx="12" cy="8" r="4"></circle>
@@ -164,7 +164,10 @@ export default function PerfilProfissional({ setAbaAtual }) {
 
               <p>Email:</p>
 
-              <p> {perfil ? perfil.email_profissional : "Carregando..."} </p>
+              {/* Email grande corta com "..." em vez de criar rolagem lateral; o title mostra ele inteiro no hover. */}
+              <p className="truncate" title={perfil?.email_profissional}>
+                {perfil ? perfil.email_profissional : "Carregando..."}
+              </p>
             </div>
 
             <p className="flex gap-1 -mt-3.5 text-xs">
