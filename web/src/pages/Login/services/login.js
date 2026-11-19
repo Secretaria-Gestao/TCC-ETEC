@@ -1,4 +1,5 @@
 import { supabase } from '../../../services/SupabaseConfig.js';
+import { pegarSessao } from '../../../services/pegarSessao.js';
 import { useNotificacaoStore } from '@/Notificacao/notificacaoStore.js';
 
 // Para onde cada tipo de usuário vai depois do login
@@ -7,6 +8,22 @@ const rotasPorTipo = {
     colaborador: '/colaborador/agenda',
     gerente: '/admin/agenda',
     administrador: '/admin/agenda'
+}
+
+async function chamarBack(rota) {
+    const sessao = await pegarSessao()
+    if (!sessao) return null
+
+    const resposta = await fetch(rota, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${sessao.access_token}`
+        }
+    })
+
+    const dados = await resposta.json()
+    return { ok: resposta.ok && dados.sucesso, dados }
 }
 
 export async function logar(email, senha) { // Login com email e senha
@@ -36,62 +53,29 @@ export async function logarComGoogle() { // Login com Google
     });
 }
 
-// Tradução do nivel_acesso da tabela profissionais
-const tiposPorNivel = {
-    1: 'administrador',
-    2: 'gerente',
-    3: 'colaborador'
+async function buscarTipoUsuario() { // sem parâmetro: o back descobre quem é pelo token
+    const resultado = await chamarBack('/api/login/tipo')
+    return resultado?.ok ? resultado.dados.tipo : null
 }
 
-//py
-async function buscarTipoUsuario(idUsuario) { // Procura o usuário nas duas tabelas
-    const [cliente, profissional] = await Promise.all([
-        supabase.from('clientes').select('id_cliente').eq('id_cliente', idUsuario).maybeSingle(),
-        supabase.from('profissionais').select('id_profissional, nivel_acesso').eq('id_profissional', idUsuario).maybeSingle()
-    ])
-
-    if (cliente.data) return 'cliente'
-    if (profissional.data) return tiposPorNivel[profissional.data.nivel_acesso] ?? 'colaborador'
-    return null
-}
-//py
-
-export async function buscarTipoDoUsuarioLogado() { // Tipo de quem está logado, ou null
-    const { data } = await supabase.auth.getUser()
-    if (!data.user) return null
-    return buscarTipoUsuario(data.user.id)
+export async function buscarTipoDoUsuarioLogado() {
+    return buscarTipoUsuario()
 }
 
-//py
 export async function buscarDestinoDoUsuario() { // Rota certa para quem está logado
     const mostrarNotificacao = useNotificacaoStore.getState().mostrarNotificacao
 
-    const { data } = await supabase.auth.getUser()
-    const usuario = data.user
+    const resultado = await chamarBack('/api/login/google')
+    if (!resultado) return '/login'
 
-    if (!usuario) return '/login'
-
-    let tipo = await buscarTipoUsuario(usuario.id)
-
-    if (!tipo) { // Primeira vez entrando com o Google: cadastra como cliente
-        const { error } = await supabase.from('clientes').insert({
-            id: usuario.id,
-            nome: usuario.user_metadata.full_name,
-            email: usuario.email
+    if (!resultado.ok) {
+        mostrarNotificacao({
+            titulo: "Erro ao finalizar cadastro!",
+            texto: "Não foi possível criar sua conta, tente novamente"
         })
-
-        if (error) {
-            mostrarNotificacao({
-                titulo: "Erro ao finalizar cadastro!",
-                texto: "Não foi possível criar sua conta, tente novamente"
-            })
-            await supabase.auth.signOut()
-            return '/login'
-        }
-
-        tipo = 'cliente'
+        await supabase.auth.signOut()
+        return '/login'
     }
 
-    return rotasPorTipo[tipo]
+    return rotasPorTipo[resultado.dados.tipo]
 }
-//py

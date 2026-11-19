@@ -105,3 +105,13 @@ def buscar_agendamentos_salao():
 def atualizar_status():
     # Rota usada pelo profissional para atualizar o status de um agendamento.
     return atualizar_status_agendamento()
+
+@rotas_json.route("/api/login/tipo", methods=["GET"])
+def tipo_usuario_rota():
+    # Devolve o tipo (cliente, colaborador, gerente, administrador) de quem está logado, pelo token.
+    return tipoUsuario()
+
+@rotas_json.route("/api/login/google", methods=["GET"])
+def login_google_rota():
+    # Login com Google: cadastra como cliente se for a primeira vez e devolve o tipo do usuário.
+    return loginGoogle()
