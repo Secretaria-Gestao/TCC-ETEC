@@ -75,8 +75,9 @@ export default function EditarProfissional({
     }
 
     return (
-        <aside className="editar-profissional w-full max-w-lg shrink-0 border border-areia bg-white p-5 top-0 right-0 h-dvh fixed flex flex-col">
-            <form onSubmit={handleSubmit(salvarDados, (erros) => console.log('2 formulário inválido', erros))} className="flex h-full flex-col">
+        // overflow-y-auto + min-h-full: em tela baixa o painel rola, em vez de espremer as seções umas sobre as outras.
+        <aside className="editar-profissional w-full max-w-lg shrink-0 border border-areia bg-white p-5 top-0 right-0 h-dvh fixed flex flex-col overflow-y-auto">
+            <form onSubmit={handleSubmit(salvarDados, (erros) => console.log('2 formulário inválido', erros))} className="flex min-h-full flex-col [&>*]:shrink-0">
                 {/* Identificação do profissional e botão para fechar o painel. */}
                 <header className="border-b border-areia pb-4 flex justify-between">
                 <div>
