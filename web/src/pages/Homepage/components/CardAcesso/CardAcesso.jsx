@@ -9,10 +9,10 @@ function CardAcesso() {
 
   return (
     <div className='h-dvh overflow-x-hidden'>
-      <div className='h-full w-dvw bg-areia/20'>
+      <div className='h-full w-dvw bg-areia/30'>
 
         <header className='bg-ameixa flex p-5 gap-2 justify-between'>
-          <div className='flex items-center gap-2 bg-[#704356] p-2 rounded-md shadow-lg'>
+          <div className='flex items-center gap-2 p-2'>
             <img className="shrink-0 w-20" src="/logo_SVG.svg" alt="" />
 
             <div>
@@ -54,23 +54,49 @@ function CardAcesso() {
 
         </header>
 
-        <main className='h-full flex items-center bg  justify-center w-8/10 place-self-center'>
-          <div className='flex  gap-20 '>
+        <main className='h-full flex items-center justify-center w-8/10 place-self-center'>
+          <div className='flex gap-20 '>
 
             <img src="/imagem_homepage1.png" alt="" className='w-6/10 shadow-2xl' />
 
-            <div className='place-self-start h-max flex flex-col gap-2'>
+            <div className='place-self-center h-max flex flex-col gap-2'>
               <b className='text-4xl'>Organização, <br /> agilidade e beleza, <br /> tudo em um só lugar!</b>
               <p className=''>
                 Agende seu horário no salão em poucos cliques, ou <br /> gerencie agenda, profissionais e serviços do seu salão <br /> em um painel só.
               </p>
+              <div className='secao-card-comentarios'>
+                <div className='bg-azul-profundo text-white card-comentarios'>
+                  <div className='text-sm gap-4 flex'> Clarice Souza <div>★★★★☆</div></div>
+                  <p className='font-extralight text-sm -mt-4'> - Cliente </p>
+                  <p >"Achei fácil de usar, porém a tela de meus agendamentos é confusa."</p>
+                </div>
+                <div className='bg-azul-profundo text-white card-comentarios'>
+                  <div className='text-sm gap-4 flex'>Clarice Souza <div>★★★★☆</div> </div>
+                  <p >"Achei fácil de usar, porém a tela de meus agendamentos é confusa."</p>
+                </div>
+                <div className='bg-azul-profundo text-white card-comentarios'>
+                  <div className='text-sm gap-4 flex'> Clarice Souza <div>★★★★☆</div></div>
+                  <p className='font-extralight text-sm -mt-4'> - Cliente </p>
+                  <p >"Achei fácil de usar, porém a tela de meus agendamentos é confusa."</p>
+                </div>
+                <div className='bg-azul-profundo text-white card-comentarios'>
+                  <div className='text-sm gap-4 flex'> Clarice Souza <div>★★★★☆</div></div>
+                  <p className='font-extralight text-sm -mt-4'> - Cliente </p>
+                  <p >"Achei fácil de usar, porém a tela de meus agendamentos é confusa."</p>
+                </div>
+                <div className='bg-azul-profundo text-white card-comentarios'>
+                  <div className='text-sm gap-4 flex'> Clarice Souza <div>★★★★☆</div></div>
+                  <p className='font-extralight text-sm -mt-4'> - Cliente </p>
+                  <p >"Achei fácil de usar, porém a tela de meus agendamentos é confusa."</p>
+                </div>
+              </div>
             </div>
           </div>
         </main>
 
       </div>
 
-      <div className='h-full w-dvw bg-amber-950 text-white'>
+      <div className='h-full w-dvw bg-azul-profundo text-white'>
         <main className='h-full flex items-center   justify-center w-7/10 place-self-center'>
           <div className='flex  gap-20 '>
 
@@ -107,7 +133,7 @@ function CardAcesso() {
                     </div>
                   )}
                 </li>
-                
+
                 <li>
                   <Link to="/login" className='bg-[#704356] shadow-lg p-2 rounded-md'>
                     Agendar um horário
