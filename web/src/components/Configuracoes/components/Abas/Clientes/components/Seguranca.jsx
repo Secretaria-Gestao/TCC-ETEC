@@ -116,7 +116,8 @@ export default function Seguranca({ profissional, admin }) {
 
           <p>Senha</p>
 
-          <p> ************** </p>
+          {/* truncate: no celular os asteriscos são cortados em vez de passarem por baixo do botão Editar */}
+          <p className="truncate"> ************** </p>
 
           {temSenha ? (
             <button type="button" className="py-1 px-3 rounded-lg bg-azul-ceu hover:bg-azul-ceu/90 text-white transition-colors text-sm" onClick={() => setMudandoSenha(true)}>
