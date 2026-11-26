@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Navigate } from "react-router"
-import { buscarTipoDoUsuarioLogado } from "../pages/Login/services/login.js";
+import { buscarDestinoDoUsuario } from "../pages/Login/services/login.js";
 
 function RotaProtegida({ tiposPermitidos, children }) {
     // Transforma ['colaborador', 'gerente'] em "colaborador,gerente"
@@ -10,7 +10,12 @@ function RotaProtegida({ tiposPermitidos, children }) {
 
     useEffect(() => {
         async function verificar() {
-            const tipo = await buscarTipoDoUsuarioLogado()
+            let tipo = null
+            try {
+                tipo = (await buscarDestinoDoUsuario()).tipo
+            } catch (erro) {
+                console.error("Erro ao verificar o usuário:", erro) // manda para o /login em vez de travar
+            }
             const permitidos = chavePermitidos.split(",")
 
             let status
@@ -24,11 +29,11 @@ function RotaProtegida({ tiposPermitidos, children }) {
     }, [chavePermitidos])
 
     // Se o resultado guardado é de outra página, ainda está verificando
-    const status = verificacao.chave === chavePermitidos ? verificacao.status : "carregando"
+    const status = verificacao?.chave === chavePermitidos ? verificacao.status : "carregando"
 
     if (status === "carregando") return <p>Carregando...</p>
     if (status === "deslogado") return <Navigate to="/login" replace />
-    if (status === "sem-permissao") return <Navigate to="/redirecionar" replace />
+    if (status === "sem-permissao") return <Navigate to="/login" replace />
 
     return children
 }

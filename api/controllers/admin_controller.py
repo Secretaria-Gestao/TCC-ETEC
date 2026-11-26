@@ -490,7 +490,10 @@ def meu_perfil():
         )
 
         if not resultado.data:
-            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404
+            resultado = supabase_admin.table("clientes").select("*").eq("id_cliente", id_usuario).execute()
+
+            if not resultado.data:
+                return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404
 
         return jsonify({"sucesso": True, "perfil": resultado.data[0]})
 

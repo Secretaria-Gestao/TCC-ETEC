@@ -2,14 +2,14 @@ import { useEffect } from "react"
 import { useNavigate } from "react-router"
 import { buscarDestinoDoUsuario } from "../pages/Login/services/login.js";
 
-function Redirecionar() {
+export default function Redirecionar() {
     const navegar = useNavigate()
 
     useEffect(() => {
-        buscarDestinoDoUsuario().then(destino => navegar(destino, { replace: true }))
-    }, [navegar])
+        buscarDestinoDoUsuario()
+            .then(({ destino }) => navegar(destino, { replace: true }))
+            .catch(() => navegar('/login', { replace: true }))
+    }, [])
 
     return <p>Entrando...</p>
 }
-
-export default Redirecionar

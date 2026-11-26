@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router"
 
-import { logar, logarComGoogle, buscarDestinoDoUsuario } from "../../services/login.js";
+import { buscarDestinoDoUsuario, logar, logarComGoogle } from "../../services/login.js";
 import './FormularioLogin.css'
 
 function FormularioLogin() {
@@ -29,7 +29,7 @@ function FormularioLogin() {
         const usuario = await logar(formulario.email, formulario.senha)
         if (!usuario) return // a notificação de erro já aparece pelo logar
 
-        const destino = await buscarDestinoDoUsuario()
+        const { destino } = await buscarDestinoDoUsuario()
         navegar(destino, { replace: true })
     }
 
