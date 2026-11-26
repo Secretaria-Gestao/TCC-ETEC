@@ -54,10 +54,10 @@ function CardAcesso() {
 
         </header>
 
-        <main className='h-full flex items-center justify-center w-8/10 place-self-center'>
-          <div className='flex gap-20 '>
+        <main className='h-full flex items-center justify-center w-1/1 place-self-center'>
+          <div className='p-5 justify-center items-center place-self-center flex gap-20 '>
 
-            <img src="/imagem_homepage1.png" alt="" className='w-6/10 shadow-2xl' />
+            <img src="/imagem_homepage1.png" alt="" className='w-7/12 shadow-2xl' />
 
             <div className='place-self-center h-max flex flex-col gap-2'>
               <b className='text-4xl'>Organização, <br /> agilidade e beleza, <br /> tudo em um só lugar!</b>

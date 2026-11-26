@@ -1,13 +1,14 @@
 .secao-card-comentarios{
     display: grid;
-    width: 84%;
+    width: 500px;
     margin-top: 10%;
     grid-column-gap: 1%;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    overflow-x: auto;
+    overflow-x: scroll;
     scrollbar-width: thin;
     scrollbar-color: var(bg-azul-profundo) transparent;
     justify-content: space-between;
+    border-radius: 15px;
 }
 
 .card-comentarios{
