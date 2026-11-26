@@ -2,12 +2,13 @@
 
 .barraLateral {
     /* sticky mantém a barra visível durante a rolagem sem retirá-la do layout. */
-    @apply bg-gray-800 text-white
-    flex flex-col
-    w-max px-4 sticky shrink-0 top-0 h-dvh;
+    @apply text-white
+    flex md:flex-col
+    gap-5 md:gap-0 md:px-4 sticky shrink-0 top-0 
+    h-20 md:h-dvh w-dvw md:w-max
+    ;
+    background-color: var(--fundo-barra-lateral);
 }
-
-
 
 .barraLateral > hr {
     margin: 24px
@@ -15,4 +16,29 @@
 
 .barraLateral svg {
     color: var(--color-laranja);
+}
+
+/* Ícones do menu em nude rosé. Os ícones do painel de Configurações, que fica dentro da barra, continuam laranja. */
+.barraLateral > a svg,
+.barraLateral > button svg,
+.barraLateral > div > button svg,
+.barraLateral > nav a svg,
+.barraLateral > nav button svg {
+    color: var(--color-azul-ceu);
+}
+
+.card-minha-renda { 
+display:grid; 
+gap:6px; 
+padding:10px; 
+margin-bottom:12px; 
+border-radius:12px;
+background:rgba(255,255,255,0.12); 
+color:#fff; 
+font-size:.75rem; 
+}
+
+.card-minha-renda b,
+.card-minha-renda-nav button { 
+      color: #fff; 
 }

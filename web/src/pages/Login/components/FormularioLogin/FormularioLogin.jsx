@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router"
 
-import { buscarDestinoDoUsuario, logar, logarComGoogle } from "../../services/login.js";
+import { logar, logarComGoogle, buscarDestinoDoUsuario } from "../../services/login.js"
 import './FormularioLogin.css'
 
 function FormularioLogin() {
@@ -13,6 +13,9 @@ function FormularioLogin() {
         senha: ""
     })
 
+    const [mandou, setMandou] = useState(0)
+    const [enviando, setEnviando] = useState(false)
+
     function mudarValor(evento) {
         const nomeCampo = evento.target.name
         const valorCampo = evento.target.value
@@ -23,15 +26,25 @@ function FormularioLogin() {
         })
     }
 
-    async function enviarFormulario(event) {
-        event.preventDefault()
+   async function enviarFormulario(event) {
+    event.preventDefault()
+    if (enviando) return // ignora clique duplo
 
-        const usuario = await logar(formulario.email, formulario.senha)
-        if (!usuario) return // a notificação de erro já aparece pelo logar
+    setMandou(1)
+    setEnviando(true)
 
-        const { destino } = await buscarDestinoDoUsuario()
-        navegar(destino, { replace: true })
+    try {
+        const resultado = await logar(formulario.email, formulario.senha)
+
+        if (resultado) {
+            // Navega pelo cargo do usuário, não pelo endereço atual da tela
+            const { destino } = await buscarDestinoDoUsuario()
+            navegar(destino, { replace: true })
+        }
+    } finally {
+        setEnviando(false) // libera o botão, com sucesso ou erro
     }
+}
 
     return (
         <>
@@ -45,30 +58,52 @@ function FormularioLogin() {
                         <label htmlFor="email">Email</label>
                         <input type="email" name="email" id="email" placeholder="seu@email.com" onChange={mudarValor} />
 
-                        <div className="error" id="email-required-error">
-                            Email é obrigatório
-                        </div>
+                        {
+                            mandou > 0 && (
+                                !formulario.email ? (
+                                    <div className="error" id="password-required-error">
+                                        Email é obrigatório
+                                    </div>
+                                )
+                                : <div></div>
+                            )
+                        }
 
-                        <div className="error" id="email-invalid-error">
-                            Email é inválido
-                        </div>
+                        {
+                            formulario.email.length > 0 && (
+                                
+                                !/\S+@\S+\.\S+/.test(formulario.email) && (
+                                    <div className="error" id="email-invalid-error">
+                                    Email é inválido
+                                </div>
+                                )
+                            )
+                        }	
+                        
                     </div>
 
                     <div className="campo">
                         <label htmlFor="senha">Senha</label>
                         <input type="password" name="senha" id="password" placeholder="sua senha" onChange={mudarValor} />
 
-                        <div className="error" id="password-required-error">
-                            Senha é obrigatória
-                        </div>
+                        {
+                            mandou > 0 && (
+                                !formulario.senha ? (
+                                    <div className="error" id="password-required-error">
+                                        Senha é obrigatória
+                                    </div>
+                                )
+                                : <div></div>
+                            )
+                        }
+                        
                     </div>
 
                     <button type="button" className="clear" id="recover-password-button">
                         Recuperar senha
                     </button>
 
-                    <button type="submit" className="solid" id="login-button">
-                        Entrar
+                    <button type="submit" className="solid" id="login-button" disabled={enviando}> {enviando ? "Entrando..." : "Entrar" }
                     </button>
 
                     <Link to="/cadastro/cliente" id="btn_cadastrar" className="outline button-link">

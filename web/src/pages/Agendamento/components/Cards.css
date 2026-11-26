@@ -26,7 +26,7 @@
 .agendamento-form button,
 .agendamento-form select {
     border-radius: 10px;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--borda-campo);
     padding: 10px;
     margin: 2px;
     height: 50px;
@@ -39,11 +39,11 @@
 }
 
 .agendamento-form .btn_servico{
-    color: var(--border-transparent);
+    color: var(--borda-suave);
     width: 40px;
     height: 40px;
     font-size: 20px;
-    border: 2px solid var(--background-transparent);
+    border: 2px solid var(--fundo-cartao);
     border-radius: 50px;
     cursor: pointer;
 }
@@ -97,9 +97,9 @@
     height: 500px;
     padding: 25px;
     margin: auto;
-    background: var(--background-transparent);
+    background: var(--fundo-cartao);
     border-radius: 15px;
-    border: 1px solid var(--border-transparent);
+    border: 1px solid var(--borda-suave);
 }
 .agendamento-form .card_2{
     flex: 1;
@@ -109,7 +109,7 @@
     height: 500px;
     padding: 25px;
     margin: auto;
-    background-color: rgb(71, 46, 95);
+    background-color: var(--cor-primaria);
 }
 
 .agendamento-form .logo {

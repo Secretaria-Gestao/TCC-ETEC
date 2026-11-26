@@ -4,21 +4,21 @@
     align-items: center;
     width: max-content;
     min-width: 320px;
-    border: 2px solid var(--border-transparent);
-    background-color: var(--background-transparent);
+    border: 2px solid var(--borda-suave);
+    background-color: var(--fundo-cartao);
     backdrop-filter: blur(10px);
     border-radius: 35px;
     padding: 45px;
     text-decoration: none;
-    color: var(--font-color);
+    color: var(--texto);
 
 }
 
 .homepage-link {
     text-decoration: none;
-    background-color: var(--border-transparent);
+    background-color: var(--borda-suave);
     padding: 5px;
     border-radius: 10px;
     margin-top: 10px;
-    color: var(--font-color);
+    color: var(--texto);
 }

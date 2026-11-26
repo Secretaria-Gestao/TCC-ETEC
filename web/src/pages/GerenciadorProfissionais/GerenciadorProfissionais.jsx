@@ -5,14 +5,13 @@ import EditarProfissional from "./components/EditarProfissional/EditarProfission
 import BarraLateral from "@/BarraLateral/BarraLateral"
 import Header from "@/Header/Header"
 
-import { pegarSessao } from "../../services/pegarSessao"
 import { buscarSalao } from "../../services/BuscarSalao"
 import { mostrarMembros } from "./services/mostrarMembros"
 import { editarProfissional, removerProfissional as removerProfissionalApi } from "./services/gerenciarProfissionais"
 
-import { menuAdmin } from "@/BarraLateral/listaMenus"
 
 import { useEffect, useState } from "react"
+import { pegarSessao } from "../../services/pegarSessao.js"
 
 export default function GerenciadorProfissionais() {
     // Estes estados representam a página inteira: membros, agenda do mês e o painel de edição.
@@ -28,15 +27,8 @@ export default function GerenciadorProfissionais() {
     useEffect(() => {
         // O salão é descoberto pela sessão; o front-end não escolhe o salão pela URL.
         async function carregarPagina() {
-            const sessao = await pegarSessao()
 
-            if (!sessao) {
-                return
-            }
-
-            setIdRemetente(sessao.user.id)
-
-            const salao = await buscarSalao(sessao.user.email)
+            const salao = await buscarSalao()
 
             if (salao) {
                 setNomeSalao(salao.nome_salao)
@@ -50,6 +42,10 @@ export default function GerenciadorProfissionais() {
                 setAgendamentos(membros[1])
 
             }
+
+            const sessao = await pegarSessao()
+
+            if (sessao) setIdRemetente(sessao.user.id)
 
         }
 
@@ -104,17 +100,18 @@ export default function GerenciadorProfissionais() {
     }
 
     return (
-        <div className="w-full h-full flex">
-            <BarraLateral menu={menuAdmin}/>
+        <main className="main-principal">
+        <div className="w-full h-full flex flex-col md:flex-row">
+            <BarraLateral />
 
-            <main className="relative w-full min-h-dvh h-max bg-blue-600/40 flex flex-col flex-1 min-w-0">
+            <div className="relative w-full min-h-dvh h-max flex flex-col flex-1 min-w-0">
                 <Header titulo="Membros do salão" subtitulo={nomeSalao} />
 
                 {/* Cabeçalho com o salão associado ao usuário logado. */}
-                <hr className="w-10/12 place-self-center mt-[-36px]" />
+                <hr className="w-10/12 place-self-center mt-[-36px] border-azul-ceu" />
 
                 {/* Bloco de resumos da equipe. */}
-                <section className="w-8/10 place-self-center border-b border-t mt-25 p-5 relative">
+                <section className="w-8/10 place-self-center border-b border-t border-azul-ceu mt-25 p-5 relative">
                     <p className="absolute -top-8 left-0">
                         Gerencie seus
                         <strong> profissionais</strong>,
@@ -154,13 +151,15 @@ export default function GerenciadorProfissionais() {
                                 onSalvar={salvarEdicaoProfissional}
                                 idRemetente={idRemetente}
                                 onRemover={removerProfissional}
+                                onAcordoSalvo={() => setAtualizacaoProfissionais((valorAtual) => valorAtual + 1)}
                             />
                         )}
                     </div>
 
                 </section>
 
-            </main>
+            </div>
         </div>
+        </main>
     )
 }

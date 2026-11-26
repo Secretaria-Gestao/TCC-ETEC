@@ -1,12 +1,13 @@
 import { Link } from 'react-router'
 
 import './CardAcesso.css'
+import { useState } from 'react'
 
 function CardAcesso() {
 	return (
 		<main className="homepage-main">
 			<div className="homepage-CardAcesso">
-				<p>Bem-te-vi</p>
+				<p>Secretária Gestão</p>
 
 				<p>Deseja agendar um horário?</p> <br />
 
@@ -14,8 +15,8 @@ function CardAcesso() {
 				<Link to={'/cadastro/gerente'} className='homepage-link'> Sou profissional </Link>
 
 			</div>
-		</main>
-	)
+		</main> 
+)
 }
 
 export default CardAcesso

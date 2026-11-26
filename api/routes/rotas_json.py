@@ -1,12 +1,14 @@
 from flask import Flask, Blueprint
 from controllers.login_controller import cadastroUserCliente
 from controllers.login_controller import cadastroUserGerente
-from controllers.login_controller import cadastroSalao
 from controllers.agendamento_controller import agendar
-from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento
+from controllers.admin_controller import cadastrar_profissional, editar_profissional, minha_renda, relatorio_acertos, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento, historico_cliente, buscar_horarios_salao, salvar_horarios_salao, definir_acordo_financeiro 
+from controllers.admin_controller import cadastrar_profissional, editar_profissional, remover_profissional, agendamentos_cliente, buscar_profissional_email, buscar_Todosprofissionais, mostrarMembros, meu_perfil, agendamentos_profissional, agendamentos_salao, atualizar_status_agendamento, cancelar_agendamento_cliente, historico_cliente, buscar_horarios_salao, salvar_horarios_salao
+from controllers.admin_controller import buscar_horarios_profissional, salvar_horarios_profissional
 from controllers.buscar_salao import buscar_salao, buscar_servicos_fornecidos, criar_servicos_fornecidos, editar_servicos_fornecidos, deletar_servicos_fornecidos
 from controllers.buscar_saloes import buscar_saloes
 from controllers.buscar_servicos import buscar_servicos_agendamento
+from controllers.editar_perfil import editar_email, editar_nome, editar_telefone, editar_foto, editar_salao, excluir_conta, excluir_salao
 
 rotas_json = Blueprint("rotas_json", __name__)
 
@@ -20,10 +22,6 @@ def validandoCliente():
 def validandoGerente():
     return cadastroUserGerente()
 
-@rotas_json.route("/api/cadastro/salao", methods=["POST"])
-def validandoSalao():
-    return cadastroSalao()
-
 @rotas_json.route("/api/agendando", methods=["POST"])
 def agendamento():
     return agendar()
@@ -32,9 +30,9 @@ def agendamento():
 def cadastrar_prof():
     return cadastrar_profissional()
 
-@rotas_json.route("/api/agendamentos/cliente/<id_cliente>", methods=["GET"])
-def buscar_agendamentos(id_cliente):
-    return agendamentos_cliente(id_cliente)
+@rotas_json.route("/api/agendamentos/cliente", methods=["GET"])
+def buscar_agendamentos():
+    return agendamentos_cliente()
 
 @rotas_json.route("/api/buscar/profissionais/email", methods=["GET"])
 def buscar_profEmail():
@@ -56,7 +54,7 @@ def editar_prof():
 def deletar_prof():
     return remover_profissional()
 
-@rotas_json.route("/api/buscar/salao", methods=["POST"])
+@rotas_json.route("/api/buscar/salao", methods=["GET"])
 def buscarSalao():
     return buscar_salao()
 
@@ -82,6 +80,36 @@ def criar_Servicos_Fornecidos():
 def editar_Servicos_Fornecidos():
     return editar_servicos_fornecidos()
 
+# Rotas da tela de Configurações (perfil, segurança e aba Salão do admin).
+# Quem está logado é identificado pelo token, por isso nenhuma delas recebe id na URL.
+@rotas_json.route("/api/editar/email", methods=['POST'])
+def editar_Email():
+    return editar_email()
+
+@rotas_json.route("/api/editar/nome", methods=['POST'])
+def editar_Nome():
+    return editar_nome()
+
+@rotas_json.route("/api/editar/telefone", methods=['POST'])
+def editar_Telefone():
+    return editar_telefone()
+
+@rotas_json.route("/api/editar/foto", methods=['POST'])
+def editar_Foto():
+    return editar_foto()
+
+@rotas_json.route("/api/editar/salao", methods=['POST'])
+def editar_Salao():
+    return editar_salao()
+
+@rotas_json.route("/api/deletar/salao", methods=['POST'])
+def deletar_Salao():
+    return excluir_salao()
+
+@rotas_json.route("/api/deletar/conta", methods=['POST'])
+def deletar_Conta():
+    return excluir_conta()
+
 @rotas_json.route("/api/deletar/servico-fornecido", methods=['POST'])
 def deletar_Servicos_Fornecidos():
     return deletar_servicos_fornecidos()
@@ -105,3 +133,44 @@ def buscar_agendamentos_salao():
 def atualizar_status():
     # Rota usada pelo profissional para atualizar o status de um agendamento.
     return atualizar_status_agendamento()
+
+@rotas_json.route("/api/agendamentos/cancelar", methods=["POST"])
+def cancelar_agendamento():
+    # Rota usada pelo cliente para cancelar um agendamento dele (até 2h30 antes).
+    return cancelar_agendamento_cliente()
+
+@rotas_json.route("/api/agendamentos/cliente/<id_cliente>/historico", methods=["GET"])
+def buscar_historico_cliente(id_cliente):
+    # Rota usada pelo cliente para ver o histórico de agendamentos.
+    return historico_cliente(id_cliente)
+
+@rotas_json.route("/api/salao/<id_salao>/horarios", methods=["GET"])
+def horarios_salao(id_salao):
+    # Os nomes das funções das rotas NÃO podem ser iguais aos importados (recursão infinita)
+    return buscar_horarios_salao(id_salao)
+
+@rotas_json.route("/api/editar/salao-horarios", methods=["POST"])
+def editar_horarios_salao():
+    return salvar_horarios_salao()
+
+@rotas_json.route("/api/profissional/<id_profissional>/horarios", methods=["GET"])
+def horarios_profissional(id_profissional):
+    # Igual à rota de horários do salão: usada pela tela de agendamento do cliente e pelas Configurações do profissional
+    return buscar_horarios_profissional(id_profissional)
+
+@rotas_json.route("/api/editar/profissional-horarios", methods=["POST"])
+def editar_horarios_profissional():
+    return salvar_horarios_profissional()
+
+@rotas_json.route("/api/profissionais/acordo-financeiro", methods=["POST"])
+def acordo_financeiro():
+    # Nome diferente da função importada, para não chamar a si mesma
+    return definir_acordo_financeiro()
+
+@rotas_json.route("/api/financeiro/acertos", methods=["GET"])
+def rota_acertos():
+    return relatorio_acertos()
+
+@rotas_json.route("/api/financeiro/minha-renda", methods=["GET"])
+def rota_minha_renda():
+    return minha_renda()

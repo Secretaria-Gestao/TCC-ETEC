@@ -25,7 +25,7 @@
 .cadastro-form .button-link {
     @apply w-full max-w-[500px] md:w-4/5 lg:w-7/12 xl:w-[57%];
     border-radius: 10px;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--borda-campo);
     padding: 10px;
     margin: 10px;
     flex: 1;
@@ -40,7 +40,7 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--borda-campo);
 }
 
 .cadastro-form input {
@@ -60,7 +60,7 @@
     align-self: center;
     content: '';
     flex: 1;
-    background-color: var(--border-color);
+    background-color: var(--borda-campo);
     height: 1px;
 
 }

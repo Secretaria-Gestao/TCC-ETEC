@@ -1,0 +1,52 @@
+import './HistoricoAtendimentos.css';
+import React, { useEffect, useState } from 'react';
+import {buscarHistorico} from '../../../../services/BuscarHistorico.js';
+
+function HistoricoAtendimentos() {
+    const [historico, setHistorico] = useState([])
+    const [carregando, setCarregando] = useState(true)
+    const [erro, setErro] = useState(null)
+
+    useEffect(() => {
+    buscarHistorico()
+        .then(setHistorico)
+        .catch((e) => {
+            console.error(e)
+            setErro('Não foi possível carregar o histórico.')
+        })
+        .finally(() => setCarregando(false)) // roda com sucesso ou erro
+}, [])
+
+    const formatarData = (iso) =>
+        new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+
+    const formatarPreco = (valor) =>
+        valor == null ? '—' : Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+
+    return (
+            <div className="historico-atendimentos-conteudo">
+                <h2 className="historico-atendimentos-titulo">Histórico de atendimentos</h2>
+                {carregando ? (
+                    <p className="historico-atendimentos-aviso">Carregando...</p>
+                ) : erro ? (
+                    <p className="historico-atendimentos-aviso">{erro}</p>
+                ) : historico.length === 0 ? (
+                    <p className="historico-atendimentos-aviso">
+                        Você ainda não tem atendimentos concluídos.
+                    </p>
+                ) : (
+                    <ul className="historico-atendimentos-lista">
+                        {historico.map((item) => (
+                            <li key={item.id_agendamento} className="historico-atendimentos-card">
+                                <strong>{formatarData(item.horario)}</strong>
+                                <span>{item.servicos?.length ? item.servicos.join(', ') : 'Serviço não informado'}</span>
+                                <span>Profissional: {item.profissional ?? '—'}</span>
+                                <span className="historico-atendimentos-preco">{formatarPreco(item.preco)}</span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+    )
+}
+export default HistoricoAtendimentos

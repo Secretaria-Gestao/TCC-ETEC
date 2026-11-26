@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 
 import "./EditarProfissional.css"
+import AcordoFinanceiro from "./AcordoFinanceiro.jsx"
 
 const FOTO_PADRAO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVWGYKJzBSw8qBRXBMcHBdY1XK_aywT9ZX_gMa5Wj8jA8QyX6DHP-O0Al-&s=10"
 
@@ -12,7 +13,8 @@ export default function EditarProfissional({
     setEstaEditando,
     onSalvar,
     idRemetente,
-    onRemover
+    onRemover,
+    onAcordoSalvo
 }) {
     // O painel recebe o profissional selecionado e devolve os dados por onSalvar.
     const nomeProfissional = profissional?.nome_profissional || "Carregando...  "
@@ -42,7 +44,7 @@ export default function EditarProfissional({
             email_profissional: "",
             cargo: "",
             nivel_acesso: "",
-            status: ""
+            status: "true"
         }
     })
 
@@ -53,7 +55,7 @@ export default function EditarProfissional({
             email_profissional: profissional?.email_profissional ?? "",
             cargo: profissional?.cargo ?? "",
             nivel_acesso: profissional?.nivel_acesso ?? "",
-            status: profissional?.status ?? ""
+            status: String(profissional?.status ?? "true")
         })
     }, [profissional, reset])
 
@@ -61,7 +63,8 @@ export default function EditarProfissional({
     const acessoSelecionado = niveisAcesso[nivelAcessoSelecionado] || niveisAcesso[3]
 
     function salvarDados(dadosFormulario) {
-        onSalvar?.(dadosFormulario)
+        console.log('1 clicou em Salvar', dadosFormulario)
+        onSalvar?.({ ...dadosFormulario, status: dadosFormulario.status === "true" })
     }
 
     function removerProfissional() {
@@ -72,10 +75,11 @@ export default function EditarProfissional({
     }
 
     return (
-        <aside className="editar-profissional w-full max-w-lg shrink-0 border border-slate-500 bg-blue-50 p-5 top-0 right-0 h-dvh fixed flex flex-col">
-            <form onSubmit={handleSubmit(salvarDados)} className="flex h-full flex-col">
+        // overflow-y-auto + min-h-full: em tela baixa o painel rola, em vez de espremer as seções umas sobre as outras.
+        <aside className="editar-profissional w-full max-w-lg shrink-0 border border-areia bg-white p-5 top-0 right-0 h-dvh fixed flex flex-col overflow-y-auto">
+            <form onSubmit={handleSubmit(salvarDados, (erros) => console.log('2 formulário inválido', erros))} className="flex min-h-full flex-col [&>*]:shrink-0">
                 {/* Identificação do profissional e botão para fechar o painel. */}
-                <header className="border-b border-slate-400 pb-4 flex justify-between">
+                <header className="border-b border-areia pb-4 flex justify-between">
                 <div>
                     <p className="text-lg">Editando</p>
                     <h2 className="text-2xl font-semibold">
@@ -88,7 +92,7 @@ export default function EditarProfissional({
 
                 {/* Foto e dados básicos editáveis. */}
                 <div className="mt-5 flex gap-5">
-                <div className="flex h-45 w-35 shrink-0 items-center justify-center border border-slate-400 bg-slate-200">
+                <div className="flex h-45 w-35 shrink-0 items-center justify-center border border-areia bg-linho">
                     <img
                         src={profissional?.foto_url || FOTO_PADRAO}
                         alt={`Foto de ${nomeProfissional}`}
@@ -126,7 +130,7 @@ export default function EditarProfissional({
                             </option>
 
                             {Object.keys(todosCargos).map((cargo) => (
-                                <option value={cargo}>
+                                <option key={cargo} value={cargo}>
                                     {cargo}
                                 </option>
                             ))}
@@ -137,7 +141,7 @@ export default function EditarProfissional({
                 </div>
 
                 {/* Nível de acesso e descrição das permissões. */}
-                <section className="mt-6 min-h-24  border-slate-400 pt-4">
+                <section className="mt-6 min-h-24  border-areia pt-4">
 
                 <div className="flex w-full justify-between">
 
@@ -160,17 +164,27 @@ export default function EditarProfissional({
 
                 </section>
 
+                {/* Acordo financeiro: tem o próprio botão "Salvar acordo" e a própria rota.
+                    key reinicia o formulário quando você troca de profissional na tabela. */}
+                {profissional && (
+                    <section className="mt-4 border-t border-slate-400 pt-4">
+                        <AcordoFinanceiro
+                            key={profissional.id_profissional}
+                            profissional={profissional}
+                            aoSalvar={onAcordoSalvo}
+                        />
+                    </section>
+                )}
+
                 {/* Status do profissional. */}
-                <section className="flex flex-1 w-full items-end gap-3 border-slate-400 pt-4 self-end ">
+                <section className="flex flex-1 w-full items-end gap-3 border-areia pt-4 self-end ">
                 <div className="w-full">
 
                     <p className="text-[20px]">Status</p>
 
                     <select
                         className="border rounded-sm max-w-62 w-2/5 flex-1 p-1"
-                        {...register("status", {
-                            setValueAs: (valor) => valor === "true"
-                        })}
+                        {...register("status")}
                     >
                         <option value="true"> Ativado </option>
                         <option value="false"> Inativo </option>
@@ -180,13 +194,13 @@ export default function EditarProfissional({
                 </section>
 
                 {/* Ações finais: remoção, cancelamento e salvamento. */}
-                <footer className="flex w-full items-center justify-between gap-3 border-slate-400 pt-4 self-end ">
+                <footer className="flex w-full items-center justify-between gap-3 border-areia pt-4 self-end ">
                 <button
                     type="button"
                     disabled={ehProprioPerfil}
                     title={ehProprioPerfil ? "Você não pode remover o próprio perfil" : "Remover profissional"}
                     onClick={removerProfissional}
-                    className="bg-marrom text-laranja p-2 rounded-lg "
+                    className="bg-vinho text-laranja p-2 rounded-lg "
                 >
                     Remover profissional
                 </button>

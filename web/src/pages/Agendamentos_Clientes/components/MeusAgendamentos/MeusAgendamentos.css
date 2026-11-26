@@ -1,74 +1,11 @@
 .meus-agendamentos-agenda-janela {
-    width: 92vw;
-    max-width: 1180px;
-    height: 88vh;
-    border-radius: 25px;
-    border: 2px solid var(--border-transparent);
-    background-color: var(--background-transparent);
-    backdrop-filter: blur(10px);
+    width: 100%;
+    height: 100dvh;
+    border: 2px solid var(--borda-suave);
+    background-color: transparent;
+    /* backdrop-filter: blur(10px); */
     display: flex;
     overflow: hidden;
-}
-
-.meus-agendamentos-sidebar {
-    width: 84px;
-    border-right: 2px solid var(--border-transparent);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 28px 0;
-}
-
-.meus-agendamentos-logo {
-    font-weight: 700;
-    font-size: 0.85rem;
-    margin-bottom: 36px;
-    color: var(--font-color);
-    letter-spacing: 0.03em;
-    text-align: center;
-}
-
-.meus-agendamentos-nav-icone {
-    width: 42px;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    margin-bottom: 14px;
-    color: var(--font-color);
-    opacity: 0.55;
-    cursor: pointer;
-    transition: opacity 0.15s, background 0.15s;
-    font-size: 1.15rem;
-}
-
-.meus-agendamentos-nav-icone:hover {
-    opacity: 1;
-    background: var(--background-transparent);
-}
-
-.meus-agendamentos-nav-icone.ativo {
-    opacity: 1;
-    background: var(--background-gradient-color-dark);
-}
-
-.meus-agendamentos-sidebar-rodape {
-    margin-top: auto;
-}
-
-.meus-agendamentos-btn-sair {
-    background: var(--background-button);
-    color: var(--font-color-transparent);
-    border: none;
-    border-radius: 10px;
-    padding: 9px 12px;
-    font-size: 0.78rem;
-    cursor: pointer;
-}
-
-.meus-agendamentos-btn-sair:active {
-    opacity: 0.3;
 }
 
 .meus-agendamentos-conteudo {
@@ -86,14 +23,14 @@
     gap: 14px;
     margin-bottom: 20px;
     font-size: 0.92rem;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .meus-agendamentos-navegacao-semana button {
     background: none;
     border: none;
     font-size: 1.1rem;
-    color: var(--font-color);
+    color: var(--texto);
     cursor: pointer;
     padding: 4px 10px;
     border-radius: 8px;
@@ -102,49 +39,84 @@
 
 .meus-agendamentos-navegacao-semana button:hover {
     opacity: 1;
-    background: var(--background-transparent);
+    background: var(--fundo-cartao);
 }
 
 .meus-agendamentos-grade-wrapper {
     flex: 1;
+    border: 2px solid var(--borda-suave);
+    background: var(--fundo-painel);
+    min-height: 0;
+    max-height: max-content;
+    
+}
+
+.meus-agendamentos-grade tbody,
+.meus-agendamentos-grade thead {
+    display: block;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-azul-ceu) var(--fundo-painel);
+}
+
+.meus-agendamentos-grade thead {
+    overflow-y: hidden;
+}
+
+.meus-agendamentos-grade tbody {
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
-    border: 2px solid var(--border-transparent);
-    border-radius: 14px;
-    background: rgba(255,255,255,0.25);
+}
+
+.meus-agendamentos-grade tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
 }
 
 table.meus-agendamentos-grade {
-    border-collapse: collapse;
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    height: 100%;
+    border-collapse: collapse;
     table-layout: fixed;
 }
 
 table.meus-agendamentos-grade th {
     position: sticky;
     top: 0;
-    background: var(--background-gradient-color-light);
+    background: var(--color-azul-profundo);
     font-size: 0.76rem;
-    color: var(--font-color);
+    color: var(--texto-invertido);
     font-weight: 700;
     padding: 10px 4px;
-    border-bottom: 2px solid var(--border-transparent);
+    border-bottom: 3px solid var(--color-ameixa);
     text-align: center;
     z-index: 2;
 }
 
 table.meus-agendamentos-grade td {
-    border: 1px solid var(--border-transparent);
+    border: 0;
+    border-top: 1px solid var(--borda-suave);
+    border-left: 1px solid var(--borda-suave);
     height: 62px;
     vertical-align: top;
     padding: 2px;
     position: relative;
 }
 
+/* o th já desenha a linha embaixo do cabeçalho */
+table.meus-agendamentos-grade tbody tr:first-child td {
+    border-top: 0;
+}
+
 .meus-agendamentos-coluna-hora {
     width: 60px;
     font-size: 0.72rem;
-    color: var(--font-color);
-    opacity: 0.7;
+    color: var(--texto);
+    opacity: 0.8;
     text-align: right;
     padding-right: 8px !important;
     border: none !important;
@@ -153,15 +125,16 @@ table.meus-agendamentos-grade td {
 }
 
 .meus-agendamentos-cartao-agendamento {
-    background: var(--background-gradient-color-dark);
-    border-left: 3px solid var(--background-button);
+    background: var(--fundo-cartao);
+    border-left: 3px solid var(--color-rosa-queimado);
     border-radius: 6px;
     padding: 4px 6px;
     font-size: 0.7rem;
-    color: var(--background-button);
+    color: var(--cor-primaria);
     line-height: 1.3;
     overflow: hidden;
     height: 100%;
+    cursor: pointer;
 }
 
 .meus-agendamentos-cartao-agendamento b {
@@ -171,17 +144,19 @@ table.meus-agendamentos-grade td {
 
 .meus-agendamentos-painel-direito {
     width: 270px;
-    border-left: 2px solid var(--border-transparent);
+    border-left: 2px solid var(--borda-suave);
     padding: 26px 18px;
     display: flex;
     flex-direction: column;
     gap: 18px;
     overflow-y: auto;
+    background-color: var(--fundo-painel);
+    height: 100dvh;
 }
 
 .meus-agendamentos-mini-calendario {
-    background: rgba(255,255,255,0.35);
-    border: 2px solid var(--border-transparent);
+    background: var(--fundo-pagina);
+    border: 2px solid var(--borda-suave);
     border-radius: 14px;
     padding: 14px;
 }
@@ -193,14 +168,14 @@ table.meus-agendamentos-grade td {
     font-weight: 700;
     font-size: 0.82rem;
     margin-bottom: 10px;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .meus-agendamentos-mini-calendario-cabecalho button {
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--font-color);
+    color: var(--texto);
     font-size: 0.9rem;
     opacity: 0.7;
 }
@@ -218,23 +193,23 @@ table.meus-agendamentos-grade td {
 }
 
 .meus-agendamentos-mini-grade .meus-agendamentos-dia-semana {
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.6;
     font-weight: 700;
     padding-bottom: 4px;
 }
 
 .meus-agendamentos-mini-grade .meus-agendamentos-dia {
-    background: rgba(255,255,255,0.6);
+    background: var(--fundo-pagina-listra);
     border-radius: 6px;
     padding: 5px 0;
-    color: var(--font-color);
+    color: var(--texto);
     cursor: pointer;
 }
 
 .meus-agendamentos-mini-grade .meus-agendamentos-dia.meus-agendamentos-hoje {
-    background: var(--background-button);
-    color: var(--font-color-transparent);
+    background: var(--color-ameixa);
+    color: var(--texto-invertido);
     font-weight: 700;
 }
 
@@ -247,16 +222,16 @@ table.meus-agendamentos-grade td {
     width: 100%;
     padding: 10px 12px;
     border-radius: 10px;
-    border: 2px solid var(--border-transparent);
+    border: 2px solid var(--borda-suave);
     font-size: 0.82rem;
-    color: var(--font-color);
-    background: rgba(255,255,255,0.5);
+    color: var(--texto);
+    background: var(--fundo-painel);
 }
 
 .meus-agendamentos-titulo-secao {
     font-size: 0.76rem;
     font-weight: 700;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.65;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -267,8 +242,8 @@ table.meus-agendamentos-grade td {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: rgba(255,255,255,0.4);
-    border: 2px solid var(--border-transparent);
+    background: var(--fundo-pagina);
+    border: 2px solid var(--borda-suave);
     border-radius: 10px;
     padding: 10px 12px;
 }
@@ -277,8 +252,8 @@ table.meus-agendamentos-grade td {
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    background: var(--background-gradient-color-dark);
-    color: var(--background-button);
+    background: var(--color-azul-po);
+    color: var(--color-azul-profundo);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -290,18 +265,18 @@ table.meus-agendamentos-grade td {
 .meus-agendamentos-cartao-profissional .meus-agendamentos-nome {
     font-size: 0.82rem;
     font-weight: 600;
-    color: var(--font-color);
+    color: var(--texto);
 }
 
 .meus-agendamentos-cartao-profissional .meus-agendamentos-funcao {
     font-size: 0.7rem;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.6;
 }
 
 .meus-agendamentos-mensagem-vazio {
     text-align: center;
-    color: var(--font-color);
+    color: var(--texto);
     opacity: 0.7;
     font-size: 0.82rem;
     padding: 40px 12px;
@@ -310,6 +285,110 @@ table.meus-agendamentos-grade td {
 .meus-agendamentos-sem-profissionais {
     font-size: 0.78rem;
     opacity: 0.65;
+}
+
+/* Ícone da sidebar com o nome embaixo */
+.meus-agendamentos-nav-icone {
+    flex-direction: column;
+    width: 68px;
+    height: auto;
+    padding: 8px 4px;
+    gap: 3px;
+}
+
+.meus-agendamentos-nav-emoji { 
+    font-size: 1.15rem; 
+}
+
+.meus-agendamentos-nav-nome {
+    font-size: 0.62rem;
+    line-height: 1.1;
+    text-align: center;
+}
+
+/* Modal de detalhes / cancelamento */
+.meus-agendamentos-modal-fundo {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: color-mix(in srgb, var(--color-azul-profundo) 55%, transparent);
+}
+
+.meus-agendamentos-modal {
+    width: 100%;
+    max-width: 380px;
+    padding: 22px;
+    border: 2px solid var(--borda-suave);
+    border-radius: 14px;
+    background: var(--fundo-painel);
+    color: var(--texto);
+}
+
+.meus-agendamentos-modal-titulo {
+    margin-bottom: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.meus-agendamentos-modal-lista {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 14px;
+    font-size: 0.82rem;
+}
+
+.meus-agendamentos-modal-lista dt {
+    font-weight: 700;
+    opacity: 0.65;
+}
+
+.meus-agendamentos-modal-texto {
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.meus-agendamentos-modal-aviso {
+    margin-top: 14px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--fundo-pagina);
+    border-left: 3px solid #d97706;
+    font-size: 0.76rem;
+}
+
+.meus-agendamentos-modal-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.meus-agendamentos-btn-secundario,
+.meus-agendamentos-btn-perigo {
+    padding: 9px 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.meus-agendamentos-btn-secundario {
+    background: var(--fundo-campo);
+    color: var(--texto);
+}
+
+.meus-agendamentos-btn-perigo {
+    background: var(--cor-perigo);
+    color: #fff;
+}
+
+.meus-agendamentos-btn-perigo:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 @media (max-width: 900px) {

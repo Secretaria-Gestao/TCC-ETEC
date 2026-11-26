@@ -1,6 +1,17 @@
 @reference "../../../../../../global.css";
 
+/* Altura fixa para inputs, selects e o botão de serviços ficarem do mesmo tamanho
+   (o select desenha a caixa diferente quando só tem padding). */
 .cadastroProfInput {
-    @apply border-1 rounded-md p-3! w-full my-2! ;
+    @apply h-11 w-full rounded-md border border-areia bg-white px-3! text-sm text-grafite outline-none transition-colors;
+    @apply placeholder:text-ardosia hover:border-nude-rose focus:border-vinho focus:ring-2 focus:ring-vinho/15;
 }
 
+.cadastroProfLabel {
+    @apply flex flex-col gap-1.5 text-sm font-medium text-grafite;
+}
+
+/* Cada etapa do cadastro, separada da próxima pela linha do divide-y do formulário. */
+.cadastroProfSecao {
+    @apply flex flex-col gap-3 py-5!;
+}

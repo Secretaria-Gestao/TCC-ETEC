@@ -1,6 +1,9 @@
+import re
+from datetime import datetime, timedelta, timezone
 from flask import request, jsonify
 from database import supabase, supabase_admin
 from controllers.autenticacao import autenticar
+from controllers.horarios_padrao import gravar_horarios_padrao_profissional
 
 def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e já vincula também no mesmo salão do gerente
     info = request.get_json(silent=True) or {}
@@ -16,24 +19,63 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
-    id_gerente = autenticar(token)
+    id_remetente = autenticar(token)
 
-    if not id_gerente:
+    if not id_remetente:
         return jsonify({"sucesso": False, "erro": "Token não autorizado"}), 401
-
+    
     try:
 
-        resultado_gerente = supabase_admin.table("profissionais").select("nivel_acesso, salao_associado").eq("id_profissional", id_gerente).execute()
+        resultado_remetente = supabase_admin.table("profissionais").select("nivel_acesso, salao_associado").eq("id_profissional", id_remetente).execute()
 
-        if not resultado_gerente.data:
-            return jsonify({"sucesso": False, "erro": "Não foi possível encontrar o gerente na tabela de profissionais"}), 404
+        if not resultado_remetente.data:
+            return jsonify({"sucesso": False, "erro": "Não foi possível encontrar o profissional"}), 404
 
-        gerente = resultado_gerente.data[0]
+        remetente = resultado_remetente.data[0]
 
-        if int(gerente["nivel_acesso"]) >= 3:
+        if int(remetente["nivel_acesso"]) >= 3:
             return jsonify({"sucesso": False, "erro": "Somente administradores e gerentes podem cadastrar um profissional"}), 403
 
         email_profissional = info["email"].strip().lower()
+
+        if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email_profissional):
+            return jsonify({"sucesso": False, "erro": "E-mail inválido"}), 400
+
+        if len(str(info["senha"])) < 6:
+            return jsonify({"sucesso": False, "erro": "A senha deve conter pelo menos 6 caracteres"}), 400
+
+        if remetente["nivel_acesso"] > int(info["nivel_acesso"]):
+                    return jsonify({"sucesso": False, "erro": "Nível do profissional sendo cadastrado acima do nível do remetente"}), 403
+        
+        if int(info["nivel_acesso"]) < 1 or int(info["nivel_acesso"]) > 3:
+            return jsonify({"sucesso": False, "erro": "Nível de acesso inexistente"}), 400
+
+        # Serviços que o profissional realiza. São opcionais e repetidos são ignorados.
+        servicos = info.get("servicos") or []
+
+        if not isinstance(servicos, list):
+            return jsonify({"sucesso": False, "erro": "Lista de serviços inválida"}), 400
+
+        # Os checkboxes do formulário mandam os ids como texto
+        try:
+            servicos = list(dict.fromkeys(int(id_servico) for id_servico in servicos))
+        except (TypeError, ValueError):
+            return jsonify({"sucesso": False, "erro": "Lista de serviços inválida"}), 400
+
+        if servicos:
+            # Confere antes de criar o usuário, para não sobrar conta pela metade
+            # se alguém mandar o id de um serviço de outro salão.
+            resposta_servicos_salao = (
+                supabase_admin.table("servicos")
+                .select("id_servico")
+                .eq("salao_associado", remetente["salao_associado"])
+                .eq("removido", False)
+                .in_("id_servico", servicos)
+                .execute()
+            )
+
+            if len(resposta_servicos_salao.data or []) != len(servicos):
+                return jsonify({"sucesso": False, "erro": "Há serviços que não pertencem a este salão"}), 400
 
         resposta_auth = supabase_admin.auth.admin.create_user({    # Cria o usuário no Supabase Auth
             "email": email_profissional,
@@ -42,17 +84,27 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
         })
 
         id_profissional = resposta_auth.user.id
-          
+
         supabase_admin.table("profissionais").insert({
             "id_profissional": id_profissional,
             "email_profissional": email_profissional,
             "nome_profissional": info["nome_profissional"],
             "cargo": info["cargo"],
             "telefone_profissional": info["telefone_profissional"],
-            "nivel_acesso": info["nivel_acesso"],
-            "salao_associado": gerente["salao_associado"]
+            "nivel_acesso": int(info["nivel_acesso"]),
+            "salao_associado": remetente["salao_associado"],
+            "status": True  # profissional novo já nasce ativo
         }).execute()
-        
+
+        # Horário de trabalho padrão (seg a sáb, 08:00 às 18:00, intervalo 12:00 às 13:00, domingo de folga)
+        gravar_horarios_padrao_profissional(id_profissional)
+
+        if servicos:
+            supabase_admin.table("profissionais_servicos").insert([
+                {"id_profissional": id_profissional, "id_servico": id_servico}
+                for id_servico in servicos
+            ]).execute()
+
         return jsonify({"sucesso": True, "resultado": "Profissional cadastrado com sucesso!"})
 
     except Exception as e:
@@ -65,23 +117,21 @@ def cadastrar_profissional(): # Aqui cria o profissional no Auth do Supabase, e 
 
         return jsonify({"sucesso": False, "erro": str(e)}), 500
 
-def agendamentos_cliente(id_cliente):
+def agendamentos_cliente():
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
 
-    id_cliente_pelo_token = autenticar(token) # Serve para verificar depois se o id que a pessoa está mandando, realmente é dela
+    id_cliente = autenticar(token) # Serve para verificar depois se o id que a pessoa está mandando, realmente é dela
 
-    if not id_cliente_pelo_token:
+    if not id_cliente:
         return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
 
     try:
-        if id_cliente_pelo_token != id_cliente: # Verificação do id_cliente
-            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"})
 
         resultado = (
             supabase_admin.table("agendamentos")
-            .select("horario, status, profissionais(nome_profissional, salao_associado, saloes!salao_associado(nome_salao, endereco_salao))")
+            .select("id_agendamento, horario, status, profissionais(nome_profissional, salao_associado, saloes!salao_associado(nome_salao, endereco_salao))")
             .eq("id_cliente", id_cliente)
             .execute()
         )
@@ -91,6 +141,7 @@ def agendamentos_cliente(id_cliente):
             prof = ag.get("profissionais", {})
             salao = prof.get("saloes", {}) if prof else {}
             agendamentos.append({
+                "id_agendamento": ag["id_agendamento"],
                 "horario": ag["horario"],
                 "status": ag["status"],
                 "profissional": prof.get("nome_profissional"),
@@ -102,7 +153,6 @@ def agendamentos_cliente(id_cliente):
 
     except Exception as e:
         return jsonify({"sucesso": False, "erro": str(e)}), 500
-
 
 def buscar_profissional_email():
     email_destinatario = (request.headers.get("X-Email") or "").lower() # Email do profissional que será buscado
@@ -205,6 +255,13 @@ def buscar_Todosprofissionais(): # Busca todos os profissionais, todos
                         .execute()
                     )
 
+                # O cliente só enxerga quem tem horário de trabalho cadastrado (quem não tem não pode ser agendado)
+                if resultado.data:
+                    ids = [profissional["id_profissional"] for profissional in resultado.data]
+                    com_horario = supabase_admin.table("horarios_trabalho").select("id_profissional").in_("id_profissional", ids).execute()
+                    ids_com_horario = [linha["id_profissional"] for linha in com_horario.data]
+                    resultado.data = [profissional for profissional in resultado.data if profissional["id_profissional"] in ids_com_horario]
+
         if not resultado or not resultado.data:
             return jsonify({"sucesso": False, "erro": "Falha ao encontrar profissionais"}), 404
 
@@ -212,7 +269,6 @@ def buscar_Todosprofissionais(): # Busca todos os profissionais, todos
 
     except Exception as e:
         return jsonify({"sucesso": False, "erro": "Falha ao encontrar o usuário remetente no banco de dados"}), 500
-
 
 def mostrarMembros():
     # Esta rota abastece a tabela e os resumos da página de gerenciamento.
@@ -252,7 +308,7 @@ def mostrarMembros():
             supabase_admin.table("profissionais")
             .select(
                 "id_profissional, nome_profissional, email_profissional, "
-                "telefone_profissional, cargo, nivel_acesso, status, criado_em, foto_url"
+                "telefone_profissional, cargo, nivel_acesso, status, tipo_pagamento, valor_comissao, criado_em, foto_url"
             )
             .eq("salao_associado", remetente["salao_associado"])
             .eq("removido", False)
@@ -267,7 +323,6 @@ def mostrarMembros():
     except Exception as erro:
         print("Erro ao buscar membros:", erro)
         return jsonify({"sucesso": False, "erro": "Falha ao buscar os membros"}), 500
-
 
 def remover_profissional():
     # A remoção é lógica: o registro e o histórico continuam no banco, mas deixam de aparecer.
@@ -343,7 +398,6 @@ def remover_profissional():
     except Exception as erro:
         print("Erro ao remover profissional:", erro)
         return jsonify({"sucesso": False, "erro": "Erro ao remover o profissional"}), 500
-
 
 def editar_profissional():
     # A edição valida o nível de acesso e o salão do remetente antes de atualizar a linha.
@@ -470,8 +524,9 @@ def editar_profissional():
         return jsonify({"sucesso": False, "erro": "Erro ao editar o profissional"}), 500
 
 def meu_perfil():
-    # Busca os dados do profissional/admin logado usando o token.
+    # Busca os dados do cliente ou profissional logado usando o token.
     # Necessário para o admin descobrir o id_salao sem precisar informar manualmente.
+    # O front sabe se quem veio é cliente ou profissional pela presença do campo id_profissional.
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     if not token:
         return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
@@ -482,12 +537,23 @@ def meu_perfil():
         return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
 
     try:
+        # "saloes!salao_associado(...)" traz o salão junto, usando a coluna salao_associado como ligação.
+        # Ele chega no front como perfil.saloes (usado na aba Salão das configurações).
         resultado = (
             supabase_admin.table("profissionais")
-            .select("*")
+            .select("*, saloes!salao_associado(nome_salao, endereco_salao)")
             .eq("id_profissional", id_usuario)
             .execute()
         )
+
+        # Não é profissional: tenta como cliente.
+        if not resultado.data:
+            resultado = (
+                supabase_admin.table("clientes")
+                .select("*")
+                .eq("id_cliente", id_usuario)
+                .execute()
+            )
 
         if not resultado.data:
             resultado = supabase_admin.table("clientes").select("*").eq("id_cliente", id_usuario).execute()
@@ -515,28 +581,59 @@ def agendamentos_profissional(id_profissional):
 
     try:
         if id_profissional_pelo_token != id_profissional: # Verificação do id_profissional
-            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"})
+            return jsonify({"sucesso": False, "erro": "O id mandado pela URL é diferente do id vindo do token"}), 403
         
-        # Traz os dados do cliente porque o profissional precisa saber quem vai atender.
+        # Traz os dados do cliente e os serviços porque o profissional precisa saber quem vai atender e o que vai fazer.
+        # Ordenado por horário para a tela mostrar os atendimentos da mesma hora na ordem certa.
         resultado = (
             supabase_admin.table("agendamentos")
-            .select("id_agendamento, horario, status, clientes(nome_cliente, email_cliente)")
+            .select(
+                "id_agendamento, horario, duracao_total, status, "
+                "clientes(nome_cliente, email_cliente), "
+                "agendamento_servicos(servicos(nome_servico))"
+            )
             .eq("id_profissional", id_profissional)
+            .order("horario")
             .execute()
         )
 
         agendamentos = []
-        for ag in resultado.data:
+        for ag in resultado.data or []:
             cliente = ag.get("clientes") or {}
+            # Cada agendamento pode ter vários serviços
+            servicos = [
+                (item.get("servicos") or {}).get("nome_servico")
+                for item in (ag.get("agendamento_servicos") or [])
+            ]
             agendamentos.append({
                 "id_agendamento": ag["id_agendamento"],
                 "horario": ag["horario"],
+                "duracao_total": ag.get("duracao_total"),
                 "status": ag["status"],
                 "cliente": cliente.get("nome_cliente"),
                 "email_cliente": cliente.get("email_cliente"),
+                "servicos": [s for s in servicos if s],  # descarta nomes vazios
             })
 
-        return jsonify({"sucesso": True, "agendamentos": agendamentos})
+        # Horário de funcionamento do salão do profissional: a grade da agenda usa para saber quais horas mostrar
+        horario_funcionamento = []
+        resposta_salao = (
+            supabase_admin.table("profissionais")
+            .select("salao_associado")
+            .eq("id_profissional", id_profissional)
+            .execute()
+        )
+        if resposta_salao.data and resposta_salao.data[0]["salao_associado"] is not None:
+            resposta_horarios = (
+                supabase_admin.table("horario_funcionamento_salao")
+                .select("dia_semana, hora_abertura, hora_fechamento, fechado")
+                .eq("id_salao", resposta_salao.data[0]["salao_associado"])
+                .order("dia_semana")
+                .execute()
+            )
+            horario_funcionamento = resposta_horarios.data or []
+
+        return jsonify({"sucesso": True, "agendamentos": agendamentos, "horario_funcionamento": horario_funcionamento})
     
     except Exception as e:
         return jsonify({"sucesso": False, "erro": str(e)}), 500
@@ -558,21 +655,38 @@ def agendamentos_salao():
     fim = request.args.get("fim")
 
     try:
-        # Usado só para para pegar o salao do admin, confiando apenas no supabase
-        resposta_remetente = supabase_admin.table("profissionais").select("salao_associado").eq("id_profissional", id_remetente).execute()
+        # Busca o nível e o salão de quem está pedindo (o salão vem do token, não do front)
+        resposta_remetente = (
+            supabase_admin.table("profissionais")
+            .select("nivel_acesso, salao_associado")
+            .eq("id_profissional", id_remetente)
+            .execute()
+        )
 
         if not resposta_remetente.data:
+            # Cliente ou usuário sem perfil de profissional não acessa esta rota
             return jsonify({"sucesso": False, "erro": "Salão do remetente não encontrado"}), 404
 
-        salao_associado = resposta_remetente.data[0]["salao_associado"]
+        remetente = resposta_remetente.data[0]
 
-        # Traz dados do cliente e do profissional, pois o admin precisa ver
-        # "quem marcou" e "com quem marcou".
+        # Só admin (1) e gerente (2) veem agenda e preços do salão inteiro;
+        # profissional (3) usa a própria rota /agendamentos/profissional
+        if int(remetente["nivel_acesso"]) >= 3:
+            return jsonify({"sucesso": False, "erro": "Somente administradores e gerentes podem ver a agenda do salão"}), 403
+
+        salao_associado = remetente["salao_associado"]
+
+        if salao_associado is None:
+            return jsonify({"sucesso": False, "erro": "O remetente não está associado a um salão"}), 404
+        
+        # Traz dados do cliente e do profissional, pois o admin ou gerente precisa ver
+        # "quem marcou" e "com quem marcou". A duração serve para a grade mostrar o horário de término.
 
         busca = (
             supabase_admin.table("agendamentos")
-            .select("id_agendamento, horario, status, preco, clientes(nome_cliente), profissionais(id_profissional, nome_profissional, cargo)")
+            .select("id_agendamento, horario, duracao_total, status, preco, clientes(nome_cliente), profissionais(id_profissional, nome_profissional, cargo)")
             .eq("salao_associado", salao_associado)
+            .order("horario")
         )
 
         if inicio:
@@ -624,7 +738,7 @@ def atualizar_status_agendamento():
         # pra impedir que ele altere o atendimento de outra pessoa.
         resultado_agendamento = (
             supabase_admin.table("agendamentos")
-            .select("id_agendamento, id_profissional, status")
+            .select("id_agendamento, id_profissional, status, horario")
             .eq("id_agendamento", id_agendamento)
             .execute()
         )
@@ -633,9 +747,31 @@ def atualizar_status_agendamento():
             return jsonify({"sucesso": False, "erro": "Agendamento não encontrado"}), 404
 
         agendamento = resultado_agendamento.data[0]
+        
+        horarioBruto = agendamento["horario"]
+        
+        horario_agendamento = datetime.fromisoformat(str(horarioBruto.replace("Z", "+00:00")))
 
         if agendamento["id_profissional"] != id_profissional:
             return jsonify({"sucesso": False, "erro": "Este agendamento não pertence a este profissional"}), 403
+
+        if agendamento["status"] == novo_status:
+            return jsonify({"sucesso": False, "erro": "A requisição selecionou o status atual do agendamento, apenas outros status são permitidos"}), 400
+
+        horario_atual = datetime.now(timezone.utc)
+
+        if horario_atual < horario_agendamento and novo_status in ["concluido", "ausente"]:
+            return jsonify({"sucesso": False, "erro": f"O agendamento ainda não aconteceu para estar como {novo_status}."}), 400
+        
+        status_atual = agendamento["status"]
+
+        # Concluído, cancelado e ausente são finais: não mudam mais
+        if status_atual in ["concluido", "cancelado", "ausente"]:
+            return jsonify({"sucesso": False, "erro": f"Um agendamento {status_atual} não pode mais mudar de status"}), 400
+
+        # Pendente só pode ser confirmado ou cancelado
+        if status_atual == "pendente" and novo_status not in ["confirmado", "cancelado"]:
+            return jsonify({"sucesso": False, "erro": "Um agendamento pendente só pode ser confirmado ou cancelado"}), 400
 
         resposta = (
             supabase_admin.table("agendamentos")
@@ -653,3 +789,522 @@ def atualizar_status_agendamento():
     except Exception as erro:
         print("Erro ao atualizar status do agendamento:", erro)
         return jsonify({"sucesso": False, "erro": "Erro ao atualizar o status"}), 500
+
+def cancelar_agendamento_cliente():
+    STATUS_CANCELAVEIS = {"pendente", "confirmado"}
+    PRAZO_CANCELAMENTO = timedelta(hours=2, minutes=30)
+    # Usado pelo cliente para cancelar um dos próprios agendamentos.
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+
+    id_cliente = autenticar(token)
+    if not id_cliente:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    info = request.get_json(silent=True) or {}
+    id_agendamento = info.get("id_agendamento")
+
+    if not id_agendamento:
+        return jsonify({"sucesso": False, "erro": "Campo ausente: id_agendamento"}), 400
+
+    try:
+        resultado_agendamento = (
+            supabase_admin.table("agendamentos")
+            .select("id_agendamento, id_cliente, horario, status")
+            .eq("id_agendamento", id_agendamento)
+            .execute()
+        )
+
+        if not resultado_agendamento.data:
+            return jsonify({"sucesso": False, "erro": "Agendamento não encontrado"}), 404
+
+        agendamento = resultado_agendamento.data[0]
+
+        # conferindo se o agendamento realmente pertence a este cliente.
+        if str(agendamento["id_cliente"]) != str(id_cliente):
+            return jsonify({"sucesso": False, "erro": "Este agendamento não pertence a este cliente"}), 403
+
+        if (agendamento["status"] or "") not in STATUS_CANCELAVEIS:
+            return jsonify({"sucesso": False, "erro": "Só agendamentos pendentes ou confirmados podem ser cancelados"}), 400
+
+        horario = datetime.fromisoformat(agendamento["horario"].replace("Z", "+00:00"))
+        if horario.tzinfo is None:
+            horario = horario.replace(tzinfo=timezone.utc)
+
+        if horario - datetime.now(timezone.utc) < PRAZO_CANCELAMENTO:
+            return jsonify({"sucesso": False, "erro": "O cancelamento só é possível até 2h30 antes do horário"}), 400
+
+        resposta = (
+            supabase_admin.table("agendamentos")
+            .update({"status": "cancelado"})
+            .eq("id_agendamento", id_agendamento)
+            .select("id_agendamento, status")
+            .execute()
+        )
+
+        if not resposta.data:
+            return jsonify({"sucesso": False, "erro": "Falha ao cancelar o agendamento"}), 500
+
+        return jsonify({"sucesso": True, "agendamento": resposta.data[0]})
+
+    except Exception as erro:
+        print("Erro ao cancelar agendamento do cliente:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao cancelar o agendamento"}), 500
+
+def historico_cliente(id_cliente):
+
+    # Retorna só os atendimentos CONCLUÍDOS do cliente logado, do mais recente
+    # para o mais antigo. Usado na página "Histórico de atendimentos".
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+
+    id_usuario = autenticar(token)
+
+    if not id_usuario:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    # Segurança: supabase_admin ignora o RLS, então conferimos aqui que o
+    # cliente só vê o PRÓPRIO histórico. Antes devolvia 200 com sucesso:false.
+    if str(id_usuario) != str(id_cliente):
+        return jsonify({"sucesso": False, "erro": "Acesso negado"}), 403
+
+    try:
+        resultado = (
+            supabase_admin.table("agendamentos")
+            # Traz o profissional e os serviços (relações via FK); o front precisa de id_agendamento e servicos
+            .select(
+                "id_agendamento, horario, status, preco, "
+                "profissionais(nome_profissional, cargo), "
+                "agendamento_servicos(servicos(nome_servico))"
+            )
+            .eq("id_cliente", id_cliente)
+            # ilike ignora maiúscula/minúscula: pega 'Concluído' e 'concluido'
+            .ilike("status", "conclu%")
+            .order("horario", desc=True)
+            .execute()
+        )
+
+        historico = []
+        for ag in resultado.data or []:
+            prof = ag.get("profissionais") or {}  # "or {}" evita erro se vier None
+            # Cada agendamento pode ter vários serviços
+            servicos = [
+                (item.get("servicos") or {}).get("nome_servico")
+                for item in (ag.get("agendamento_servicos") or [])
+            ]
+            historico.append({
+                "id_agendamento": ag["id_agendamento"],
+                "horario": ag["horario"],
+                "preco": ag.get("preco"),
+                "profissional": prof.get("nome_profissional"),
+                "cargo": prof.get("cargo"),
+                "servicos": [s for s in servicos if s],  # descarta nomes vazios
+            })
+
+        return jsonify({"sucesso": True, "historico": historico})
+
+    except Exception as e:
+        print("Erro ao buscar histórico do cliente:", e)
+        return jsonify({"sucesso": False, "erro": str(e)}), 500
+
+def buscar_horarios_salao(id_salao):
+    # Qualquer usuário logado pode ler (o cliente precisa disso no formulário de agendamento)
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    if not autenticar(token):
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    try:
+        resposta = (
+            supabase_admin.table("horario_funcionamento_salao")
+            .select("dia_semana, hora_abertura, hora_fechamento, fechado")
+            .eq("id_salao", id_salao)
+            .order("dia_semana")
+            .execute()
+        )
+        # Lista vazia NÃO é erro: salão que ainda não configurou os horários
+        return jsonify({"sucesso": True, "horarios": resposta.data or []})
+    except Exception as erro:
+        print("Erro ao buscar horários do salão:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao buscar horários"}), 500
+
+def salvar_horarios_salao():
+    # Só administrador (nível 1) altera os horários do PRÓPRIO salão
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    id_usuario = autenticar(token)
+    if not id_usuario:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    try:
+        # O salão vem do banco (pelo token), nunca do front: evita editar salão alheio
+        resp = (
+            supabase_admin.table("profissionais")
+            .select("nivel_acesso, salao_associado")
+            .eq("id_profissional", id_usuario)
+            .execute()
+        )
+        if not resp.data:
+            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404
+
+        admin = resp.data[0]
+        if int(admin["nivel_acesso"]) != 1:
+            return jsonify({"sucesso": False, "erro": "Somente administradores podem editar horários"}), 403
+        if admin["salao_associado"] is None:
+            return jsonify({"sucesso": False, "erro": "Administrador sem salão associado"}), 404
+
+        info = request.get_json(silent=True) or {}
+        horarios = info.get("horarios")
+        if not isinstance(horarios, list) or not horarios:
+            return jsonify({"sucesso": False, "erro": "Campo ausente: horarios"}), 400
+
+        linhas = []
+        dias_vistos = set()
+        for h in horarios:
+            dia = h.get("dia_semana")
+            if dia not in range(0, 7) or dia in dias_vistos:
+                return jsonify({"sucesso": False, "erro": f"Dia da semana inválido ou repetido: {dia}"}), 400
+            dias_vistos.add(dia)
+
+            fechado = bool(h.get("fechado"))
+            abertura = h.get("hora_abertura")
+            fechamento = h.get("hora_fechamento")
+
+            if not fechado:
+                if not abertura or not fechamento:
+                    return jsonify({"sucesso": False, "erro": f"Informe abertura e fechamento (dia {dia})"}), 400
+                # Compara só "HH:MM" (os 5 primeiros caracteres): texto nesse formato ordena certo
+                if str(abertura)[:5] >= str(fechamento)[:5]:
+                    return jsonify({"sucesso": False, "erro": f"A abertura deve ser antes do fechamento (dia {dia})"}), 400
+
+            linhas.append({
+                "id_salao": admin["salao_associado"],
+                "dia_semana": dia,
+                # Dia fechado grava NULL nos horários
+                "hora_abertura": None if fechado else abertura,
+                "hora_fechamento": None if fechado else fechamento,
+                "fechado": fechado,
+            })
+
+        # upsert = insere se não existe, atualiza se já existe (usa a constraint do passo 1)
+        supabase_admin.table("horario_funcionamento_salao").upsert(
+            linhas, on_conflict="id_salao,dia_semana"
+        ).execute()
+
+        return jsonify({"sucesso": True})
+
+    except Exception as erro:
+        print("Erro ao salvar horários do salão:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao salvar horários"}), 500
+
+DIAS_SEMANA = ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"]
+
+def buscar_horarios_profissional(id_profissional):
+    # Qualquer usuário logado pode ler (o cliente precisa disso no formulário de agendamento)
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    if not autenticar(token):
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    try:
+        resposta = (
+            supabase_admin.table("horarios_trabalho")
+            .select("dia_semana, hora_inicio, hora_fim, ativo, intervalo_inicio, intervalo_fim")
+            .eq("id_profissional", id_profissional)
+            .order("dia_semana")
+            .execute()
+        )
+        # Lista vazia NÃO é erro: profissional que ainda não configurou os horários
+        return jsonify({"sucesso": True, "horarios": resposta.data or []})
+    except Exception as erro:
+        print("Erro ao buscar horários de trabalho:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao buscar horários"}), 500
+
+def salvar_horarios_profissional():
+    # Cada profissional (qualquer nível) altera só os PRÓPRIOS horários: o id vem do token, nunca do front
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    id_usuario = autenticar(token)
+    if not id_usuario:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    try:
+        perfil = (
+            supabase_admin.table("profissionais")
+            .select("id_profissional, salao_associado")
+            .eq("id_profissional", id_usuario)
+            .execute()
+        )
+        if not perfil.data:
+            return jsonify({"sucesso": False, "erro": "Somente profissionais têm horários de trabalho"}), 403
+
+        info = request.get_json(silent=True) or {}
+        horarios = info.get("horarios")
+        if not isinstance(horarios, list) or not horarios:
+            return jsonify({"sucesso": False, "erro": "Campo ausente: horarios"}), 400
+
+        # Funcionamento do salão do profissional (sem nada salvo para o dia = sem restrição, igual no agendamento)
+        funcionamento = (
+            supabase_admin.table("horario_funcionamento_salao")
+            .select("dia_semana, hora_abertura, hora_fechamento, fechado")
+            .eq("id_salao", perfil.data[0]["salao_associado"])
+            .execute()
+        )
+
+        linhas = []
+        dias_vistos = set()
+        for h in horarios:
+            dia = h.get("dia_semana")
+            if dia not in range(0, 7) or dia in dias_vistos:
+                return jsonify({"sucesso": False, "erro": f"Dia da semana inválido ou repetido: {dia}"}), 400
+            dias_vistos.add(dia)
+
+            if not h.get("hora_inicio") or not h.get("hora_fim"):
+                return jsonify({"sucesso": False, "erro": f"Informe início e fim ({DIAS_SEMANA[dia]})"}), 400
+
+            # Compara só "HH:MM" (os 5 primeiros caracteres): texto nesse formato ordena certo
+            inicio = str(h["hora_inicio"])[:5]
+            fim = str(h["hora_fim"])[:5]
+            if inicio >= fim:
+                return jsonify({"sucesso": False, "erro": f"O início deve ser antes do fim ({DIAS_SEMANA[dia]})"}), 400
+
+            # Nos dias em que atende, o expediente precisa ficar dentro do funcionamento do salão
+            if h.get("ativo"):
+                for regra in funcionamento.data:
+                    if regra["dia_semana"] != dia:
+                        continue
+                    if regra["fechado"]:
+                        return jsonify({"sucesso": False, "erro": f"O salão não funciona neste dia ({DIAS_SEMANA[dia]})"}), 400
+                    abertura = str(regra["hora_abertura"])[:5]
+                    fechamento = str(regra["hora_fechamento"])[:5]
+                    if inicio < abertura or fim > fechamento:
+                        return jsonify({"sucesso": False, "erro": f"O salão funciona das {abertura} às {fechamento} ({DIAS_SEMANA[dia]})"}), 400
+
+            # O intervalo é opcional, mas se vier precisa estar completo e dentro do expediente
+            if h.get("intervalo_inicio") or h.get("intervalo_fim"):
+                if not h.get("intervalo_inicio") or not h.get("intervalo_fim"):
+                    return jsonify({"sucesso": False, "erro": f"Informe início e fim do intervalo ({DIAS_SEMANA[dia]})"}), 400
+
+                pausa_inicio = str(h["intervalo_inicio"])[:5]
+                pausa_fim = str(h["intervalo_fim"])[:5]
+                if pausa_inicio <= inicio or pausa_fim <= pausa_inicio or pausa_fim >= fim:
+                    return jsonify({"sucesso": False, "erro": f"O intervalo deve começar antes de terminar e ficar dentro do expediente ({DIAS_SEMANA[dia]})"}), 400
+
+            linhas.append({
+                "id_profissional": id_usuario,
+                "dia_semana": dia,
+                "hora_inicio": inicio,
+                "hora_fim": fim,
+                "ativo": bool(h.get("ativo")),
+                # Sem intervalo grava NULL nos dois campos
+                "intervalo_inicio": h.get("intervalo_inicio") or None,
+                "intervalo_fim": h.get("intervalo_fim") or None,
+            })
+
+        # upsert = insere se não existe, atualiza se já existe (usa a restrição única id_profissional + dia_semana)
+        supabase_admin.table("horarios_trabalho").upsert(
+            linhas, on_conflict="id_profissional,dia_semana"
+        ).execute()
+
+        return jsonify({"sucesso": True})
+
+    except Exception as erro:
+        print("Erro ao salvar horários de trabalho:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao salvar horários"}), 500
+
+TIPOS_PAGAMENTO = {"salao_paga_profissional", "profissional_paga_salao"}
+
+def definir_acordo_financeiro():
+    # Só o administrador (nível 1) define o acordo, e só de profissionais do PRÓPRIO salão
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    id_usuario = autenticar(token)
+    if not id_usuario:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    info = request.get_json(silent=True) or {}
+    id_profissional = info.get("id_profissional")
+    tipo = info.get("tipo_pagamento")
+    valor = info.get("valor_comissao")
+
+    if not id_profissional or not tipo or valor is None or valor == "":
+        return jsonify({"sucesso": False, "erro": "Campos ausentes: id_profissional, tipo_pagamento, valor_comissao"}), 400
+    if tipo not in TIPOS_PAGAMENTO:
+        return jsonify({"sucesso": False, "erro": f"Tipo de pagamento inválido: {tipo}"}), 400
+
+    # O valor chega como texto ou número; converte e valida o intervalo
+    try:
+        valor = float(valor)
+    except (TypeError, ValueError):
+        return jsonify({"sucesso": False, "erro": "valor_comissao deve ser um número"}), 400
+    if not 0 <= valor <= 100:
+        return jsonify({"sucesso": False, "erro": "O percentual deve estar entre 0 e 100"}), 400
+
+    try:
+        # Quem está pedindo: precisa ser nível 1
+        resp_admin = (
+            supabase_admin.table("profissionais")
+            .select("nivel_acesso, salao_associado")
+            .eq("id_profissional", id_usuario)
+            .execute()
+        )
+        if not resp_admin.data:
+            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404
+        admin = resp_admin.data[0]
+        if int(admin["nivel_acesso"]) != 1:
+            return jsonify({"sucesso": False, "erro": "Somente administradores definem o acordo financeiro"}), 403
+
+        # O profissional alvo precisa ser do mesmo salão do admin
+        resp_alvo = (
+            supabase_admin.table("profissionais")
+            .select("salao_associado")
+            .eq("id_profissional", id_profissional)
+            .execute()
+        )
+        if not resp_alvo.data:
+            return jsonify({"sucesso": False, "erro": "Profissional não encontrado"}), 404
+        # str() nos dois lados evita falso 403 por diferença de tipo
+        if str(resp_alvo.data[0]["salao_associado"]) != str(admin["salao_associado"]):
+            return jsonify({"sucesso": False, "erro": "Este profissional não pertence ao seu salão"}), 403
+
+        supabase_admin.table("profissionais").update({
+            "tipo_pagamento": tipo,
+            "valor_comissao": valor,
+        }).eq("id_profissional", id_profissional).execute()
+
+        return jsonify({"sucesso": True})
+
+    except Exception as erro:
+        print("Erro ao definir acordo financeiro:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao salvar o acordo financeiro"}), 500
+
+
+def relatorio_acertos():
+    # US 20: totais do mês por colaborador. Só administrador (nível 1).
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    id_remetente = autenticar(token)
+    if not id_remetente:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    # O front manda o mês como intervalo ISO (início inclusive, fim exclusivo).
+    # Assim o fuso horário é resolvido no navegador, igual ao faturamento.
+    inicio = request.args.get("inicio")
+    fim = request.args.get("fim")
+    if not inicio or not fim:
+        return jsonify({"sucesso": False, "erro": "Campos ausentes: inicio, fim"}), 400
+
+    try:
+        resp = (
+            supabase_admin.table("profissionais")
+            .select("nivel_acesso, salao_associado")
+            .eq("id_profissional", id_remetente)
+            .execute()
+        )
+        if not resp.data:
+            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404
+        remetente = resp.data[0]
+
+        # Só o administrador vê o acordo financeiro de todo mundo
+        if int(remetente["nivel_acesso"]) != 1:
+            return jsonify({"sucesso": False, "erro": "Acesso negado"}), 403
+
+        # Todos os colaboradores do salão (mesmo desativados, que podem ter
+        # atendimentos no mês), só ficam de fora os removidos.
+        profs = (
+            supabase_admin.table("profissionais")
+            .select("id_profissional, nome_profissional, tipo_pagamento, valor_comissao")
+            .eq("salao_associado", remetente["salao_associado"])
+            .eq("removido", False)
+            .execute()
+        ).data or []
+
+        ids = [p["id_profissional"] for p in profs]
+        totais = {}
+        if ids:
+            ags = (
+                supabase_admin.table("agendamentos")
+                .select("id_profissional, preco")
+                .in_("id_profissional", ids)
+                .gte("horario", inicio)
+                .lt("horario", fim)
+                .ilike("status", "conclu%")  # só concluídos
+                .execute()
+            ).data or []
+            for ag in ags:
+                t = totais.setdefault(ag["id_profissional"], {"qtd": 0, "total": 0.0})
+                t["qtd"] += 1
+                t["total"] += float(ag.get("preco") or 0)  # preço gravado no agendamento
+
+        relatorio = [{
+            "id_profissional": p["id_profissional"],
+            "nome": p["nome_profissional"],
+            "tipo_pagamento": p.get("tipo_pagamento"),
+            "valor_comissao": p.get("valor_comissao"),
+            "qtd": totais.get(p["id_profissional"], {}).get("qtd", 0),
+            "total": round(totais.get(p["id_profissional"], {}).get("total", 0.0), 2),
+        } for p in profs]
+
+        return jsonify({"sucesso": True, "relatorio": relatorio})
+
+    except Exception as erro:
+        print("Erro no relatório de acertos:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao gerar o relatório"}), 500
+
+
+def minha_renda():
+    # US 24/25: renda do próprio profissional (admin, gerente ou profissional)
+    # no intervalo pedido. O id vem do token, nunca do front.
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return jsonify({"sucesso": False, "erro": "Token ausente"}), 401
+    id_profissional = autenticar(token)
+    if not id_profissional:
+        return jsonify({"sucesso": False, "erro": "Token inválido"}), 401
+
+    inicio = request.args.get("inicio")
+    fim = request.args.get("fim")
+    if not inicio or not fim:
+        return jsonify({"sucesso": False, "erro": "Campos ausentes: inicio, fim"}), 400
+
+    try:
+        resp = (
+            supabase_admin.table("profissionais")
+            .select("tipo_pagamento, valor_comissao")
+            .eq("id_profissional", id_profissional)
+            .execute()
+        )
+        # Cliente não tem linha em profissionais: não tem renda
+        if not resp.data:
+            return jsonify({"sucesso": False, "erro": "Perfil não encontrado"}), 404
+        acordo = resp.data[0]
+
+        ags = (
+            supabase_admin.table("agendamentos")
+            .select("preco")
+            .eq("id_profissional", id_profissional)
+            .gte("horario", inicio)
+            .lt("horario", fim)
+            .ilike("status", "conclu%")
+            .execute()
+        ).data or []
+
+        return jsonify({
+            "sucesso": True,
+            "qtd": len(ags),
+            "total": round(sum(float(a.get("preco") or 0) for a in ags), 2),
+            "tipo_pagamento": acordo.get("tipo_pagamento"),
+            "valor_comissao": acordo.get("valor_comissao"),
+        })
+
+    except Exception as erro:
+        print("Erro ao calcular a renda:", erro)
+        return jsonify({"sucesso": False, "erro": "Erro ao calcular a renda"}), 500

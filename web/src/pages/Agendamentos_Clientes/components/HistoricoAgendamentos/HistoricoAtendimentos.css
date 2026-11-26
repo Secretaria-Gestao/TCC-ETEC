@@ -1,0 +1,66 @@
+.historico-atendimentos-btn-sair:active { 
+    opacity: 0.3; 
+}
+/* Área da lista (rola por dentro, sem estourar a janela) */
+.historico-atendimentos-conteudo {
+    flex: 1;
+    padding: 26px 22px;
+    overflow-y: auto;
+    min-width: 0;
+}
+
+.historico-atendimentos-titulo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--texto);
+    margin-bottom: 18px;
+}
+
+.historico-atendimentos-aviso {
+    text-align: center;
+    color: var(--texto);
+    opacity: 0.7;
+    font-size: 0.85rem;
+    padding: 40px 12px;
+}
+
+.historico-atendimentos-lista {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+}
+
+.historico-atendimentos-card {
+    display: grid;
+    gap: 4px;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.4);
+    border: 2px solid var(--borda-suave);
+    border-radius: 12px;
+    color: var(--texto);
+    font-size: 0.85rem;
+}
+
+.historico-atendimentos-preco {
+    font-weight: 700;
+    color: var(--cor-primaria);
+}
+
+.historico-atendimentos-nav-icone {
+    flex-direction: column;
+    width: 68px;
+    height: auto;
+    padding: 8px 4px;
+    gap: 3px;
+}
+
+.historico-atendimentos-nav-emoji { 
+    font-size: 1.15rem; 
+}
+
+.historico-atendimentos-nav-nome {
+    font-size: 0.62rem;
+    line-height: 1.1;
+    text-align: center;
+}

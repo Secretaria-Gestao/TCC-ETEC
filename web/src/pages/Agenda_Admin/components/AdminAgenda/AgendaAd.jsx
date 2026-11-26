@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { pegarSessao } from '../../../../services/pegarSessao.js'
 import { obterDomingoDaSemana, MESES } from './utils/AgendaHelpers.js'
 
-import SidebarNavegacao from './components/SidebarNavegacao'
 import NavegacaoSemana from './components/NavegacaoSemana'
 import GradeSemanal from './components/GradeSemanal'
 import MiniCalendario from './components/MiniCalendario'
@@ -12,22 +11,19 @@ import SecaoProfissionais from './components/SecaoProfissionais'
 
 import './AgendaAd.css'
 
-function AgendaAdmin() {
+// A seção vem da rota, e cada uma tem o seu item na BarraLateral: 'agenda', 'financeiro' ou 'profissionais'.
+function AgendaAdmin({ secaoAtiva = 'agenda' }) {
     const [agendamentos, setAgendamentos] = useState([])
-    const [idAdmin, setIdAdmin] = useState('')
     const [filtroProfissional, setFiltroProfissional] = useState('')
     const [dataReferenciaSemana, setDataReferenciaSemana] = useState(new Date())
     const [dataReferenciaMes, setDataReferenciaMes] = useState(new Date())
     const [mensagem, setMensagem] = useState('')
-    const [secaoAtiva, setSecaoAtiva] = useState('agenda')
 
     useEffect(() => {
         async function carregarAgendamentos() {
 
             const sessao = await pegarSessao()
             const token = sessao.access_token
-
-            setIdAdmin(sessao.user.id)
 
             try {
                 const resposta = await fetch(`/api/agendamentos/salao`, {
@@ -38,29 +34,28 @@ function AgendaAdmin() {
                 const resultado = await resposta.json()
 
                 if (!resultado.sucesso) {
-                    console.log(resultado.erro)
                     setMensagem('Erro ao buscar agendamentos: ' + resultado.erro)
                     return
                 }
 
-                console.log(resultado)
 
-                setAgendamentos(resultado.agendamentos || [])
+            const agendamentosTratados = (resultado.agendamentos || []).map((ag) => ({
+                ...ag,
+                profissional: ag.profissionais?.nome_profissional,
+                id_profissional: ag.profissionais?.id_profissional,
+                cliente: ag.clientes?.nome_cliente,
+            }))   
 
-                // Busca também só os agendamentos do próprio admin, usando a
-                // mesma rota que o colaborador usa — passando o id do admin logado.
-
+            setAgendamentos(agendamentosTratados)
             } catch (erro) {
-                console.error('Erro na requisição:', erro)
-                setMensagem('Erro de conexão. Tente novamente.')
+                console.error(erro)
+                setMensagem('Erro ao buscar agendamentos: ' + erro.message)
             }
         }
-
         carregarAgendamentos()
 
     }, [])
     
-    console.log(agendamentos)
     const nomesUnicos = [...new Set(agendamentos.map((ag) => ag.profissional).filter(Boolean))]
 
     const domingo = obterDomingoDaSemana(dataReferenciaSemana)
@@ -80,13 +75,17 @@ function AgendaAdmin() {
         setDataReferenciaMes(novaData)
     }
 
-    // Total de receita da semana atual, usado na seção Financeiro.
+    const fimSemana = new Date(domingo)
+    fimSemana.setDate(fimSemana.getDate() + 7)
+
     const totalSemana = agendamentos
         .filter((ag) => {
             const dataAg = new Date(ag.horario)
-            return dataAg >= domingo && dataAg <= sabado
+
+            const concluido = ag.status?.toLowerCase().startsWith('conclu')
+            return concluido && dataAg >= domingo && dataAg < fimSemana
         })
-        .reduce((soma, ag) => soma + (ag.preco || 0), 0)
+        .reduce((soma, ag) => soma + Number (ag.preco || 0), 0)
 
     // Aplica o filtro de profissional antes de passar pra grade da seção "Agenda".
     const agendamentosFiltrados = filtroProfissional
@@ -95,8 +94,6 @@ function AgendaAdmin() {
 
     return (
         <div className="agenda-admin-janela">
-            <SidebarNavegacao secaoAtiva={secaoAtiva} setSecaoAtiva={setSecaoAtiva} />
-
             <div className="agenda-admin-conteudo">
                 {secaoAtiva === 'agenda' && (
                     <>
@@ -108,18 +105,6 @@ function AgendaAdmin() {
                             campoSecundario="cliente"
                         />
                         {mensagem && <p className="agenda-admin-mensagem">{mensagem}</p>}
-                    </>
-                )}
-
-                {secaoAtiva === 'minha-agenda' && (
-                    <>
-                        <NavegacaoSemana tituloSemana={tituloSemana} mudarSemana={mudarSemana} />
-                        <GradeSemanal
-                            domingo={domingo}
-                            agendamentos={agendamentos.filter((ag) => ag.idAdmin === idAdmin)}
-                            campoPrincipal="cliente"
-                            campoSecundario="status"
-                        />
                     </>
                 )}
 
