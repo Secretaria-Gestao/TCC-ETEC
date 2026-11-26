@@ -63,6 +63,16 @@ export async function logarComGoogle() { // Login com Google no Supabase Auth
 export async function buscarDestinoDoUsuario() {
     const perfil = await pegarMeuPerfil()
 
+    // Profissional removido pelo administrador continua com login no Auth, mas não pode mais entrar
+    if (perfil?.removido) {
+        await supabase.auth.signOut()
+        useNotificacaoStore.getState().mostrarNotificacao({
+            titulo: "Conta desativada!",
+            texto: "Esta conta foi removida do salão"
+        })
+        return { tipo: null, destino: '/login' }
+    }
+
     if (perfil?.id_profissional) {
         const tipo = tiposPorNivel[Number(perfil.nivel_acesso)] ?? 'profissional'
         return { tipo, destino: rotasPorTipo[tipo] }
