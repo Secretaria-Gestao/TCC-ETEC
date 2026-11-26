@@ -71,25 +71,15 @@ function CardAcesso() {
                   <p >"Achei fácil de usar, porém a tela de meus agendamentos é confusa."</p>
                 </div>              
                 <div className='bg-azul-profundo text-white card-comentarios'>
-                  <div className='text-sm gap-4 flex justify-between'> Clarice Souza <div>★★★★☆</div></div>
-                  <p className='font-extralight text-sm -mt-4'>— Cliente </p>
-                  <p >"Achei fácil de usar, porém a tela de meus agendamentos é confusa."</p>
+                  <div className='text-sm gap-4 flex justify-between'>Geovana Fortes<div>★★★☆☆</div></div>
+                  <p className='font-extralight text-sm -mt-0.5'>— Cliente </p>
+                  <p >"Achei legal, fácil e dinâmico, acho que vai ser bastante útil, só precisa fazer alguns ajustes."</p>
                 </div>              
                 <div className='bg-azul-profundo text-white card-comentarios'>
-                  <div className='text-sm gap-4 flex justify-between'> Clarice Souza <div>★★★★☆</div></div>
-                  <p className='font-extralight text-sm -mt-4'>— Cliente </p>
-                  <p >"Achei fácil de usar, porém a tela de meus agendamentos é confusa."</p>
-                </div>              
-                <div className='bg-azul-profundo text-white card-comentarios'>
-                  <div className='text-sm gap-4 flex justify-between'> Clarice Souza <div>★★★★☆</div></div>
-                  <p className='font-extralight text-sm -mt-4'>— Cliente </p>
-                  <p >"Achei fácil de usar, porém a tela de meus agendamentos é confusa."</p>
-                </div>              
-                <div className='bg-azul-profundo text-white card-comentarios'>
-                  <div className='text-sm gap-4 flex justify-between'> Clarice Souza <div>★★★★☆</div></div>
-                  <p className='font-extralight text-sm -mt-4'>— Cliente </p>
-                  <p >"Achei fácil de usar, porém a tela de meus agendamentos é confusa."</p>
-                </div>              
+                  <div className='text-sm gap-4 flex justify-between'> Leonardo de Lima <div>★★★★★</div></div>
+                  <p className='font-extralight text-sm -mt-17'>— Cliente </p>
+                  <p >"É simples e intuitivo"</p>
+                </div>          
               </div>
             </div>
           </div>
@@ -97,7 +87,7 @@ function CardAcesso() {
 
       </div>
 
-      <div className='mt-10 h-full w-dvw bg-azul-profundo text-white'>
+      <div className='mt-30 h-full w-dvw bg-azul-profundo text-white'>
         <main className='h-full flex items-center justify-center w-1/1 place-self-center'>
           <div className='p-5 justify-center items-center place-self-center flex gap-20'>
 
