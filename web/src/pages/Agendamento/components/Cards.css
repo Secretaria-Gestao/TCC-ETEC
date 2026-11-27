@@ -10,7 +10,6 @@
     box-sizing: border-box;
 }
 
-
 .agendamento-form .agendamento-header{
     display: flex;
     margin-bottom: 5%;
@@ -47,7 +46,6 @@
     border-radius: 50px;
     cursor: pointer;
 }
-
 
 .agendamento-form .lista_servicos{
     display: grid;
@@ -91,28 +89,22 @@
 }
 
 .agendamento-form .card_1{
-    width: 37dvw;
     min-width: 400px;
     max-width: 700px;
     height: 500px;
     padding: 25px;
-    margin: auto;
     background: var(--fundo-cartao);
     border-radius: 15px;
     border: 1px solid var(--borda-suave);
 }
 .agendamento-form .card_2{
-    flex: 1;
-    width: 37dvw;
     min-width: 450px;
     max-width: 700px;
-    height: 500px;
     padding: 25px;
-    margin: auto;
+    border-radius: 15px;
     background-color: var(--cor-primaria);
 }
 
 .agendamento-form .logo {
     width: 20%;
-    height: 20%;
 }

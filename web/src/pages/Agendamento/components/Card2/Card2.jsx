@@ -9,18 +9,18 @@ export default function Card2({
   enviarDados,
   resetarDados
 }) {
-  return (
-    <div className="card_2">
-      <header className="agendamento-header">
-        <h1 className="agendamento-title text-azul-ceu! font-bold">Agendamento</h1>
-        <img className="logo" src="/logo_pequena.png" alt="logo secretária gestão" />
-      </header>
 
+  console.log()
+  return (
+    <div className="card_2 w-full h-120 2xl:min-h-125 ">
+      <header className="agendamento-header sm:gap-2">
+        <h1 className=" text-azul-ceu! text-4xl! sm:text-[45px]! font-bold">Agendamento</h1>
+        <img className="logo rotate-y-180" src="/logo_pequena.png" alt="logo secretária gestão" />
+      </header>
 
       <p className='text-white ml-1'>
         {Number(dados.preco || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
       </p>
-
 
       <div>
         {todosSaloes.length === 0 && <p className='text-white'>Nenhum salão disponível no momento.</p>}

@@ -14,7 +14,7 @@ import Card2 from "./components/Card2/Card2"
 import './Agendamento.css'
 import './components/Cards.css'
 
-function Agendamento() {
+export default function Agendamento() {
 
     const navegar = useNavigate()
     const [todosProfissionais, setTodosProfissionais] = useState([])
@@ -234,15 +234,6 @@ function Agendamento() {
         }
     }
 
-    function adicionarServico() {
-        // Adiciona o primeiro serviço que ainda não foi escolhido
-        const disponivel = todosServicos.find(s => !dados.servicos.includes(s.id_servico))
-        if (!disponivel) return // todos já escolhidos (ou lista vazia)
-
-        const novaLista = [...dados.servicos, disponivel.id_servico]
-        setDados(d => ({ ...d, servicos: novaLista, preco: calcularTotal(novaLista) }))
-    }
-
     function mudarValorDados(evento) {
         const nomeCampo = evento.target.name
         const valorCampo = evento.target.value
@@ -253,54 +244,36 @@ function Agendamento() {
         })
     }
 
-    function mudarValorServico(evento, indice) {
-        const novaLista = [...dados.servicos]
-        novaLista[indice] = Number(evento.target.value)
-        // Uma única atualização, com o total recalculado da lista inteira
-        setDados(d => ({ ...d, servicos: novaLista, preco: calcularTotal(novaLista) }))
-    }
-
     return (
         <main className="main-principal">
 
             <div className="w-full h-full flex flex-col md:flex-row">
-
                 <BarraLateral />
 
-                <div className="flex flex-1 min-w-0">
+                <form className='agendamento-form w-full items-center justify-center flex-col 2xl:flex-row '>
 
-                    <form className='agendamento-form md:w-full'>
+                    <Card1
+                        dados={dados}
+                        todosServicos={todosServicos}
+                        todosProfissionais={todosProfissionais}
+                        hoje={hoje}
+                        regra={regra}
+                        avisoHorario={avisoHorario}
+                        mudarValorDados={mudarValorDados}
+                    />
 
-                        <Card1
-                            dados={dados}
-                            todosServicos={todosServicos}
-                            todosProfissionais={todosProfissionais}
-                            hoje={hoje}
-                            regra={regra}
-                            avisoHorario={avisoHorario}
-                            mudarValorDados={mudarValorDados}
-                            mudarValorServico={mudarValorServico}
-                            adicionarServico={adicionarServico}
-                        />
+                    <Card2
+                        dados={dados}
+                        todosSaloes={todosSaloes}
+                        enviando={enviando}
+                        avisoHorario={avisoHorario}
+                        mudarValorDados={mudarValorDados}
+                        enviarDados={enviarDados}
+                        resetarDados={resetarDados}
+                    />
 
-                        <Card2
-                            dados={dados}
-                            todosSaloes={todosSaloes}
-                            enviando={enviando}
-                            avisoHorario={avisoHorario}
-                            mudarValorDados={mudarValorDados}
-                            enviarDados={enviarDados}
-                            resetarDados={resetarDados}
-                        />
-
-                    </form>
-
-                </div>
-
+                </form>
             </div>
-
         </main>
     )
 }
-
-export default Agendamento

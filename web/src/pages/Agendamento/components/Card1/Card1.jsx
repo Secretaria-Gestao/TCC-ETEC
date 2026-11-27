@@ -3,11 +3,36 @@ export default function Card1({
   dados, todosServicos,
   todosProfissionais, hoje,
   regra, avisoHorario,
-  mudarValorDados, mudarValorServico,
-  adicionarServico
+  mudarValorDados
 }) {
+
+  function removerServico(evento) {
+    const id = evento.target.value
+
+    const novaLista = [...dados.servicos].filter(s => (console.log(s)))
+
+  }
+
+  function adicionarServico() {
+    // Adiciona o primeiro serviço que ainda não foi escolhido
+    const disponivel = todosServicos.find(s => !dados.servicos.includes(s.id_servico))
+    if (!disponivel) return // todos já escolhidos (ou lista vazia)
+
+    const novaLista = [...dados.servicos, disponivel.id_servico]
+    setDados(d => ({ ...d, servicos: novaLista, preco: calcularTotal(novaLista) }))
+  }
+
+
+  function mudarValorServico(evento, indice) {
+    const novaLista = [...dados.servicos]
+    novaLista[indice] = Number(evento.target.value)
+    // Uma única atualização, com o total recalculado da lista inteira
+    setDados(d => ({ ...d, servicos: novaLista, preco: calcularTotal(novaLista) }))
+  }
+
+
   return (
-    <div className="card_1">
+    <div className="card_1 w-full ">
       <div className="lista_servicos" id="lista_servicos">
         {
           dados.servicos.map((servico, indice) => {
@@ -31,13 +56,25 @@ export default function Card1({
                   indice == 0 && (
                     <button type="button" className="btn_servico bg-white" id="btn_add_servico" onClick={adicionarServico}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                        className="bi bi-plus-lg " viewBox="0 0 16 16">
+                        className="bi bi-plus-lg " viewBox="0 0 19 19">
                         <path fillRule="evenodd"
                           d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
                       </svg>
                     </button>
                   )
                 }
+
+                {
+                  indice > 0 && (
+                    <button type="button" className="btn_servico bg-white" id="btn_add_servico" onClick={removerServico}>
+                      <svg xmlns="http://w3.org" width="20" height="20" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                      </svg>
+
+                    </button>
+                  )
+                }
+
               </div>
             )
           })
