@@ -18,9 +18,7 @@ function CardAcesso() {
             <div>
               <p className=' font-bold text-xl text-white'>Secretária gestão</p>
               <hr className='w-full text-white' />
-
             </div>
-
           </div>
 
           <div className='text-white px-5 self-center overflow-visible'>
@@ -32,18 +30,18 @@ function CardAcesso() {
 
                 {modalProf && (
                   <div className='absolute top-full w-full z-50 bg-[#704356] shadow-md border-[0px_1px_1px_1px] rounded-b-md border-black/20 flex flex-col divide-y divide-black/20'>
-                    <Link className='text-center p-2'>
+                    <Link to="/cadastro/gerente" className='text-center p-2'>
                       Criar o meu salão
                     </Link>
 
-                    <Link className='text-center p-2'>
+                    <Link to="/login" className='text-center p-2'>
                       Entrar no sistema
                     </Link>
                   </div>
 
                 )}
-
               </li>
+
               <li>
                 <Link to="/login" className='bg-black/4 shadow-md p-2 rounded-md'>
                   Agendar um horário
@@ -69,17 +67,17 @@ function CardAcesso() {
                   <div className='text-sm gap-4 flex justify-between'> Clarice Souza <div>★★★★☆</div></div>
                   <p className='font-extralight text-sm -mt-4'>— Cliente </p>
                   <p >"Achei fácil de usar, porém a tela de meus agendamentos é confusa."</p>
-                </div>              
+                </div>
                 <div className='bg-azul-profundo text-white card-comentarios'>
                   <div className='text-sm gap-4 flex justify-between'>Geovana Fortes<div>★★★☆☆</div></div>
                   <p className='font-extralight text-sm -mt-0.5'>— Cliente </p>
                   <p >"Achei legal, fácil e dinâmico, acho que vai ser bastante útil, só precisa fazer alguns ajustes."</p>
-                </div>              
+                </div>
                 <div className='bg-azul-profundo text-white card-comentarios'>
                   <div className='text-sm gap-4 flex justify-between'> Leonardo de Lima <div>★★★★★</div></div>
                   <p className='font-extralight text-sm -mt-17'>— Cliente </p>
                   <p >"É simples e intuitivo"</p>
-                </div>          
+                </div>
               </div>
             </div>
           </div>
@@ -91,7 +89,7 @@ function CardAcesso() {
         <main className='h-full flex items-center justify-center w-1/1 place-self-center'>
           <div className='p-5 justify-center items-center place-self-center flex gap-20'>
 
-            <img src="/imagem_homepage2.png" alt="" className='w-7/12 shadow-xl/20 rounded-2xl'/>
+            <img src="/imagem_homepage2.png" alt="" className='w-7/12 shadow-xl/20 rounded-2xl' />
 
             <div>
               <div className='place-self-start h-max w-110'>
@@ -114,11 +112,11 @@ function CardAcesso() {
 
                   {modalProf && (
                     <div className='absolute top-full w-full z-50 bg-[#704356] shadow-lg border-[0px_1px_1px_1px] rounded-b-md border-black/20 flex flex-col divide-y divide-black/20'>
-                      <Link className='text-center p-3'>
+                      <Link to="/cadastro/gerente" className='text-center p-3'>
                         Criar o meu salão
                       </Link>
 
-                      <Link className='text-center p-3'>
+                      <Link to="/login" className='text-center p-3'>
                         Entrar no sistema
                       </Link>
                     </div>
