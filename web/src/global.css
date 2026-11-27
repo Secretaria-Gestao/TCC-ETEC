@@ -28,7 +28,7 @@
     --color-azul-po: #B5C9E2;
     --color-azul-ceu: #6F93C2;
     --color-azul-medio: #3F6494;
-    --color-azul-profundo: #1F3A5C;
+    --color-azul-profundo: #092140;
 
     /* Alertas */
     --color-laranja: #EB620A;
@@ -95,6 +95,11 @@ button[disabled] {
 .main-principal {
     @apply w-dvw min-h-dvh bg-no-repeat bg-fixed bg-center ;
     background: repeating-linear-gradient(to top right, var(--fundo-pagina) 10% 35%, var(--color-azul-po) 35% 40%, var(--fundo-pagina) 40% 45%);
+}
+
+.main-principal-escuro {
+    @apply w-dvw min-h-dvh bg-no-repeat bg-fixed bg-center ;
+    background: repeating-linear-gradient(to top right, var(--color-azul-profundo) 10% 35%, var(--color-cobre) 35% 40%, var(--color-azul-profundo) 40% 45%);
 }
 
 /* O blur fica numa camada atrás do conteúdo, e não num ancestral dele: backdrop-filter num ancestral faz dele a

@@ -72,7 +72,7 @@ export default function Seguranca({ profissional, admin }) {
     await supabase.auth.signOut()
     // replace() troca a página em vez de empilhar no histórico (o botão voltar não leva a uma tela de quem já saiu)
     // e recarrega tudo, o que também limpa o cache do perfil da pessoa anterior.
-    window.location.replace(profissional ? '/login/colaborador' : '/login/cliente')
+    window.location.replace(profissional ? '/login' : '/login')
   }
 
   async function excluir() {
