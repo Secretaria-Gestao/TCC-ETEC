@@ -6,7 +6,7 @@
     grid-template-columns: repeat(5, 1fr);
     overflow-x: scroll;
     scrollbar-width: thin;
-    scrollbar-color: var(bg-azul-profundo) transparent;
+    scrollbar-color: var(--color-azul-ceu) transparent;
     justify-content: space-between;
     border-radius: 15px;
 }
