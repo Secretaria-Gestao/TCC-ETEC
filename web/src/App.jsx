@@ -23,7 +23,7 @@ function App() {
       <Route path="/cadastro/*" element={ <Cadastro /> } />
       <Route path="/login/*" element={ <Login /> } />
       <Route path="/agendamento/*" element={ <Agendamento /> } />
-      <Route path="/trocar-senha/*" element={ <TrocarSenha /> } />
+      <Route path="/trocarSenha/*" element={ <TrocarSenha /> } />
 
   {/* Rota do colaborador para ver a própria agenda */}    
       <Route path="/colaborador/agenda" element={ <PageAgendaColaborador /> } />

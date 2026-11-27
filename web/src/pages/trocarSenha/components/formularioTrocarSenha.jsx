@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { supabase } from '../../../services/SupabaseConfig.js';
+import style from './formularioTrocarSenha.module.css'
 
 function FormularioTrocarSenha() {
     const [novaSenha, setNovaSenha] = useState('')
@@ -10,39 +11,40 @@ function FormularioTrocarSenha() {
     const [carregando, setCarregando] = useState(false)
     const navigate = useNavigate()
 
-    useEffect(() => {
-        // O link do e-mail dispara PASSWORD_RECOVERY e cria uma sessão temporária
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((evento) => {
-            if (evento === 'PASSWORD_RECOVERY') setSessaoValida(true)
-        })
-        // Cobre também o usuário já logado (ex.: vindo das Configurações)
-        supabase.auth.getSession().then(({ data }) => {
-            if (data.session) setSessaoValida(true)
-        })
-        return () => subscription.unsubscribe()
-    }, [])
+    // useEffect(() => {
+    //     // O link do e-mail dispara PASSWORD_RECOVERY e cria uma sessão temporária
+    //     const { data: { subscription } } = supabase.auth.onAuthStateChange((evento) => {
+    //         if (evento === 'PASSWORD_RECOVERY') setSessaoValida(true)
+    //     })
+    //     // Cobre também o usuário já logado (ex.: vindo das Configurações)
+    //     supabase.auth.getSession().then(({ data }) => {
+    //         if (data.session) setSessaoValida(true)
+    //     })
+    //     return () => subscription.unsubscribe()
+    // }, [])
 
-    async function handleSubmit(e) {
-        e.preventDefault()
-        setErro('')
+    // async function handleSubmit(e) {
+    //     e.preventDefault()
+    //     setErro('')
 
-        if (novaSenha.length < 6) return setErro('A senha deve ter pelo menos 6 caracteres.')
-        if (novaSenha !== confirmar) return setErro('As senhas não coincidem.')
+    //     if (novaSenha.length < 6) return setErro('A senha deve ter pelo menos 6 caracteres.')
+    //     if (novaSenha !== confirmar) return setErro('As senhas não coincidem.')
 
-        setCarregando(true)
-        const { error } = await supabase.auth.updateUser({ password: novaSenha })
-        setCarregando(false)
+    //     setCarregando(true)
+    //     const { error } = await supabase.auth.updateUser({ password: novaSenha })
+    //     setCarregando(false)
 
-        if (error) return setErro(error.message)
-        navigate('/')
-    }
+    //     if (error) return setErro(error.message)
+    //     navigate('/')
+    // }
 
-    if (!sessaoValida) {
-        return <p>Link inválido ou expirado. Solicite a recuperação de senha novamente.</p>
-    }
+    // if (!sessaoValida) {
+    //     return <p>Link inválido ou expirado. Solicite a recuperação de senha novamente.</p>
+    // }
 
     return (
-        <form className='formulario-trocar-senha' onSubmit={handleSubmit}>
+        // <form className='formulario-trocar-senha' onSubmit={handleSubmit}>
+        <form className=''>
             <h1>Alterar senha</h1>
 
             <label htmlFor='novaSenha'>Nova senha:</label>

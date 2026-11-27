@@ -1,0 +1,14 @@
+body{
+    background:  repeating-linear-gradient(to top right, var(--background-gradient-color-light) 10% 35%, var(--background-gradient-color-dark) 35% 40%, var(--background-gradient-color-light) 40% 45%) fixed center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.trocar-senha-page{
+    background: #ece6dc fixed;
+    padding: 8%;
+    margin: 20%;
+    justify-self: center;
+    align-self: center;
+    border-radius: 15px;
+}
