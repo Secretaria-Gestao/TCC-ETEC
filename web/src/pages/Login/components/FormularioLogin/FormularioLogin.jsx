@@ -1,8 +1,7 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router"
 
-import { logar } from "../../services/login.js"
-import { logarComGoogle, descobrirRotaPosLogin } from "../../services/login.js"
+import { logar, logarComGoogle, buscarDestinoDoUsuario } from "../../services/login.js"
 import './FormularioLogin.css'
 
 function FormularioLogin() {
@@ -39,7 +38,8 @@ function FormularioLogin() {
 
         if (resultado) {
             // Navega pelo cargo do usuário, não pelo endereço atual da tela
-            navegar(await descobrirRotaPosLogin())
+            const { destino } = await buscarDestinoDoUsuario()
+            navegar(destino, { replace: true })
         }
     } finally {
         setEnviando(false) // libera o botão, com sucesso ou erro

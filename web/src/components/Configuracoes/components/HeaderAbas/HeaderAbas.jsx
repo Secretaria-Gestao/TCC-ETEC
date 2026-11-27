@@ -19,13 +19,15 @@ export default function HeaderAbas({ abaAtual, setAbaAtual, setConfigAberto, per
                 Segurança
             </button>
 
-            <button type="button"
-                className={`border-b ${abaAtual == "horariosProfissional" ? "border-laranja border-b-2" : "border-transparent"} -mb-px px-1 pb-2`}
-                onClick={() => setAbaAtual("horariosProfissional")}
-
-            >
-                Horários
-            </button>
+            {/* Cliente não tem horário de trabalho: para ele a aba mostrava a tela de Segurança */}
+            {perfil != "cliente" && (
+                <button type="button"
+                    className={`border-b ${abaAtual == "horariosProfissional" ? "border-laranja border-b-2" : "border-transparent"} -mb-px px-1 pb-2`}
+                    onClick={() => setAbaAtual("horariosProfissional")}
+                >
+                    Horários
+                </button>
+            )}
 
             {perfil == "admin" && (
                 <button type="button"

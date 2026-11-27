@@ -3,10 +3,16 @@
 .cliente-perfil-grid {
     display: grid;
     position: relative;
-    grid-template-columns: 28px 84px minmax(0, 1fr) 72px;
+    /* A última coluna cresce com o botão (minmax(72px, auto)): com 72px fixos, no celular o "Editar"
+       ficava mais largo que a coluna e invadia o espaço do campo ao lado. */
+    grid-template-columns: 28px 84px minmax(0, 1fr) minmax(72px, auto);
     gap: 0 12px;
     align-items: center;
-    
+
+}
+
+.cliente-perfil-grid > button {
+    white-space: nowrap;
 }
 
 .cliente-perfil-email {
